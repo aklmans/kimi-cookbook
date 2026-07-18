@@ -5,8 +5,8 @@ type CoverVisualProps = {
       Rendered as an HTML overlay so it isn't cropped when the SVG is
       `slice`-scaled. Omit for brands whose scene carries the identity. */
   motif?: string;
-  /** Brand-specific scene. "moon" → Kimi's Moonshot crescent (Kimi is
-      Moonshot AI / 月之暗面); default → the flowing-gradient waves. */
+  /** Brand-specific scene. "moon" → Kimi's 月之暗面 dark-side moon (Kimi is
+      Moonshot AI); default → the flowing-gradient waves. */
   variant?: "moon";
   className?: string;
   /** Per-brand palette overrides (--cv-bg / --cv-1..4 / --cv-hi). */
@@ -21,8 +21,8 @@ type CoverVisualProps = {
  *   --cv-1 … --cv-4  scene stops, dark → bright (moon shadow → surface → glow)
  *   --cv-hi          highlight (ribbon tip / stars)
  * Defaults derive from --cover-accent via color-mix (see globals.css); a brand
- * can override any var inline. `variant="moon"` swaps the wave scene for a
- * crescent moon (Kimi); everything else keeps the waves.
+ * can override any var inline. `variant="moon"` swaps the wave scene for the
+ * 月之暗面 dark-side moon (Kimi); everything else keeps the waves.
  */
 export function CoverVisual({
   motif,
@@ -51,31 +51,19 @@ export function CoverVisual({
   );
 }
 
-/** Kimi — a crescent moon on a night sky, lit along the lower-left limb in the
-    vivid Kimi blue, with a small companion moon top-right. The whole disc stays
-    faintly visible (earthshine) so it reads as a sphere, not a sliver. */
+/** Kimi — 月之暗面 (Moonshot's own name IS the cover): a dark-side moon —
+    the whole ghost disc faintly visible, one lit paper crescent on the
+    right limb — under a hairline orbit with a single satellite in the K
+    mark's blue, and a faint horizon arc low on the card. Everything lives
+    inside the central band so the `slice` crop on tall cards keeps the
+    moon, the orbit's sweep and the satellite. */
 function MoonScene() {
   return (
     <>
       <defs>
-        <radialGradient id="cv-moon-lit" cx="0.3" cy="0.66" r="0.95">
-          <stop offset="0" stopColor="var(--cv-3)" />
-          <stop offset="0.55" stopColor="var(--cv-2)" />
-          <stop offset="1" stopColor="var(--cv-1)" />
-        </radialGradient>
-        <radialGradient id="cv-atmo" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0.6" stopColor="var(--cv-4)" stopOpacity="0" />
-          <stop offset="0.9" stopColor="var(--cv-4)" stopOpacity="0.5" />
-          <stop offset="1" stopColor="var(--cv-4)" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="cv-horizon" cx="0.5" cy="1" r="0.95">
-          <stop offset="0" stopColor="var(--cv-4)" stopOpacity="0.22" />
-          <stop offset="0.6" stopColor="var(--cv-bg)" stopOpacity="0" />
-        </radialGradient>
-        <mask id="cv-crescent">
-          <rect x="0" y="0" width="300" height="400" fill="black" />
-          <circle cx="150" cy="300" r="150" fill="white" />
-          <circle cx="206" cy="262" r="146" fill="black" />
+        <mask id="cv-moon-bite">
+          <rect x="-90" y="-90" width="180" height="180" fill="#fff" />
+          <circle cx="-14" cy="-6" r="74" fill="#000" />
         </mask>
         <clipPath id="cv-clip">
           <rect x="0" y="0" width="300" height="400" />
@@ -83,53 +71,40 @@ function MoonScene() {
       </defs>
       <g clipPath="url(#cv-clip)">
         <rect x="0" y="0" width="300" height="400" fill="var(--cv-bg)" />
-        <rect x="0" y="0" width="300" height="400" fill="url(#cv-horizon)" />
-        {/* stars — kept in the central band (x≈78–224) so they survive the
-            `slice` crop on a tall card */}
-        <g fill="var(--cv-hi)">
-          <circle cx="96" cy="66" r="1.4" opacity="0.75" />
-          <circle cx="134" cy="42" r="1" opacity="0.5" />
-          <circle cx="198" cy="56" r="1.1" opacity="0.6" />
-          <circle cx="166" cy="98" r="0.9" opacity="0.45" />
-          <circle cx="110" cy="120" r="0.8" opacity="0.4" />
-          <circle cx="216" cy="126" r="1" opacity="0.5" />
-          <circle cx="82" cy="140" r="0.9" opacity="0.4" />
+        <g transform="translate(150 168) scale(0.68)">
+          {/* the dark side — a ghost disc, not a sliver */}
+          <circle
+            r="78"
+            fill="var(--cv-1)"
+            stroke="var(--cv-3)"
+            strokeOpacity="0.07"
+            strokeWidth="1"
+          />
+          {/* the lit crescent — paper moon, bitten back to a thin limb */}
+          <circle r="78" fill="var(--cv-3)" mask="url(#cv-moon-bite)" />
+          {/* the orbit — one hairline, satellite in the K mark's blue */}
+          <ellipse
+            rx="118"
+            ry="38"
+            transform="rotate(-14)"
+            fill="none"
+            stroke="var(--cv-3)"
+            strokeOpacity="0.26"
+            strokeWidth="0.8"
+          />
+          <circle cx="82" cy="-46" r="9" fill="var(--cv-4)" opacity="0.16" />
+          <circle cx="82" cy="-46" r="4.6" fill="var(--cv-4)" />
         </g>
-        {/* atmospheric halo behind the moon */}
-        <circle cx="150" cy="300" r="176" fill="url(#cv-atmo)" />
-        {/* moon disc — earthshine, so the dark side stays a visible sphere */}
-        <circle cx="150" cy="300" r="150" fill="var(--cv-1)" />
-        {/* lit crescent + a few craters, clipped to the crescent by the mask */}
-        <g mask="url(#cv-crescent)">
-          <circle cx="150" cy="300" r="150" fill="url(#cv-moon-lit)" />
-          <g fill="var(--cv-1)" opacity="0.5">
-            <circle cx="92" cy="250" r="15" />
-            <circle cx="66" cy="322" r="9" />
-            <circle cx="120" cy="356" r="19" />
-            <circle cx="150" cy="296" r="6" />
-          </g>
-        </g>
-        {/* Kimi-blue rim light on the lit limb only */}
-        <circle
+        {/* a faint horizon arc low on the card — depth, not decoration */}
+        <ellipse
           cx="150"
-          cy="300"
-          r="149"
+          cy="384"
+          rx="142"
+          ry="43"
           fill="none"
-          stroke="var(--cv-4)"
-          strokeWidth="2.5"
-          opacity="0.6"
-          mask="url(#cv-crescent)"
-        />
-        {/* companion moon, upper-right (inside the safe band) */}
-        <circle cx="206" cy="68" r="17" fill="var(--cv-1)" />
-        <circle
-          cx="206"
-          cy="68"
-          r="16"
-          fill="none"
-          stroke="var(--cv-4)"
-          strokeWidth="1.3"
-          opacity="0.5"
+          stroke="var(--cv-3)"
+          strokeOpacity="0.1"
+          strokeWidth="0.8"
         />
       </g>
     </>

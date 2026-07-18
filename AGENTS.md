@@ -337,8 +337,9 @@ Co-Authored-By: Kimi Code <noreply@moonshot.ai>
   `.cover-visual {…}` CSS default sets those vars on the element too, so an
   inherited value from a parent loses; an inline value on the element wins.
   Kimi's near-ink accent (#1A1A1A) would derive a dull grey, so it ships an
-  explicit palette instead: the `moon` variant — a Moonshot crescent on a
-  night sky, lit along the lower-left limb in Kimi blue (`lib/cover-visual.ts`
+  explicit palette instead: the `moon` variant — a 月之暗面 dark-side moon
+  (a faint ghost disc plus one lit paper crescent on the limb) under a
+  hairline orbit with a single satellite in Kimi blue (`lib/cover-visual.ts`
   holds the only brand entry).
 - **cover card is a theme-stable "book jacket"**: the `.cover-card` (web hero
   right column + the print jacket) is a light strip over the dark `<CoverVisual>`
