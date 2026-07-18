@@ -1,0 +1,66 @@
+---
+references:
+  - id: 1
+    body: "Kimi 帮助中心 · 会员套餐价格 —— 截至 2026-07 五档: Adagio（免费）、Andante ¥49、Moderato ¥99、Allegretto ¥199、Allegro ¥699。分项额度: Agent 用量约 6 / 30 / 60 / 150 / 360 个（共享 token 额度池按常见任务折算的估值）, Kimi Code 倍率 1x / 4x / 20x / 60x（单独额度池）, Agent 集群 Moderato 25 次 / Allegretto 50 次 / Allegro 120 次, 专业数据库 200 / 1,000 / 2,000 / 5,000 / 12,000 次, Kimi Claw 自 Allegretto 起; 连续包年最高省 ¥1,680。国际版为另一套档位（$19–$199）。"
+    url: "https://www.kimi.com/zh-cn/help/membership/membership-pricing"
+    urlLabel: "Kimi 帮助中心 · 会员价格"
+  - id: 2
+    body: "Kimi 开放平台（platform.kimi.com）· 定价 —— 消费端会员与 API 是两套账户、两条计费; 订阅不含 API 额度。API 按 token 计价（旗舰 kimi-k3 每百万 ¥20.00 输入 / ¥2.00 缓存命中 / ¥100.00 输出, 1M 上下文）, base_url https://api.moonshot.cn/v1。截至 2026-07。"
+    url: "https://platform.kimi.com/docs/pricing/chat-k3"
+    urlLabel: "Kimi 开放平台 · 定价"
+  - id: 3
+    body: "Hugging Face · moonshotai（Kimi-K2.6 / Kimi-K2.7-Code 模型卡）—— K2 系权重 Modified MIT 开源, 可自托管; K3 权重官方承诺 2026 年 7 月 27 日前放出。Kimi 的独一份不是「最便宜」也不是「样样第一」, 而是「整合好的 agent 栈 + 国内可达 + 中文长材料 + 开源权重」叠在一起。截至 2026-07。"
+    url: "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
+    urlLabel: "Hugging Face · Kimi-K2.7-Code"
+  - id: 4
+    body: "Kimi Code 官方文档 · 会员权益 —— Kimi Code 随 Kimi 会员订阅一同提供、并非独立商品; k3 需 Moderato 档及以上、1M 上下文需 Allegretto 档及以上, 高速版需 Allegretto; 每 5 小时约 300–1,200 次请求、并发 30。官方预告「会员权益将与 Kimi Code 权益拆分、可按需分别购买」, 截至 2026-07-17 未上线、新套餐档名与价格未公布。"
+    url: "https://www.kimi.com/code/docs/kimi-code/membership.html"
+    urlLabel: "Kimi Code · 会员权益"
+---
+
+<Cover />
+
+<T zh="一本书读到这里, 该落到两个决定: 这套栈你买哪一档, 以及哪些活根本不该交给它。选档不是看价格, 是看你缺的是哪样分项额度; 取舍不是看谁口号大, 是看你最常干的活谁做得最顺。" />
+
+<SectionTitle number="I"><T zh="五档差的是分项额度, 不是模型" /></SectionTitle>
+
+<T zh="你多付的钱, 买的是各项用量, 不是一个更聪明的模型 —— 五档跑的是同一套模型。" />
+
+<T zh={<>截至 2026-07, Kimi 会员五档全用音乐术语命名: Adagio（免费）、Andante ¥49、Moderato ¥99、Allegretto ¥199、Allegro ¥699。<Footnote n={1} />它们之间差的不是模型, 而是<strong>分项额度</strong>: Agent 用量（约 6 → 360 个）、Kimi Code 倍率（1x → 60x）、Agent 集群（Moderato 25 次 / Allegretto 50 / Allegro 120 —— 门槛比本书上一版低了一档）、专业数据库调用（200 → 12,000 次）, 以及 Kimi Claw 从 Allegretto（¥199）才解锁。还要注意额度结构变了: Agent、深度研究、PPT、Kimi Claw 这些<strong>共享一个 token 额度池</strong>（次数只是折算估值）, 只有 Kimi Code 是单独的池 —— 你 Swarm 跑得猛, 是真的会把 Agent 用量也吃紧的。<Footnote n={1} /></>} />
+
+<T zh="所以选档先问: 你最吃的是哪一样? 重度写码的人盯 Kimi Code 倍率, 常交办成品的人盯 Agent 次数和集群, 多数轻度用户免费的 Adagio 或 ¥49 的 Andante 就够。别照着价目表挑「功能最全」的那档 —— 挑「补上你那块短缺」的那档。" />
+
+<Divider />
+
+<SectionTitle number="II"><T zh="订阅不含 API —— 自动化是另一条账" /></SectionTitle>
+
+<T zh="想把 Kimi 接进脚本和系统, 订阅那点额度不算数; API 是另一套账户、另一条账单。" />
+
+<T zh={<>这条线最容易踩。消费端会员和开放平台（platform.kimi.com）的 API 是两回事: 两套账户、两条计费, 会员买得再高也不附带 API 额度。<Footnote n={2} />API 按 token 计价（旗舰 kimi-k3 每百万 ¥20 输入 / ¥100 输出, 缓存命中 ¥2）, base_url 是 <C>https://api.moonshot.cn/v1</C>, 兼容 OpenAI（第八章那条）。另外第八章还讲过第三条账: 会员自带的 coding 端点（api.kimi.com/coding）—— 三套账户各算各的, 谁的 Key 也别串。判断很简单: 偶尔手动用 → 会员; 要稳定、批量、嵌进产品自动跑 → 走 API 单独算账。会员买的是你自己用, API 买的是让它替系统跑。</>} />
+
+<T zh={<>顺带辟一个传言: 市面上流传的「Kimi Code 独立订阅 $19 / $39」是把国际版会员价张冠李戴。截至 2026-07-17, Kimi Code 仍随会员提供、不是独立商品; 官方只预告了「会员权益将与 Kimi Code 权益拆分、可按需分别购买」, 新套餐的档名和价格还没公布 —— 别按传言里的数字做预算。<Footnote n={4} /></>} />
+
+<Divider />
+
+<SectionTitle number="III"><T zh="取舍: 它的位置, 和什么时候别用它" /></SectionTitle>
+
+<T zh="Kimi 不是「最便宜」, 也不是「样样第一」, 更不是「国产版某家」。把它当谁的平替, 你只会拿它的短处比别人的长处。" />
+
+<T zh={<>认清它的独一份: 不是单项最强, 是<strong>一整套整合好的 agent 栈 + 国内可达 + 中文长材料顺手 + 开源权重打底</strong>叠在一起（现货是 K2 系, K3 权重官方承诺 7 月 27 日前放出）。<Footnote n={3} />选它, 是因为这一整套对上了你的活 —— 要的就是「聊天 + 交办 + 研究 + 写码」一站式、还在国内直连。单拎一项去比, 它可能不占上风。</>} />
+
+<T zh="给一把按场景的尺子（只讲适配, 不踩同行）: 要一站式的 agent 栈、中文长材料、国内顺手的编码 → Kimi; 最难的推理、最吃打磨的 agentic coding、一锤定音的输出 → 回 Claude / GPT 这些前沿; 极致性价比的推理、或想拿开源权重自建省钱 → DeepSeek 更划算（它专打便宜这条, 而 Kimi 已经涨价离场）; 多模态创作、绑字节生态 → 豆包更全; 阿里生态、企业接入合规 → 通义更稳。" />
+
+<T zh="选主力的标准不是谁 benchmark 高, 是「你最常干的那类活, 谁做得最顺」。多数人需要一两个主力加一个备胎, 不是五个都开着。这一节最该被你截图存下来。" />
+
+<Checklist>
+  <Check><T zh="列出你上个月真花掉额度的 5 类活。" /></Check>
+  <Check><T zh="对照五档的 Agent 次数 / Kimi Code 倍率 / 集群, 看你其实卡在哪一样。" /></Check>
+  <Check><T zh="挑出其中该走 API、或换前沿 / DeepSeek / 豆包 / 通义 更顺的活。" /></Check>
+  <Check><T zh="定下你的主力档位与「什么时候升 / 降档」的触发条件。" /></Check>
+</Checklist>
+
+<Callout kind="key" zh="收束就一句: Kimi 这一年从长文本工具长成了一套栈。它不靠便宜取胜, 靠的是这一整套对上你的活。选对那一面、买对那一档, 比追更高的档位重要 —— 它对不上的活, 也大方交给更合适的那一个。" />
+
+<References />
+
+<Kicker zh={"便宜是 DeepSeek 的活,\nKimi 卖的是整套栈"} sig="Kimi · Zhapar" />

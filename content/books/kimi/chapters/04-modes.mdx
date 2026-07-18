@@ -1,0 +1,70 @@
+---
+references:
+  - id: 1
+    body: "Kimi 帮助中心 · Agent 模式 —— 截至 2026-07, 输入框可在 Instant / Thinking / Agent / Agent Swarm 之间切换; Agent 模式不只回答, 直接产出网站 / 幻灯 / 文档 / 表格等成品。"
+    url: "https://www.kimi.com/zh-cn/help/agent/agent-overview"
+    urlLabel: "Kimi 帮助中心 · Agent"
+  - id: 2
+    body: "Kimi 帮助中心 · Agent Swarm —— Agent Swarm 是多智能体协作模式, 派出一群子 agent 并行干活、各自独立再归并, 面向大规模查找 / 处理 / 多视角的任务; 现由 Kimi K3 驱动（K3 集群）。截至 2026-07 仍带 Beta 说明, Moderato 档起可用（25 次 / Allegretto 50 次 / Allegro 120 次）。"
+    url: "https://www.kimi.com/zh-cn/help/agent/agent-swarm"
+    urlLabel: "Kimi 帮助中心 · Agent Swarm"
+  - id: 3
+    body: "Kimi 开放平台 · API 总览 —— 思考（深想）在 kimi-k2.6 上可显式关闭（type: disabled, 经 extra_body 传）; kimi-k3 与 kimi-k2.7-code 的思考永远开启。输入框里 Instant（关思考）与 Thinking（开思考）的切换对应这个开关。截至 2026-07。"
+    url: "https://platform.kimi.com/docs/api/overview"
+    urlLabel: "Kimi 开放平台 · API 总览"
+---
+
+<Cover />
+
+<T zh="Kimi 的输入框不只是个打字框 —— 旁边有一个你大概没怎么动过的模式开关: Instant、Thinking、Agent、Agent Swarm。多数人一直留在默认那档, 没意识到换一档, 它干的活就完全是另一回事。" />
+
+<T zh={<>这四个模式, 是 Kimi 把「答你一句」和「替你做成」分开的旋钮。<Footnote n={1} />挑错了, 要么简单问题让你干等、要么把一句话能答的事支起一整套 agent。这章给一张对照: 哪一档对哪类活, 以及一条贯穿始终的判断 —— 挑能办成事的<strong>最低</strong>那一档。</>} />
+
+<SectionTitle number="I"><T zh="四个模式, 是从「答」到「做」的四档" /></SectionTitle>
+
+<T zh="它们不是四个并列的功能, 是一条从「给你一句话」到「替你干一整件事」的阶梯。" />
+
+<Dl>
+<Di term={<T zh="Instant · 快答" />} desc={<T zh="不开思考, 秒回。查事实、改错字、闲聊、要立刻拿到一句话 —— 这一档够。" />} />
+<Di term={<T zh="Thinking · 深想" />} desc={<T zh="先在内部推几步再答。多步推理、算账、写码、要核对的活。第三章细讲这条线。" />} />
+<Di term={<T zh="Agent · 交办" />} desc={<T zh="不只给答案, 直接做出网站 / 幻灯 / 文档 / 表格等成品。你要的是一份能交的件, 不是一段文字 —— 细看第五章。" />} />
+<Di term={<T zh="Agent Swarm · 集群" />} desc={<T zh="派出一群子 agent 并行干, 扛大规模的查找、处理、多视角综合。大活才动用 —— 细看第六章。" />} />
+</Dl>
+
+<T zh="一句话记住分界: 前两档（Instant / Thinking）是「它答、你做」, 后两档（Agent / Agent Swarm）是「它做、你验」。你这次到底要一段回答, 还是要一件成品, 决定了你该停在哪一档。" />
+
+<KimiModesDiagram />
+
+<Divider />
+
+<SectionTitle number="II"><T zh="往「做」那头走, 代价也一档档涨" /></SectionTitle>
+
+<T zh="越往右, 它替你扛得越多, 你付出的时间、额度和风险也越大。" />
+
+<T zh={<>Instant 几乎不花什么; Thinking 拿时间换深度（第三章那条线）; Agent 一跑就吃掉共享额度池里的一份（各档约合 6–360 个）和并发额度, 还得等它把成品做完; Agent Swarm 更猛, 派一群子 agent, 烧的是按档限次的集群额度（Moderato 25 次 / Allegretto 50 / Allegro 120）, 一次消耗约为普通 Agent 任务的数倍, 而且目前还是 Beta。<Footnote n={2} />代价不只是钱和时间 —— 越自动的模式, 越可能<strong>把一个偏掉的方向一口气做到底</strong>。它做得越多, 你越要在它出发前就把要的东西说清。</>} />
+
+<Divider />
+
+<SectionTitle number="III"><T zh="默认够用, 别为「更高级」上更高的档" /></SectionTitle>
+
+<T zh="一个常见的错觉是「上更高级的模式 = 更好的结果」。多数日常活, 停在前两档才对。" />
+
+<T zh={<>挑模式的标准只有一个: 这件活的<strong>形状</strong>。要一句答案, 用 Instant; 要一段讲得通的推理, 用 Thinking<Footnote n={3} />; 要一份能直接交的成品（PPT、网页、表）, 才上 Agent; 要并行处理一大批、或要多个独立视角, 才动 Agent Swarm。反过来硬套只会浪费: 拿 Agent 去问一个事实, 是等十分钟换一句本该秒回的话; 拿 Swarm 去做一件单线就能办的事, 是为不存在的规模付费。</>} />
+
+<T zh="所以这章的判断就一句: 先看活的形状, 再挑能办成它的最低那一档。能用 Instant 解决的, 别开 Thinking; 一段文字够用的, 别叫 Agent。把模式当工具挑, 不当「等级」追。" />
+
+<Steps>
+  <Step title={<T zh="挑最近 3 件你交给 Kimi 的活" />}>
+    <T zh="翻记录, 挑 3 件不同类型的: 比如查个资料、改段代码、做份汇报。" />
+  </Step>
+  <Step title={<T zh="给每件标一个「最低可行模式」" />}>
+    <T zh="按活的形状判断: 它要的是一句话、一段推理、还是一份成品 / 一批处理? 标上 Instant / Thinking / Agent / Swarm。" />
+  </Step>
+  <Step title={<T zh="对比你当时实际用的那档" />}>
+    <T zh="多半你要么全停在默认、没用上该用的 Agent, 要么反过来给小事上了大模式。记下这个差, 就是你以后挑档的依据。" />
+  </Step>
+</Steps>
+
+<References />
+
+<Kicker zh={"四个模式, 从「答你」到「替你做」;\n挑能办成事的最低那一档"} sig="Kimi · Zhapar" />

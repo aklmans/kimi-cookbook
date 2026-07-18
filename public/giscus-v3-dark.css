@@ -1,0 +1,220 @@
+/* Giscus custom theme · Aklman v3 (dark) — the dark-mode mirror of
+   giscus-v3-light.css. Same structure, dark v3 palette. */
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+main {
+  /* ---------- Surfaces ---------- */
+  --color-canvas-default: #1A1A1A;
+  --color-canvas-overlay: #1A1A1A;
+  --color-canvas-inset: #232323;
+  --color-canvas-subtle: #232323;
+
+  /* ---------- Text ---------- */
+  --color-fg-default: #FAFAFA;
+  --color-fg-muted: #C5C5C5;
+  --color-fg-subtle: #8E8E8E;
+  --color-fg-on-emphasis: #1A1A1A;
+
+  /* ---------- Borders ---------- */
+  --color-border-default: #3F3F3D;
+  --color-border-muted: rgba(63, 63, 61, 0.6);
+  --color-neutral-emphasis-plus: #FAFAFA;
+  --color-neutral-emphasis: #8E8E8E;
+  --color-neutral-muted: rgba(63, 63, 61, 0.4);
+  --color-neutral-subtle: rgba(63, 63, 61, 0.15);
+
+  /* ---------- Accent (warm orange, dark variant) ---------- */
+  --color-accent-fg: #E8835B;
+  --color-accent-emphasis: #E8835B;
+  --color-accent-muted: rgba(232, 131, 91, 0.4);
+  --color-accent-subtle: rgba(232, 131, 91, 0.1);
+
+  --color-success-fg: #FAFAFA;
+  --color-success-emphasis: #FAFAFA;
+  --color-attention-fg: #E8835B;
+  --color-attention-emphasis: #E8835B;
+  --color-severe-fg: #E8835B;
+  --color-danger-fg: #E8835B;
+  --color-danger-emphasis: #E8835B;
+
+  /* ---------- Buttons ---------- */
+  --color-btn-text: #FAFAFA;
+  --color-btn-bg: #1A1A1A;
+  --color-btn-border: #3F3F3D;
+  --color-btn-shadow: none;
+  --color-btn-inset-shadow: none;
+  --color-btn-hover-bg: #232323;
+  --color-btn-hover-border: #FAFAFA;
+  --color-btn-active-bg: #232323;
+  --color-btn-active-border: #FAFAFA;
+  --color-btn-selected-bg: #232323;
+  --color-btn-counter-bg: rgba(63, 63, 61, 0.5);
+
+  --color-btn-primary-text: #1A1A1A;
+  --color-btn-primary-bg: #FAFAFA;
+  --color-btn-primary-border: #FAFAFA;
+  --color-btn-primary-shadow: none;
+  --color-btn-primary-inset-shadow: none;
+  --color-btn-primary-hover-bg: #C5C5C5;
+  --color-btn-primary-hover-border: #C5C5C5;
+  --color-btn-primary-selected-bg: #FAFAFA;
+  --color-btn-primary-selected-shadow: none;
+
+  --color-action-list-item-default-hover-bg: #232323;
+  --color-segmented-control-bg: #232323;
+  --color-segmented-control-button-bg: #1A1A1A;
+  --color-segmented-control-button-selected-border: #FAFAFA;
+
+  --color-primer-shadow-inset: none;
+  --color-primer-shadow-focus: 0 0 0 1px #FAFAFA;
+
+  /* ---------- Primer V8 button + emphasis tokens ---------- */
+  --button-primary-bgColor-rest: #FAFAFA;
+  --button-primary-bgColor-hover: #C5C5C5;
+  --button-primary-bgColor-active: #C5C5C5;
+  --button-primary-bgColor-disabled: #3F3F3D;
+  --button-primary-fgColor-rest: #1A1A1A;
+  --button-primary-fgColor-disabled: rgba(26, 26, 26, 0.55);
+  --button-primary-borderColor-rest: #FAFAFA;
+  --button-primary-borderColor-hover: #C5C5C5;
+  --button-primary-borderColor-active: #C5C5C5;
+  --button-primary-shadow-resting: 0 0;
+  --button-primary-shadow-hover: 0 0;
+  --button-primary-shadow-active: 0 0;
+  --button-primary-shadow-inset: 0 0;
+
+  --button-success-bgColor-rest: #FAFAFA;
+  --button-success-bgColor-hover: #C5C5C5;
+  --button-success-fgColor-rest: #1A1A1A;
+  --button-success-borderColor-rest: #FAFAFA;
+
+  --bgColor-emphasis: #FAFAFA;
+  --fgColor-onEmphasis: #1A1A1A;
+  --borderColor-emphasis: #FAFAFA;
+  --bgColor-success-emphasis: #FAFAFA;
+  --bgColor-attention-emphasis: #E8835B;
+
+  /* ---------- Syntax highlighting ---------- */
+  --color-prettylights-syntax-comment: #8E8E8E;
+  --color-prettylights-syntax-constant: #E8835B;
+  --color-prettylights-syntax-entity: #FAFAFA;
+  --color-prettylights-syntax-storage-modifier-import: #FAFAFA;
+  --color-prettylights-syntax-entity-tag: #E8835B;
+  --color-prettylights-syntax-keyword: #E8835B;
+  --color-prettylights-syntax-string: #C5C5C5;
+  --color-prettylights-syntax-variable: #FAFAFA;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #E8835B;
+  --color-prettylights-syntax-invalid-illegal-text: #1A1A1A;
+  --color-prettylights-syntax-invalid-illegal-bg: #E8835B;
+  --color-prettylights-syntax-string-regexp: #C5C5C5;
+  --color-prettylights-syntax-markup-heading: #FAFAFA;
+  --color-prettylights-syntax-markup-italic: #FAFAFA;
+  --color-prettylights-syntax-markup-bold: #FAFAFA;
+  --color-prettylights-syntax-markup-deleted-text: #FAFAFA;
+  --color-prettylights-syntax-markup-deleted-bg: rgba(63, 63, 61, 0.4);
+  --color-prettylights-syntax-markup-inserted-text: #FAFAFA;
+  --color-prettylights-syntax-markup-inserted-bg: rgba(63, 63, 61, 0.4);
+  --color-prettylights-syntax-markup-changed-text: #FAFAFA;
+  --color-prettylights-syntax-markup-changed-bg: rgba(232, 131, 91, 0.1);
+  --color-prettylights-syntax-markup-ignored-text: #1A1A1A;
+  --color-prettylights-syntax-markup-ignored-bg: #FAFAFA;
+  --color-prettylights-syntax-meta-diff-range: #8E8E8E;
+  --color-prettylights-syntax-brackethighlighter-angle: #8E8E8E;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #3F3F3D;
+  --color-prettylights-syntax-constant-other-reference-link: #C5C5C5;
+
+  /* ---------- v3 type stack ---------- */
+  --primer-fontStack-sansSerif: "Source Serif 4", "Noto Serif SC", Georgia, serif;
+  --primer-fontStack-system: "Source Serif 4", "Noto Serif SC", Georgia, serif;
+  --primer-fontStack-monospace: "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+
+main,
+main * {
+  font-family: var(--primer-fontStack-system);
+}
+main code,
+main pre,
+main kbd,
+main samp,
+main .gsc-comment-box-textarea {
+  font-family: var(--primer-fontStack-monospace);
+}
+
+main .markdown-body {
+  font-size: 16px;
+  line-height: 1.78;
+  letter-spacing: -0.005em;
+}
+main .markdown-body code,
+main .markdown-body pre {
+  background: var(--color-canvas-inset);
+  border-radius: 0;
+}
+
+main .gsc-comment,
+main .gsc-comment-box,
+main .gsc-reactions-popover,
+main .gsc-tab-button,
+main .btn,
+main .Button,
+main button,
+main input,
+main textarea {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+main .gsc-comment,
+main .gsc-comment-box,
+main .gsc-comment-box-tabs,
+main .gsc-comment-box-preview {
+  border-width: 0.5px !important;
+}
+
+main .gsc-comment-author-name,
+main .gsc-comment-author,
+main .gsc-comment-edited,
+main .gsc-comment-header time,
+main .gsc-comment-header .Link--secondary {
+  font-family: var(--primer-fontStack-monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+main a:not(.btn):not(.Button):not(.gsc-reaction-button) {
+  color: var(--color-accent-fg);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent-fg);
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 3px;
+}
+main a:not(.btn):not(.Button):not(.gsc-reaction-button):hover {
+  text-decoration-thickness: 1px;
+}
+
+/* Defensive primary-button overrides — see giscus-v3-light.css for rationale.
+   Dark mode: paper-white box, ink text (inverted v3 emphasis). */
+main .btn-primary,
+main button.btn-primary,
+main [class*="btn-primary"],
+main .Button--primary,
+main button.Button--primary,
+main button[data-variant="primary"] {
+  background-color: #FAFAFA !important;
+  background-image: none !important;
+  color: #1A1A1A !important;
+  border-color: #FAFAFA !important;
+  box-shadow: none !important;
+}
+main .btn-primary:hover,
+main button.btn-primary:hover,
+main [class*="btn-primary"]:hover,
+main .Button--primary:hover,
+main button.Button--primary:hover,
+main button[data-variant="primary"]:hover {
+  background-color: #C5C5C5 !important;
+  border-color: #C5C5C5 !important;
+}
