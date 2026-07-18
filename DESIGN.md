@@ -53,7 +53,7 @@ If a change violates one of them it's wrong, no matter how
 --ink-3       #6B6B6B  tertiary, labels, metadata (light) / #8A8A8A (dark)
 --rule        #9A9A9A  divider 0.5px lines (light) / #4A4A4A (dark)
 --border      #C0BFBA  card borders, subtle frames (light) / #3A3A3A (dark)
---accent      #C95F3D  THE warm orange (light) / #E8835B (dark, brighter)
+--accent      #1783FF  THE Kimi blue (light) / #5E9FFF (dark, brighter)
 --code-bg     #F0EFEB  cream code-block tint (light) / #2A2A2A (dark)
 --row-hover   #F5F2EC  list row hover (light) / #232323 (dark)
 ```

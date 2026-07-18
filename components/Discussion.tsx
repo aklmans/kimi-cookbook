@@ -14,7 +14,7 @@ const CONFIGURED = Boolean(REPO && REPO_ID && CATEGORY && CATEGORY_ID);
 
 /* Cache-bust for the custom giscus theme CSS in /public. giscus and the browser
    cache the theme stylesheet hard, so bump this whenever giscus-v3-*.css change. */
-const GISCUS_THEME_VERSION = "20260616";
+const GISCUS_THEME_VERSION = "20260718";
 
 type DiscussionState =
   | "closed"

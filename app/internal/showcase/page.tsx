@@ -23,7 +23,7 @@ const SWATCHES: { name: string; hex: string; accent?: boolean }[] = [
   { name: "ink-3", hex: "#6B6B6B" },
   { name: "rule", hex: "#9A9A9A" },
   { name: "border", hex: "#C0BFBA" },
-  { name: "accent", hex: "#C95F3D", accent: true },
+  { name: "accent", hex: "#1783FF", accent: true },
   { name: "code-bg", hex: "#F0EFEB" },
 ];
 
@@ -132,7 +132,7 @@ export default function ShowcasePage() {
                 <p className="note__label">— Dual Theme</p>
                 <p className="note__body">
                   浅色 (#FAFAFA / #1A1A1A) 与深色 (#1A1A1A / #FAFAFA)
-                  是互为反演的同一套系统; accent 在深色下提亮为 #E8835B
+                  是互为反演的同一套系统; accent 在深色下提亮为 #5E9FFF
                   以保持可读对比。点击右上 ☼/☾ 切换。
                 </p>
               </div>

@@ -26,7 +26,7 @@ export default async function Image({ params }: { params: Promise<Params> }) {
   const ch = found?.chapter;
   const brand = book
     ? coverBrandForBook(book)
-    : { label: slug, mark: slug.slice(0, 3).toUpperCase(), accent: "#C95F3D" };
+    : { label: slug, mark: slug.slice(0, 3).toUpperCase(), accent: "#1783FF" };
   const brandMark = ogText(brand.mark);
   const brandLabel = ogText(brand.label);
   const bookTitle = ogText(book?.title ?? slug);
@@ -138,7 +138,7 @@ export default async function Image({ params }: { params: Promise<Params> }) {
             fontSize: 18,
             fontWeight: 600,
             letterSpacing: 0,
-            color: "#C95F3D",
+            color: "#1783FF",
             margin: "48px 0 0 0",
           }}
         >

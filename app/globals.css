@@ -10116,8 +10116,8 @@ html {
        saturate(1.6); push a bit further so keyword / string / function separate
        more clearly on paper. Supersedes Round-84's filter (last rule wins). One
        global filter is the only lever — Shiki tokens have no per-type class.
-   3 · Accent restraint — the terracotta stays the structural signature (title
-       stops `.stop`, chapter/section eyebrows `.v3-section__number` — left
+   3 · Accent restraint — the Kimi blue (Round-100) stays the structural signature
+       (title stops `.stop`, chapter/section eyebrows `.v3-section__number` — left
        untouched), but the purely-decorative uses go to ink: the divider dots and
        the TOC / reference numbers. The divider needs !important to beat the
        verbatim print rule's `color: #C95F3D !important`; the two number styles
@@ -10735,4 +10735,29 @@ html {
 @media print {
   @page :left  { @bottom-right { content: "KIMI"; } }
   @page :right { @bottom-right { content: "KIMI"; } }
+}
+
+/* ============================================================
+   Round-100 · Kimi blue accent — this is now a single-book Kimi site,
+   so the editorial accent leaves the old library terracotta (#C95F3D)
+   for the Kimi brand blue already carried by the cover's orbit
+   satellite (#1783FF): one blue across cover, chrome, and print.
+   The warm paper bg and the rest of the language stay untouched.
+   Same selectors as the verbatim token defs / print overrides, later
+   in the cascade — wins without editing the verbatim block. Dark mode
+   brightens, mirroring the old #C95F3D → #E8835B pattern. Accent use
+   stays decorative-only (stops, section numbers, underlines, hovers),
+   so #1783FF's ≈3.5:1 on #FAFAFA is fine (large/decorative ≥3:1).
+   Print: recolors the structural accents only (link underline, title
+   stop, section number) — the decorative print accents deliberately
+   stay ink per the earlier accent-restraint block (divider dots, TOC /
+   reference numbers), which this block must not override.
+   ============================================================ */
+:root { --accent: #1783FF; }
+:root[data-theme="light"] { --accent: #1783FF; }
+:root[data-theme="dark"] { --accent: #5E9FFF; }
+@media print {
+  a { text-decoration-color: #1783FF !important; }
+  .stop { color: #1783FF !important; }
+  .v3-section__number { color: #1783FF !important; }
 }

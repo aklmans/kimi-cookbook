@@ -296,7 +296,7 @@ async function createCanonFigureCanvas(slide: HTMLElement) {
   const muted = cssToken("--ink-2", "#3a3a3a");
   const subtle = cssToken("--ink-3", "#6b6b6b");
   const border = cssToken("--border", "#c0bfba");
-  const accent = cssToken("--accent", "#c95f3d");
+  const accent = cssToken("--accent", "#1783ff");
   const bg = cssToken("--bg", "#fafafa");
   const title =
     slide.querySelector<HTMLElement>(".figcard-title")?.innerText.trim() ||

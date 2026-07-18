@@ -25,18 +25,18 @@ main {
   --color-neutral-subtle: rgba(63, 63, 61, 0.15);
 
   /* ---------- Accent (warm orange, dark variant) ---------- */
-  --color-accent-fg: #E8835B;
-  --color-accent-emphasis: #E8835B;
+  --color-accent-fg: #5E9FFF;
+  --color-accent-emphasis: #5E9FFF;
   --color-accent-muted: rgba(232, 131, 91, 0.4);
   --color-accent-subtle: rgba(232, 131, 91, 0.1);
 
   --color-success-fg: #FAFAFA;
   --color-success-emphasis: #FAFAFA;
-  --color-attention-fg: #E8835B;
-  --color-attention-emphasis: #E8835B;
-  --color-severe-fg: #E8835B;
-  --color-danger-fg: #E8835B;
-  --color-danger-emphasis: #E8835B;
+  --color-attention-fg: #5E9FFF;
+  --color-attention-emphasis: #5E9FFF;
+  --color-severe-fg: #5E9FFF;
+  --color-danger-fg: #5E9FFF;
+  --color-danger-emphasis: #5E9FFF;
 
   /* ---------- Buttons ---------- */
   --color-btn-text: #FAFAFA;
@@ -93,20 +93,20 @@ main {
   --fgColor-onEmphasis: #1A1A1A;
   --borderColor-emphasis: #FAFAFA;
   --bgColor-success-emphasis: #FAFAFA;
-  --bgColor-attention-emphasis: #E8835B;
+  --bgColor-attention-emphasis: #5E9FFF;
 
   /* ---------- Syntax highlighting ---------- */
   --color-prettylights-syntax-comment: #8E8E8E;
-  --color-prettylights-syntax-constant: #E8835B;
+  --color-prettylights-syntax-constant: #5E9FFF;
   --color-prettylights-syntax-entity: #FAFAFA;
   --color-prettylights-syntax-storage-modifier-import: #FAFAFA;
-  --color-prettylights-syntax-entity-tag: #E8835B;
-  --color-prettylights-syntax-keyword: #E8835B;
+  --color-prettylights-syntax-entity-tag: #5E9FFF;
+  --color-prettylights-syntax-keyword: #5E9FFF;
   --color-prettylights-syntax-string: #C5C5C5;
   --color-prettylights-syntax-variable: #FAFAFA;
-  --color-prettylights-syntax-brackethighlighter-unmatched: #E8835B;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #5E9FFF;
   --color-prettylights-syntax-invalid-illegal-text: #1A1A1A;
-  --color-prettylights-syntax-invalid-illegal-bg: #E8835B;
+  --color-prettylights-syntax-invalid-illegal-bg: #5E9FFF;
   --color-prettylights-syntax-string-regexp: #C5C5C5;
   --color-prettylights-syntax-markup-heading: #FAFAFA;
   --color-prettylights-syntax-markup-italic: #FAFAFA;

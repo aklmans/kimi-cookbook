@@ -28,19 +28,19 @@ main {
   --color-neutral-subtle: rgba(192, 191, 186, 0.15);
 
   /* ---------- Accent (warm orange) ---------- */
-  --color-accent-fg: #C95F3D;
-  --color-accent-emphasis: #C95F3D;
+  --color-accent-fg: #1783FF;
+  --color-accent-emphasis: #1783FF;
   --color-accent-muted: rgba(201, 95, 61, 0.4);
   --color-accent-subtle: rgba(201, 95, 61, 0.1);
 
   /* v3 collapses status colors into the same restrained palette */
   --color-success-fg: #1A1A1A;
   --color-success-emphasis: #1A1A1A;
-  --color-attention-fg: #C95F3D;
-  --color-attention-emphasis: #C95F3D;
-  --color-severe-fg: #C95F3D;
-  --color-danger-fg: #C95F3D;
-  --color-danger-emphasis: #C95F3D;
+  --color-attention-fg: #1783FF;
+  --color-attention-emphasis: #1783FF;
+  --color-severe-fg: #1783FF;
+  --color-danger-fg: #1783FF;
+  --color-danger-emphasis: #1783FF;
 
   /* ---------- Buttons ---------- */
   --color-btn-text: #1A1A1A;
@@ -100,20 +100,20 @@ main {
   --fgColor-onEmphasis: #FAFAFA;
   --borderColor-emphasis: #1A1A1A;
   --bgColor-success-emphasis: #1A1A1A;
-  --bgColor-attention-emphasis: #C95F3D;
+  --bgColor-attention-emphasis: #1783FF;
 
   /* ---------- Syntax highlighting (code fences in comments) ---------- */
   --color-prettylights-syntax-comment: #6B6B6B;
-  --color-prettylights-syntax-constant: #C95F3D;
+  --color-prettylights-syntax-constant: #1783FF;
   --color-prettylights-syntax-entity: #1A1A1A;
   --color-prettylights-syntax-storage-modifier-import: #1A1A1A;
-  --color-prettylights-syntax-entity-tag: #C95F3D;
-  --color-prettylights-syntax-keyword: #C95F3D;
+  --color-prettylights-syntax-entity-tag: #1783FF;
+  --color-prettylights-syntax-keyword: #1783FF;
   --color-prettylights-syntax-string: #3A3A3A;
   --color-prettylights-syntax-variable: #1A1A1A;
-  --color-prettylights-syntax-brackethighlighter-unmatched: #C95F3D;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #1783FF;
   --color-prettylights-syntax-invalid-illegal-text: #FAFAFA;
-  --color-prettylights-syntax-invalid-illegal-bg: #C95F3D;
+  --color-prettylights-syntax-invalid-illegal-bg: #1783FF;
   --color-prettylights-syntax-string-regexp: #3A3A3A;
   --color-prettylights-syntax-markup-heading: #1A1A1A;
   --color-prettylights-syntax-markup-italic: #1A1A1A;

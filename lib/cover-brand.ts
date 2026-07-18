@@ -40,7 +40,7 @@ export function coverBrandForBook(
     BOOK_COVER_BRANDS[book.slug] ?? {
       label: book.titleEn || book.title,
       mark: fallbackMark(book),
-      accent: "#C95F3D",
+      accent: "#1783FF",
       hasLobeIcon: false,
     }
   );
