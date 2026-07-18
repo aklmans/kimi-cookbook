@@ -2754,6 +2754,74 @@ assertExists(
   "Site must expose a site-level /llms.txt index so AI agents can discover every published book from one URL.",
 );
 
+/* ── Mini Program content API contract ──
+   The WeChat Mini Program (kimi-cookbook-miniapp) reads the book through
+   /api/mp/v1. Pin the surface: routes exist, the chapters route follows
+   the site's static-params model, and the renderer degrades MDX to the
+   restricted HTML subset mp-html understands (behavioral coverage lives
+   in smoke.mjs against the live server). */
+assertExists(
+  "app/api/mp/v1/book/route.ts",
+  "Mini Program book API route must exist.",
+);
+assertExists(
+  "app/api/mp/v1/chapters/[slug]/route.ts",
+  "Mini Program chapter API route must exist.",
+);
+assertExists(
+  "app/api/mp/v1/version/route.ts",
+  "Mini Program cache-invalidation version route must exist.",
+);
+assertExists(
+  "lib/mp-render.tsx",
+  "Mini Program MDX → restricted-HTML renderer must exist.",
+);
+assertIncludes(
+  "app/api/mp/v1/chapters/[slug]/route.ts",
+  "export const dynamicParams = false;",
+  "Mini Program chapter API should disable unspecified dynamic params.",
+);
+assertIncludes(
+  "app/api/mp/v1/chapters/[slug]/route.ts",
+  "generateStaticParams",
+  "Mini Program chapter API should prerender every chapter.",
+);
+assertIncludes(
+  "app/api/mp/v1/book/route.ts",
+  'dynamic = "force-static"',
+  "Mini Program book API should be statically generated.",
+);
+assertIncludes(
+  "lib/mp-render.tsx",
+  "renderToStaticMarkup",
+  "Mini Program renderer should compile MDX to a static HTML string.",
+);
+assertIncludes(
+  "lib/mp-render.tsx",
+  "sanitizeHtml",
+  "Mini Program renderer should sanitize the emitted HTML subset.",
+);
+assertNotIncludes(
+  "lib/mp-render.tsx",
+  "rehypeAutolinkHeadings",
+  "Mini Program HTML should not carry self-link heading anchors a Mini Program can't navigate.",
+);
+assertIncludes(
+  "next.config.ts",
+  '"/api/mp/v1/chapters/[slug]"',
+  "Standalone output must trace chapter MDX for the Mini Program chapter API.",
+);
+assertIncludes(
+  "scripts/smoke.mjs",
+  "/api/mp/v1/book",
+  "Smoke must cover the Mini Program book API.",
+);
+assertIncludes(
+  "scripts/smoke.mjs",
+  "/api/mp/v1/chapters/08-code",
+  "Smoke must cover the Mini Program chapter HTML contract.",
+);
+
 assertIncludes(
   "app/sitemap.ts",
   "getAllBooks()",

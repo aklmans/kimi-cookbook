@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/search-index.json": ["./content/books/**/*.mdx"],
     "/books/[slug]/llms.md": ["./content/books/**/*.mdx"],
+    "/api/mp/v1/chapters/[slug]": ["./content/books/**/*.mdx"],
   },
   /* Single-book site: the home page IS the book's intro page. Proxy `/`
      to the book detail route while keeping the URL at `/` (rewrites run

@@ -143,6 +143,60 @@ async function main() {
     !kimiLlms.includes("<T "),
   );
 
+  // ── Mini Program content API (/api/mp/v1) ──
+  async function fetchJson(url) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      return res.ok ? await res.json() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  const mpBook = await fetchJson(`${BASE_URL}/api/mp/v1/book`);
+  check(
+    "/api/mp/v1/book returns the single book with its chapter list",
+    mpBook?.slug === "kimi" && mpBook?.chapters?.length === 10,
+  );
+
+  const mpVersion = await fetchJson(`${BASE_URL}/api/mp/v1/version`);
+  check(
+    "/api/mp/v1/version exposes a cache-invalidation version",
+    typeof mpVersion?.version === "string" && mpVersion.version.length > 0,
+  );
+
+  const mpIntro = await fetchJson(`${BASE_URL}/api/mp/v1/chapters/01-intro`);
+  check(
+    "/api/mp/v1/chapters/01-intro renders cover + footnotes",
+    !!mpIntro && mpIntro.html.includes("<h1") && mpIntro.html.includes("<sup"),
+  );
+
+  const mpCode = await fetchJson(`${BASE_URL}/api/mp/v1/chapters/08-code`);
+  check(
+    "/api/mp/v1/chapters/08-code keeps <pre> + Shiki inline colors",
+    !!mpCode &&
+      mpCode.html.includes("<pre") &&
+      mpCode.html.includes('style="color:'),
+  );
+  const mpHtmlSafe = [mpIntro, mpCode].every(
+    (c) =>
+      c &&
+      !c.html.toLowerCase().includes("<script") &&
+      !c.html.toLowerCase().includes("<iframe") &&
+      !c.html.includes('class="v3-'),
+  );
+  check(
+    "/api/mp/v1 chapter HTML is the restricted safe subset (no script/iframe/v3-chrome)",
+    mpHtmlSafe,
+  );
+  check(
+    "/api/mp/v1/chapters/08-code carries prev/next nav",
+    !!mpCode && mpCode.prev?.slug === "07-research" && mpCode.next?.slug === "09-selection",
+  );
+
+  const mpMissing = await fetchStatus(`${BASE_URL}/api/mp/v1/chapters/not-real`);
+  check("/api/mp/v1/chapters/not-real returns 404", mpMissing === 404);
+
   // ── Browser checks (Playwright) ──
   const browser = await chromium.launch({ headless: true });
   try {
