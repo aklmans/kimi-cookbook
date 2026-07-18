@@ -10791,3 +10791,34 @@ html {
   --code-text: #E2E6EC;
   --code-rule: var(--accent);
 }
+
+/* ============================================================
+   Round-102 · Header brand mark — the plain "Kimi" text brand becomes
+   the site's own logo + name: the 月之暗面 tile (black rounded tile,
+   paper crescent, one Kimi-blue satellite — same composition as
+   favicon.svg) next to a "Kimi Cookbook" wordmark in the header's
+   mono-uppercase chrome style. Flex so the mark and text baseline
+   align; a hairline ring keeps the black tile legible on the dark
+   theme's near-black header.
+   ============================================================ */
+.v3-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.v3-header__logo {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex: none;
+}
+.v3-header__logo .logo-ring {
+  stroke: rgba(26, 26, 26, 0.1);
+  stroke-width: 1;
+}
+:root[data-theme="dark"] .v3-header__logo .logo-ring {
+  stroke: rgba(250, 250, 250, 0.22);
+}
+@media (max-width: 640px) {
+  .v3-header__logo { width: 18px; height: 18px; }
+}

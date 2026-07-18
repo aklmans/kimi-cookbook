@@ -110,7 +110,7 @@ export function bookPrintCover(
     >
       <div className="print-jacket__masthead">
         <span className="print-jacket__imprint">
-          <T zh="KIMI" en="KIMI" />
+          <T zh="KIMI COOKBOOK" en="KIMI COOKBOOK" />
         </span>
         <span className="print-jacket__serial">NO. {serial}</span>
       </div>

@@ -7,13 +7,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 # Kimi · 从长文本到一套 agent 栈 — Agent Brief
 
 Editorial single-book ebook site — 《Kimi · 从长文本到一套 agent 栈》
-by **Zhapar**, at <https://kimi.read.wiki>. One book about the Kimi
-agent stack, for readers who already pay for Kimi but only use a
-fraction of it. Slimmed down from a multi-book library: the
-architecture still supports N books, the manifest just holds one
-(`lib/books.ts` → `BOOKS = [kimi]`). The home page `/` is proxied to
-`/books/kimi` via a `next.config.ts` rewrite — the book intro page IS
-the landing page.
+by **Zhapar**, at <https://kimi.read.wiki>. The site brand is **Kimi
+Cookbook** (header logo + name); the book itself keeps its full title
+for metadata / RSS / OG. One book about the Kimi agent stack, for
+readers who already pay for Kimi but only use a fraction of it.
+Slimmed down from a multi-book library: the architecture still
+supports N books, the manifest just holds one (`lib/books.ts` →
+`BOOKS = [kimi]`). The home page `/` is proxied to `/books/kimi` via a
+`next.config.ts` rewrite — the book intro page IS the landing page.
 
 **Stack**: Next.js 16 App Router (Turbopack) + React 19 + TypeScript
 strict + Tailwind v4 + MDX (`next-mdx-remote/rsc`) + `next-themes` +

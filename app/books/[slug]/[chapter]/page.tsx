@@ -57,7 +57,7 @@ export async function generateMetadata({
       title: `${ch.title} · ${book.title}`,
       description,
       url: absoluteUrl(url),
-      siteName: "Kimi · 从长文本到一套 agent 栈",
+      siteName: "Kimi Cookbook",
       publishedTime,
       modifiedTime,
       authors: [book.author],

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description:
       "《Kimi · 从长文本到一套 agent 栈》—— Zhapar 写给已经付费 Kimi、却只用到一小部分的人。",
     url: "/about",
-    siteName: "Kimi · 从长文本到一套 agent 栈",
+    siteName: "Kimi Cookbook",
   },
 };
 

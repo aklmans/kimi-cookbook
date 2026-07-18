@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description:
       "Content of the Kimi book is licensed under CC BY-NC-ND 4.0 — free to read, quote, and share; no commercial reuse, no derivatives.",
     url: "/license",
-    siteName: "Kimi · 从长文本到一套 agent 栈",
+    siteName: "Kimi Cookbook",
   },
 };
 

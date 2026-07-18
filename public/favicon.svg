@@ -1,9 +1,15 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-    <defs/>
-    <path fill="#fafafa" stroke="none" d="M 0 0 L 512 0 L 512 512 L 0 512 Z"/>
-    <g>
-        <path fill="#1a1a1a" stroke="none" d="M 232.6 148.8 Q 275.8 147.5 299.4 147.5 Q 308.7 147.5 309 160.6 Q 309 166.1 300.4 180.8 Q 280.9 215.7 252.7 257.9 L 209.8 322.9 Q 206.3 328.6 211.1 328.3 L 296.2 325.1 Q 307.1 325.1 310 331.5 Q 314.2 338.9 314.8 348.8 Q 315.4 354.6 314.2 356.5 Q 312.9 358.1 307.8 358.4 Q 291.8 358.7 241.5 358.7 Q 203.4 359 174.3 359.7 Q 162.5 360.3 161.5 348.5 Q 160.6 341.4 169.8 325.1 Q 183.6 302.4 216.9 252.2 Q 245.7 209 258.5 185.9 Q 261 181.8 261 181.4 Q 260.7 180.8 256.6 180.8 Q 248.6 180.8 224.9 181.8 L 187.4 182.7 Q 175.6 183.4 172.1 176.3 Q 167.3 168 166.3 159.7 Q 164.4 149.1 174.3 149.4 Q 196.1 149.8 232.6 148.8 Z"/>
-    </g>
-    <path fill="#c95f3d" stroke="none" d="M 386 346 C 386 357 377 366 366 366 C 355 366 346 357 346 346 C 346 335 355 326 366 326 C 377 326 386 335 386 346 Z"/>
+  <!-- Kimi Cookbook site mark — the book's 月之暗面 cover as an app tile:
+       black rounded tile, ghost disc, one lit paper crescent on the right
+       limb, and a single satellite in Kimi blue. Same composition as the
+       header logo (components/SiteHeader.tsx · SiteLogo). -->
+  <rect width="512" height="512" rx="112" fill="#0E0E13"/>
+  <mask id="moon-bite">
+    <rect x="64" y="64" width="384" height="384" fill="#fff"/>
+    <circle cx="230" cy="245" r="137" fill="#000"/>
+  </mask>
+  <circle cx="256" cy="256" r="144" fill="#1B1B25"/>
+  <circle cx="256" cy="256" r="144" fill="#EFE8DC" mask="url(#moon-bite)"/>
+  <circle cx="379" cy="144" r="47" fill="#1783FF" opacity="0.18"/>
+  <circle cx="379" cy="144" r="28" fill="#1783FF"/>
 </svg>
-
