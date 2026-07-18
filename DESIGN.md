@@ -54,7 +54,7 @@ If a change violates one of them it's wrong, no matter how
 --rule        #9A9A9A  divider 0.5px lines (light) / #4A4A4A (dark)
 --border      #C0BFBA  card borders, subtle frames (light) / #3A3A3A (dark)
 --accent      #1783FF  THE Kimi blue (light) / #5E9FFF (dark, brighter)
---code-bg     #F0EFEB  cream code-block tint (light) / #2A2A2A (dark)
+--code-bg     #F3F6F9  cool "blue-paper" code tint (light) / #242A32 cold slate (dark)
 --row-hover   #F5F2EC  list row hover (light) / #232323 (dark)
 ```
 
@@ -529,7 +529,7 @@ margin: 22mm 20mm 24mm 20mm;
 ### Two PDF dropping gotchas
 
 1. **`print-color-adjust: exact` is mandatory** for nested-element
-   backgrounds (Kimi tile, code-bg cream, callout fills, the Warp cover
+   backgrounds (Kimi tile, cool code-bg tint, callout fills, the Warp cover
    symbol's gradient). Set globally inside `@media print`. Playwright
    `printBackground:true` only covers the page bg, not nested elements.
 2. **Per-chapter byline hidden in print** — `.v3-cover__byline`

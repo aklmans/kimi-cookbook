@@ -10761,3 +10761,33 @@ html {
   .stop { color: #1783FF !important; }
   .v3-section__number { color: #1783FF !important; }
 }
+
+/* ============================================================
+   Round-101 · Cool code surface — after the accent went Kimi blue
+   (Round-100), the warm cream code tints read as the old library's
+   leftover: beige blocks + a terracotta left rule fighting blue
+   stops. Two token layers move cool together — the verbatim
+   `--code-bg` (inline code chips, tabs, callout tints, striped
+   placeholders) and Round-40's `--code-surface*` / `--code-text` /
+   `--code-rule` (the code-block frame, title strip, base text, and
+   the accent left rule, which now follows --accent like the
+   promptbox's). Light is a "blue-paper" #F3F6F9 (told apart from
+   the warm page bg by temperature, not brightness); dark is a cold
+   slate #242A32. The Shiki palette is retuned cool to match
+   (lib/code-theme.ts — keyword now carries the Kimi blue). Same
+   selectors as Round-40 / the verbatim defs, later in the cascade.
+   ============================================================ */
+:root, :root[data-theme="light"] {
+  --code-bg: #F3F6F9;
+  --code-surface: #E8EEF4;
+  --code-surface-soft: #F3F6F9;
+  --code-text: #2B3038;
+  --code-rule: var(--accent);
+}
+:root[data-theme="dark"] {
+  --code-bg: #242A32;
+  --code-surface: #1C222B;
+  --code-surface-soft: #242A32;
+  --code-text: #E2E6EC;
+  --code-rule: var(--accent);
+}

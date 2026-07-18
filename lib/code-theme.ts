@@ -1,36 +1,41 @@
 import type { ThemeRegistrationRaw } from "shiki";
 
-/* Warm editorial Shiki theme, ported verbatim from the Zhaphar website
-   (the newer source-of-truth design language). Restrained, low-chroma
-   palette on a warm code surface — not a default IDE skin. Used by
-   rehype-pretty-code in the chapter MDX pipeline; the --shiki-light /
-   --shiki-dark vars it emits are consumed by globals.css Round-8. */
+/* Cool editorial Shiki theme — the Kimi-site retune of the palette that
+   started as the Zhaphar website's warm editorial theme. Same restrained,
+   low-chroma structure (no default-IDE-skin saturation), but every role is
+   swung cool so the code surface sits with the Kimi blue accent instead of
+   fighting it: keyword carries the Kimi blue, string stays steel blue,
+   function violet, type cold teal, constants go quiet slate, and all the
+   warm greys become cool greys. Used by rehype-pretty-code in the chapter
+   MDX pipeline; the --shiki-light / --shiki-dark vars it emits are
+   consumed by globals.css Round-8. The block surface itself is the
+   --code-bg token (Round-101), matched to these backgrounds. */
 
 export const ZHAPHAR_CODE_COLORS = {
   light: {
-    foreground: "#2d2926",
-    background: "#f3efe7",
-    muted: "#7f7a70",
-    punctuation: "#6f6a62",
-    keyword: "#b65a43",
-    string: "#2f5f86",
-    function: "#7c5f9d",
-    type: "#52756a",
-    constant: "#946b35",
-    variable: "#3b3833",
-    invalid: "#a83f32"
+    foreground: "#2b3038",
+    background: "#f3f6f9",
+    muted: "#7c8492",
+    punctuation: "#657080",
+    keyword: "#1168d8",
+    string: "#2e6e91",
+    function: "#7451b8",
+    type: "#3e7e7a",
+    constant: "#556274",
+    variable: "#3b424d",
+    invalid: "#b03c3c"
   },
   dark: {
-    foreground: "#e7dfd4",
-    background: "#101312",
-    muted: "#928b7e",
-    punctuation: "#b7afa4",
-    keyword: "#e18a6f",
+    foreground: "#e2e6ec",
+    background: "#242a32",
+    muted: "#8a93a2",
+    punctuation: "#9aa4b2",
+    keyword: "#6ba8ff",
     string: "#8fbad4",
-    function: "#c1a3e8",
-    type: "#9cbe8f",
-    constant: "#d2b16d",
-    variable: "#e3d9ca",
+    function: "#b4a5ee",
+    type: "#7fc4bc",
+    constant: "#a8b3c2",
+    variable: "#dde3ea",
     invalid: "#ff8a78"
   }
 } as const;
@@ -129,7 +134,7 @@ function createTheme(name: string, type: "light" | "dark"): ThemeRegistrationRaw
       "editor.background": color.background,
       "editor.foreground": color.foreground,
       "editorLineNumber.foreground": color.muted,
-      "editor.selectionBackground": type === "light" ? "#ead9cf" : "#3a2924"
+      "editor.selectionBackground": type === "light" ? "#d9e4f2" : "#2e3a4d"
     }
   };
 }
