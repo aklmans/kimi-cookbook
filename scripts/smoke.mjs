@@ -202,6 +202,10 @@ async function main() {
       mpCode.prompts[0].template.length > 0 &&
       mpCode.html.includes('href="#kc-prompt-0"'),
   );
+  check(
+    "/api/mp/v1/chapters/08-code ships the chapter kicker quote",
+    !!mpCode && typeof mpCode.kicker === "string" && mpCode.kicker.length > 0,
+  );
   const mpHtmlSafe = [mpIntro, mpCode].every(
     (c) =>
       c &&

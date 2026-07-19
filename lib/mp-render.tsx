@@ -893,12 +893,16 @@ function mpComponents(ctx: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   components: Record<string, any>;
   prompts: { id: number; model: string; template: string; example: string }[];
+  kicker: string;
 } {
   const note = <MpDiagramNote />;
   /* PromptBox instances self-register here so the payload can carry the raw
-     prompt text (the MP copies from the payload, not from the rendered HTML). */
+     prompt text (the MP copies from the payload, not from the rendered HTML).
+     The chapter's <Kicker> manifesto is also captured — it's the share
+     poster's protagonist quote. */
   let promptCount = 0;
   const prompts: { id: number; model: string; template: string; example: string }[] = [];
+  let kicker = "";
   const components = {
     T: MpT,
     StopPunct: MpStopPunct,
@@ -908,7 +912,10 @@ function mpComponents(ctx: {
     SectionTitle: MpSectionTitle,
     H3: MpH3,
     Divider: MpDivider,
-    Kicker: MpKicker,
+    Kicker: (props: { zh?: string; en?: string; sig?: string }) => {
+      kicker = (props.zh ?? props.en ?? "").replace(/\s+/g, " ").trim();
+      return <MpKicker {...props} />;
+    },
     Quote: MpQuote,
     CodeBlock: MpCodeBlock,
     Tabs: MpTabs,
@@ -970,7 +977,7 @@ function mpComponents(ctx: {
     Footnote: ({ n }: { n: number }) => <MpFootnote n={n} />,
     References: () => <MpReferences references={ctx.references} />,
   };
-  return { components, prompts };
+  return { components, prompts, kicker };
 }
 
 /** Strip anything a rich renderer must never see (defensive — the MP
@@ -994,6 +1001,8 @@ export type MpChapterPayload = {
   outline: { id: string; level: number; title: string }[];
   references: { id: number; body: string; url: string; urlLabel: string }[];
   prompts: { id: number; model: string; template: string; example: string }[];
+  /** The chapter's closing <Kicker> manifesto — the share poster's quote. */
+  kicker: string;
 };
 
 /** Render one chapter's MDX to the restricted Mini Program HTML. Throws
@@ -1022,7 +1031,7 @@ export async function renderChapterToMpHtml(
   // markdown ### all gain stable ids, so the MP's in-chapter outline can
   // scroll to them via mp-html's navigateTo.
   const { outline, body: bodyWithOutlineIds } = extractChapterOutline(body);
-  const { components, prompts } = mpComponents({
+  const { components, prompts, kicker } = mpComponents({
     book,
     chapter,
     index,
@@ -1070,5 +1079,6 @@ export async function renderChapterToMpHtml(
       urlLabel: r.urlLabel ?? "",
     })),
     prompts,
+    kicker,
   };
 }
