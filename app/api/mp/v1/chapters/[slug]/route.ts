@@ -35,12 +35,8 @@ export async function GET(
     {
       ...payload,
       bookTitle: book.title,
-      prev: prev
-        ? { slug: prev.slug, title: prev.titleShort ?? prev.title }
-        : null,
-      next: next
-        ? { slug: next.slug, title: next.titleShort ?? next.title }
-        : null,
+      prev: prev ? { slug: prev.slug, title: prev.title } : null,
+      next: next ? { slug: next.slug, title: next.title } : null,
     },
     {
       headers: {

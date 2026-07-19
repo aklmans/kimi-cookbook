@@ -206,8 +206,12 @@ async function main() {
     mpHtmlSafe,
   );
   check(
-    "/api/mp/v1/chapters/08-code carries prev/next nav",
-    !!mpCode && mpCode.prev?.slug === "07-research" && mpCode.next?.slug === "09-selection",
+    "/api/mp/v1/chapters/08-code carries prev/next nav with full titles",
+    !!mpCode &&
+      mpCode.prev?.slug === "07-research" &&
+      mpCode.prev.title.includes(" · ") &&
+      mpCode.next?.slug === "09-selection" &&
+      mpCode.next.title.includes(" · "),
   );
 
   const mpMissing = await fetchStatus(`${BASE_URL}/api/mp/v1/chapters/not-real`);
