@@ -66,6 +66,16 @@ const nextConfig: NextConfig = {
         source: "/giscus-v3-:mode(light|dark).css",
         headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
       },
+      {
+        // Tsanger subsets for the Mini Program's wx.loadFontFace. Next's
+        // default public-file header is max-age=0, which the WeChat font
+        // loader chokes on (net::ERR_CACHE_MISS on the revalidation path) —
+        // give the fonts a real cache lifetime so they load and stay cached.
+        source: "/fonts/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=2592000" },
+        ],
+      },
     ];
   },
 };
