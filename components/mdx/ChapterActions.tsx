@@ -50,9 +50,11 @@ export function ChapterActions({
 
   /* The outline rail + its toggle live in GlobalUI's delegated keyboard
      handler (`o`). Dispatching the same key event keeps one owner of the
-     panel state instead of duplicating the toggle logic here. */
+     panel state instead of duplicating the toggle logic here. Dispatched
+     on document.body so e.target is a real element (document itself has
+     no .closest() and GlobalUI's handler walks it). */
   const toggleOutline = () => {
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "o" }));
+    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "o" }));
   };
 
   const copyPrompt = async () => {
@@ -126,7 +128,7 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
           ) : status === "error" ? (
             <T zh="复制失败" en="Copy failed" />
           ) : (
-            <T zh="AI 提示词" en="AI Prompt" />
+            <T zh="让 Agent 读" en="Feed to AI" />
           )}
         </span>
       </button>
