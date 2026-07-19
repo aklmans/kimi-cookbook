@@ -893,7 +893,7 @@ function mpComponents(ctx: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   components: Record<string, any>;
   prompts: { id: number; model: string; template: string; example: string }[];
-  kicker: string;
+  kicker: { text: string };
 } {
   const note = <MpDiagramNote />;
   /* PromptBox instances self-register here so the payload can carry the raw
@@ -902,7 +902,12 @@ function mpComponents(ctx: {
      poster's protagonist quote. */
   let promptCount = 0;
   const prompts: { id: number; model: string; template: string; example: string }[] = [];
-  let kicker = "";
+  /* A box, not a bare string: mpComponents() is evaluated before compileMDX
+     renders anything, so destructuring a string would capture the initial
+     "" forever. The Kicker closure writes into the box during render and
+     the payload reads it afterwards. (prompts works the same way, via the
+     mutable array.) */
+  const kicker = { text: "" };
   const components = {
     T: MpT,
     StopPunct: MpStopPunct,
@@ -913,7 +918,7 @@ function mpComponents(ctx: {
     H3: MpH3,
     Divider: MpDivider,
     Kicker: (props: { zh?: string; en?: string; sig?: string }) => {
-      kicker = (props.zh ?? props.en ?? "").replace(/\s+/g, " ").trim();
+      kicker.text = (props.zh ?? props.en ?? "").replace(/\s+/g, " ").trim();
       return <MpKicker {...props} />;
     },
     Quote: MpQuote,
@@ -1079,6 +1084,6 @@ export async function renderChapterToMpHtml(
       urlLabel: r.urlLabel ?? "",
     })),
     prompts,
-    kicker,
+    kicker: kicker.text,
   };
 }
