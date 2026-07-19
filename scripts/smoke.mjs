@@ -564,8 +564,7 @@ async function main() {
     // Book detail hero: a brand mark + the text once + a 3-item colophon,
     // with NO separate cover panel (which used to duplicate the
     // kicker/title/lede).
-    await page.goto(`${BASE_URL}/books/kimi`, { waitUntil: "networkidle" });
-    const detailStatCount = await page
+    await page.goto(`${BASE_URL}/books/kimi`, { waitUntil: "networkidle" });    const detailStatCount = await page
       .locator(".book-detail__stats .book-detail__stat")
       .count();
     check("Book detail renders a 3-stat colophon", detailStatCount === 3);
@@ -576,6 +575,16 @@ async function main() {
     );
     const detailMarks = await page.locator(".book-detail__mark").count();
     check("Book detail renders the brand mark", detailMarks === 1);
+
+    // Per-chapter Feed-to-AI entry (chapter-scoped prompt)
+    await page.goto(`${BASE_URL}/books/kimi/01-intro`, {
+      waitUntil: "networkidle",
+    });
+    const agentBtn = await page.locator(".ch-agent__btn").count();
+    check(
+      "Chapter page renders the per-chapter Feed-to-AI button",
+      agentBtn === 1,
+    );
 
     // Chapter reading pages must not overflow horizontally at tablet /
     // small-laptop widths. Checked in a dedicated 1024px context.
