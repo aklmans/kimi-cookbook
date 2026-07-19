@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Kimi Cookbook 宣传海报 · 05 扫码开始读</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  /* 与 01 呼应的书挡:右上出血大圆盘 */
+  .moon-disc {
+    position: absolute;
+    top: -110px;
+    right: -150px;
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    background: var(--disc);
+  }
+  .moon-disc svg { display: block; width: 100%; height: 100%; }
+
+  .headline {
+    position: absolute;
+    left: 72px;
+    top: 220px;
+    width: 936px;
+  }
+  .kicker { margin-bottom: 36px; }
+  h2 {
+    font-size: 76px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  h2 .kimi { color: var(--blue); }
+
+  .qr-card {
+    position: absolute;
+    left: 72px;
+    top: 540px;
+    width: 500px;
+    background: #fff;
+    border: 1px solid var(--hairline);
+    padding: 36px 36px 30px;
+  }
+  .qr-card img { display: block; width: 100%; }
+  .qr-card .cap {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--hairline);
+    font-size: 27px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .qr-card .cap small { display: block; font-size: 22px; color: var(--ink-3); margin-top: 4px; }
+
+  .links {
+    position: absolute;
+    left: 636px;
+    top: 600px;
+    width: 400px;
+  }
+  .link-row { margin-bottom: 64px; }
+  .link-row .label {
+    font-size: 24px;
+    letter-spacing: 0.26em;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+  }
+  .link-row .value { font-size: 34px; line-height: 1.5; font-weight: 500; }
+  .link-row .value small { display: block; font-size: 23px; font-weight: 400; color: var(--ink-3); margin-top: 4px; }
+
+  .signoff {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    bottom: 72px;
+    border-top: 1px solid var(--hairline);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    letter-spacing: 0.24em;
+    color: var(--ink-3);
+  }
+</style>
+</head>
+<body>
+
+  <div class="moon-disc" aria-hidden="true">
+    <svg viewBox="0 0 620 620" xmlns="http://www.w3.org/2000/svg">
+      <mask id="p5-bite">
+        <rect x="100" y="200" width="400" height="400" fill="#fff"/>
+        <circle cx="288" cy="386" r="143" fill="#000"/>
+      </mask>
+      <circle cx="310" cy="400" r="150" fill="#1B1B25"/>
+      <circle cx="310" cy="400" r="150" fill="#EFE8DC" mask="url(#p5-bite)"/>
+      <circle cx="415" cy="290" r="49" fill="#1783FF" opacity="0.18"/>
+      <circle cx="415" cy="290" r="29" fill="#1783FF"/>
+    </svg>
+  </div>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-tile" aria-hidden="true"><img src="../assets/brand/mp-avatar.svg" alt=""></div>
+      <div class="brand-name">KIMI COOKBOOK</div>
+      <div class="brand-serial">NO. 05</div>
+    </div>
+  </header>
+
+  <main class="headline">
+    <div class="kicker">
+      <span class="k-tile"><img src="../assets/brand/kimi.webp" alt="Kimi"></span>
+      <span>开始读</span>
+    </div>
+    <h2>扫一下,<br>现在就读。</h2>
+  </main>
+
+  <div class="qr-card">
+    <img src="../assets/brand/miniapp-qrcode.jpg" alt="Kimi Cookbook 小程序码">
+    <div class="cap">微信扫码 · 小程序直达<small>码中央的月亮,就是这本书的封面</small></div>
+  </div>
+
+  <div class="links">
+    <div class="link-row">
+      <div class="label">网页版</div>
+      <div class="value">kimi.read.wiki<small>手机 / 电脑浏览器直接打开</small></div>
+    </div>
+    <div class="link-row">
+      <div class="label">源码</div>
+      <div class="value">开源公开<small>github.com/aklmans/kimi-cookbook</small></div>
+    </div>
+    <div class="link-row">
+      <div class="label">作者</div>
+      <div class="value">Zhapar<small>想清楚 · 与 Kimi 共建 · 持续生长</small></div>
+    </div>
+  </div>
+
+  <footer class="signoff">
+    <span>KIMI COOKBOOK</span>
+    <span>2026</span>
+  </footer>
+
+</body>
+</html>

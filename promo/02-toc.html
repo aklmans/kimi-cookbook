@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Kimi Cookbook 宣传海报 · 02 内容地图</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .headline {
+    position: absolute;
+    left: 72px;
+    top: 190px;
+    width: 936px;
+  }
+  .kicker { margin-bottom: 30px; }
+  h2 {
+    font-size: 62px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  h2 .kimi { color: var(--blue); }
+
+  .toc {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    top: 460px;
+    border-top: 1px solid var(--hairline);
+  }
+  .toc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 32px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .toc-row .no {
+    width: 64px;
+    flex: none;
+    font-size: 26px;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  .toc-row .t {
+    font-size: 30px;
+    line-height: 1.4;
+  }
+  .toc-row .t .dim { color: var(--ink-3); }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-tile" aria-hidden="true"><img src="../assets/brand/mp-avatar.svg" alt=""></div>
+      <div class="brand-name">KIMI COOKBOOK</div>
+      <div class="brand-serial">NO. 02</div>
+    </div>
+  </header>
+
+  <main class="headline">
+    <div class="kicker">
+      <span class="k-tile"><img src="../assets/brand/kimi.webp" alt="Kimi"></span>
+      <span>这本书讲什么</span>
+    </div>
+    <h2>10 章,把 <span class="kimi">Kimi</span><br>从工具讲成一个栈。</h2>
+  </main>
+
+  <div class="toc">
+    <div class="toc-row"><span class="no">01</span><span class="t">引子 <span class="dim">· 你印象里的 Kimi 是旧的</span></span></div>
+    <div class="toc-row"><span class="no">02</span><span class="t">全景 <span class="dim">· 一套对标前沿的栈</span></span></div>
+    <div class="toc-row"><span class="no">03</span><span class="t">挑模型 <span class="dim">· K3、K2.7-Code 与 K2.6</span></span></div>
+    <div class="toc-row"><span class="no">04</span><span class="t">四模式 <span class="dim">· 快答、深想、交办、集群</span></span></div>
+    <div class="toc-row"><span class="no">05</span><span class="t">交办 <span class="dim">· Agent 直接做成品</span></span></div>
+    <div class="toc-row"><span class="no">06</span><span class="t">大活 <span class="dim">· Agent Swarm 与 Kimi Claw</span></span></div>
+    <div class="toc-row"><span class="no">07</span><span class="t">查证 <span class="dim">· Deep Research 出带出处的报告</span></span></div>
+    <div class="toc-row"><span class="no">08</span><span class="t">写码 &amp; 接 API <span class="dim">· 把 Kimi 配进你的 Agent</span></span></div>
+    <div class="toc-row"><span class="no">09</span><span class="t">选档 &amp; 取舍 <span class="dim">· 买哪档,什么时候回 frontier</span></span></div>
+    <div class="toc-row"><span class="no">10</span><span class="t">实战速查 <span class="dim">· 哪类活该用哪一面</span></span></div>
+  </div>
+
+  <footer class="colophon">
+    <div class="endpoint">
+      <div class="label">在线书</div>
+      <div class="value">kimi.read.wiki<small>网页即读,支持导出 PDF</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">网站应用</div>
+      <div class="value">中英双语<small>Agent 可读的 llms.md</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">小程序</div>
+      <div class="value">扫码体验<small>小程序码在末页</small></div>
+    </div>
+  </footer>
+
+</body>
+</html>

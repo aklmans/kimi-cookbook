@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Kimi Cookbook avatar for the WeChat Mini Program — same 月之暗面
+       composition as the site mark (public/favicon.svg · SiteHeader
+       SiteLogo), but the tile is FULL-BLEED (no corner radius): WeChat
+       masks avatars itself — a circle in chats/search/discovery, a
+       rounded square on the profile page — so rounded corners here would
+       read as transparent notches under a circular crop. Keep every
+       element inside the inscribed circle (radius 256): moon r=144,
+       satellite glow reaches ~213. Upload the rendered PNG at
+       mp.weixin.qq.com → 设置 → 基本设置 → 头像. -->
+  <rect width="512" height="512" fill="#0E0E13"/>
+  <mask id="moon-bite">
+    <rect x="64" y="64" width="384" height="384" fill="#fff"/>
+    <circle cx="230" cy="245" r="137" fill="#000"/>
+  </mask>
+  <circle cx="256" cy="256" r="144" fill="#1B1B25"/>
+  <circle cx="256" cy="256" r="144" fill="#EFE8DC" mask="url(#moon-bite)"/>
+  <circle cx="379" cy="144" r="47" fill="#1783FF" opacity="0.18"/>
+  <circle cx="379" cy="144" r="28" fill="#1783FF"/>
+</svg>

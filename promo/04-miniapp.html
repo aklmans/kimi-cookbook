@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Kimi Cookbook 宣传海报 · 04 小程序</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .headline {
+    position: absolute;
+    left: 72px;
+    top: 208px;
+    width: 936px;
+  }
+  .kicker { margin-bottom: 36px; }
+  h2 {
+    font-size: 68px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  h2 .kimi { color: var(--blue); }
+
+  .pages {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    top: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+    border-left: 1px solid var(--hairline);
+  }
+  .page-card {
+    border-right: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding: 40px 36px 44px;
+  }
+  .page-card .no {
+    font-size: 24px;
+    letter-spacing: 0.22em;
+    color: var(--blue);
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .page-card .name { font-size: 40px; font-weight: 500; margin-bottom: 12px; }
+  .page-card .desc { font-size: 27px; line-height: 1.55; color: var(--ink-2); }
+  .note {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    top: 1010px;
+    font-size: 28px;
+    line-height: 1.7;
+    color: var(--ink-3);
+  }
+  .note .dot { color: var(--blue); }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-tile" aria-hidden="true"><img src="../assets/brand/mp-avatar.svg" alt=""></div>
+      <div class="brand-name">KIMI COOKBOOK</div>
+      <div class="brand-serial">NO. 04</div>
+    </div>
+  </header>
+
+  <main class="headline">
+    <div class="kicker">
+      <span class="k-tile"><img src="../assets/brand/kimi.webp" alt="Kimi"></span>
+      <span>小程序 · 微信阅读端</span>
+    </div>
+    <h2>微信里,<br>把这本书装进口袋。</h2>
+  </main>
+
+  <div class="pages">
+    <div class="page-card">
+      <div class="no">BOOK</div>
+      <div class="name">书架</div>
+      <div class="desc">书籍主页:封面、简介与入口</div>
+    </div>
+    <div class="page-card">
+      <div class="no">TOC</div>
+      <div class="name">目录</div>
+      <div class="desc">全 10 章一屏导航,随点随读</div>
+    </div>
+    <div class="page-card">
+      <div class="no">READ</div>
+      <div class="name">阅读</div>
+      <div class="desc">章节正文,站点同款书籍排版</div>
+    </div>
+    <div class="page-card">
+      <div class="no">ABOUT</div>
+      <div class="name">关于</div>
+      <div class="desc">作者、网站与反馈入口</div>
+    </div>
+  </div>
+
+  <p class="note"><span class="dot">·</span> 跟随系统深色模式 &nbsp;<span class="dot">·</span> 仓耳今楷字体与网站同源 &nbsp;<span class="dot">·</span> 下页扫码直接打开</p>
+
+  <footer class="colophon">
+    <div class="endpoint">
+      <div class="label">在线书</div>
+      <div class="value">kimi.read.wiki<small>网页即读,支持导出 PDF</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">网站应用</div>
+      <div class="value">中英双语<small>Agent 可读的 llms.md</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">小程序</div>
+      <div class="value">扫码体验<small>小程序码在末页</small></div>
+    </div>
+  </footer>
+
+</body>
+</html>

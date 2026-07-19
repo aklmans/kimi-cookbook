@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Kimi Cookbook 宣传海报 · 03 网站应用</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .headline {
+    position: absolute;
+    left: 72px;
+    top: 208px;
+    width: 936px;
+  }
+  .kicker { margin-bottom: 36px; }
+  h2 {
+    font-size: 68px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  h2 .kimi { color: var(--blue); }
+
+  .features {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    top: 472px;
+    display: flex;
+    border-top: 1px solid var(--hairline);
+    padding-top: 30px;
+  }
+  .feat { flex: 1; }
+  .feat + .feat { border-left: 1px solid var(--hairline); padding-left: 26px; margin-left: 26px; }
+  .feat .k {
+    font-size: 24px;
+    letter-spacing: 0.22em;
+    color: var(--blue);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .feat .v { font-size: 29px; line-height: 1.5; }
+  .feat .v small { display: block; font-size: 22px; color: var(--ink-3); margin-top: 3px; }
+
+  /* 截图组合:桌面浏览器 + 手机叠加 */
+  .shots { position: absolute; left: 72px; top: 660px; }
+  .browser {
+    width: 740px;
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .browser .bar {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--paper);
+  }
+  .browser .bar i {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--hairline); display: block;
+  }
+  .browser .bar .url {
+    margin-left: 12px;
+    font-size: 16px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .browser img { display: block; width: 100%; }
+  .phone {
+    position: absolute;
+    left: 690px;
+    top: 36px;
+    width: 210px;
+    border: 6px solid var(--ink);
+    border-radius: 30px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .phone img { display: block; width: 100%; }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-tile" aria-hidden="true"><img src="../assets/brand/mp-avatar.svg" alt=""></div>
+      <div class="brand-name">KIMI COOKBOOK</div>
+      <div class="brand-serial">NO. 03</div>
+    </div>
+  </header>
+
+  <main class="headline">
+    <div class="kicker">
+      <span class="k-tile"><img src="../assets/brand/kimi.webp" alt="Kimi"></span>
+      <span>网站 · kimi.read.wiki</span>
+    </div>
+    <h2>给读者,也给 <span class="kimi">Agent</span><br>留了一扇门。</h2>
+  </main>
+
+  <div class="features">
+    <div class="feat">
+      <div class="k">双语</div>
+      <div class="v">中英切换<small>同一本书两种读法</small></div>
+    </div>
+    <div class="feat">
+      <div class="k">AGENT 可读</div>
+      <div class="v">每章 llms.md<small>一键复制「让 Agent 读」</small></div>
+    </div>
+    <div class="feat">
+      <div class="k">带走</div>
+      <div class="v">导出 PDF<small>打印级排版,RSS 订阅</small></div>
+    </div>
+  </div>
+
+  <div class="shots">
+    <div class="browser">
+      <div class="bar"><i></i><i></i><i></i><span class="url">kimi.read.wiki</span></div>
+      <img src="../output/promo/assets/site-home-desktop.png" alt="网站首页">
+    </div>
+    <div class="phone">
+      <img src="../output/promo/assets/site-chapter-mobile.png" alt="手机阅读">
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="endpoint">
+      <div class="label">在线书</div>
+      <div class="value">kimi.read.wiki<small>网页即读,支持导出 PDF</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">网站应用</div>
+      <div class="value">中英双语<small>Agent 可读的 llms.md</small></div>
+    </div>
+    <div class="endpoint">
+      <div class="label">小程序</div>
+      <div class="value">扫码体验<small>小程序码在末页</small></div>
+    </div>
+  </footer>
+
+</body>
+</html>
