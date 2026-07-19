@@ -851,9 +851,14 @@ function MpGallery({ children }: { cols?: number; children: ReactNode }) {
 
 function MpFootnote({ n }: { n: number }) {
   /* An anchor link, not a bare <sup>: the Mini Program turns the tap into a
-     reference bottom sheet (href "#fn-N"), and "#kc-refs" jumps to the list. */
+     reference bottom sheet keyed off href "#fn-N" — which deliberately has
+     NO target element (MpReferences items carry no ids): mp-html fires its
+     linktap AND auto-scrolls any # link whose target exists, so a found
+     target would yank the page to the chapter's end on every footnote tap.
+     The fnref-N id anchors the way BACK — the "返回引文处" chip and each
+     refs item's ↩ link navigate to this exact in-text marker. */
   return (
-    <a href={`#fn-${n}`}>
+    <a id={`fnref-${n}`} href={`#fn-${n}`}>
       <sup>
         <span style={{ color: ACCENT }}>{n}</span>
       </sup>
@@ -863,20 +868,24 @@ function MpFootnote({ n }: { n: number }) {
 
 function MpReferences({ references }: { references: Reference[] }) {
   if (!references.length) return null;
+  /* The items carry NO ids (see MpFootnote). The ↩ back-link returns the
+     reader to the in-text marker — mp-html's built-in # scroll handles it
+     (target fnref-N exists), same as the web references list. */
   return (
     <div id="kc-refs">
       <hr />
       <h3>引用与参考</h3>
       <ol>
         {references.map((r) => (
-          <li key={r.id} id={`fn-${r.id}`}>
+          <li key={r.id}>
             {r.body ?? r.bodyEn ?? ""}
             {r.url ? (
               <>
                 {" "}
                 <a href={r.url}>{r.urlLabel ?? r.url}</a>
               </>
-            ) : null}
+            ) : null}{" "}
+            <a href={`#fnref-${r.id}`}>↩</a>
           </li>
         ))}
       </ol>
