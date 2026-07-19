@@ -2118,6 +2118,41 @@ assertIncludes(
   "The chapter agent prompt should keep the anti-improvisation rail.",
 );
 assertIncludes(
+  "components/mdx/ChapterActions.tsx",
+  "qr.png?url=",
+  "The chapter bar should offer a QR popover wired to the qr.png route.",
+);
+assertIncludes(
+  "components/mdx/ChapterActions.tsx",
+  "poster.png",
+  "The chapter bar should link the chapter share poster.",
+);
+assertIncludes(
+  "components/mdx/ChapterActions.tsx",
+  "download=",
+  "The poster action should download in place (same-origin download attribute), not open a throwaway tab.",
+);
+assertFileIncludes(
+  "app/books/[slug]/[chapter]/poster.png/route.tsx",
+  "ImageResponse",
+  "The chapter share poster route should render via ImageResponse.",
+);
+assertFileIncludes(
+  "app/books/[slug]/[chapter]/poster.png/route.tsx",
+  "扫码读全文",
+  "The chapter share poster should carry the scan-to-read caption (same as the Mini Program poster).",
+);
+{
+  const summaries = (
+    read("content/books/kimi/meta.ts").match(/posterSummary:/g) || []
+  ).length;
+  if (summaries !== 10) {
+    fail(
+      `Every chapter should carry a posterSummary for the share poster's middle band (found ${summaries}/10).`,
+    );
+  }
+}
+assertIncludes(
   "components/mdx/NextBook.tsx",
   "previousBook",
   "NextBook should accept a previousBook prop and render a reverse link.",

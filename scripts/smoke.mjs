@@ -196,6 +196,26 @@ async function main() {
     kimiChHtml.includes('type="text/markdown"'),
   );
 
+  // Chapter share surfaces: QR popover + share poster
+  check(
+    "/books/kimi/08-code bar offers the QR popover",
+    kimiChHtml.includes("二维码"),
+  );
+  check(
+    "/books/kimi/08-code bar links the share poster",
+    kimiChHtml.includes("/books/kimi/08-code/poster.png"),
+  );
+  const poster = await fetch(`${BASE_URL}/books/kimi/01-intro/poster.png`);
+  check(
+    "/books/kimi/01-intro/poster.png returns a PNG",
+    poster.status === 200 &&
+      (poster.headers.get("content-type") ?? "").includes("image/png"),
+  );
+  const qrStatus = await fetchStatus(
+    `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://kimi.read.wiki/books/kimi/01-intro")}`,
+  );
+  check("/api/mp/qr.png serves the chapter QR", qrStatus === 200);
+
   // ── Mini Program content API (/api/mp/v1) ──
   async function fetchJson(url) {
     try {
@@ -612,14 +632,52 @@ async function main() {
     const detailMarks = await page.locator(".book-detail__mark").count();
     check("Book detail renders the brand mark", detailMarks === 1);
 
-    // Chapter reading-aids bar (目录 / MD / AI 提示词) on the cover
+    // Chapter reading-aids bar (目录 / MD / 让 Agent 读 / 二维码 / 海报)
+    // on the cover
     await page.goto(`${BASE_URL}/books/kimi/01-intro`, {
       waitUntil: "networkidle",
     });
     const aidActions = await page.locator(".ch-actions__action").count();
     check(
-      "Chapter cover renders the reading-aids bar with 3 actions",
-      aidActions === 3,
+      "Chapter cover renders the reading-aids bar with 5 actions",
+      aidActions === 5,
+    );
+
+    // QR popover: hover shows, pointer-leave hides, click toggles,
+    // Escape closes
+    const qrButton = page.locator(".ch-actions__action", { hasText: "二维码" });
+    await qrButton.hover();
+    const qrPop = page.locator(".ch-actions__qr-pop");
+    check(
+      "QR popover opens on hover with the qr.png image",
+      (await qrPop.count()) === 1 &&
+        (await qrPop.locator("img").getAttribute("src"))?.includes(
+          "/api/mp/qr.png?url=",
+        ) === true,
+    );
+    await page.locator("h1").first().hover();
+    check(
+      "QR popover hides after the pointer leaves",
+      (await page.locator(".ch-actions__qr-pop").count()) === 0,
+    );
+    await qrButton.click();
+    check(
+      "QR popover toggles open on click",
+      (await page.locator(".ch-actions__qr-pop").count()) === 1,
+    );
+    await page.keyboard.press("Escape");
+    check(
+      "QR popover closes on Escape",
+      (await page.locator(".ch-actions__qr-pop").count()) === 0,
+    );
+
+    // Poster action downloads the PNG in place (no throwaway tab)
+    const posterLink = page.locator(".ch-actions__action", { hasText: "海报" });
+    check(
+      "Poster action downloads the PNG directly",
+      ((await posterLink.getAttribute("download")) ?? "").endsWith(
+        "-poster.png",
+      ) && (await posterLink.getAttribute("target")) === null,
     );
 
     // Chapter reading pages must not overflow horizontally at tablet /

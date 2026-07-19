@@ -1017,6 +1017,8 @@ export type MpChapterPayload = {
   prompts: { id: number; model: string; template: string; example: string }[];
   /** The chapter's closing <Kicker> manifesto — the share poster's quote. */
   kicker: string;
+  /** The share poster's middle-band summary (meta.posterSummary). */
+  posterSummary: string;
 };
 
 /** Render one chapter's MDX to the restricted Mini Program HTML. Throws
@@ -1094,5 +1096,6 @@ export async function renderChapterToMpHtml(
     })),
     prompts,
     kicker: kicker.text,
+    posterSummary: chapter.posterSummary ?? "",
   };
 }

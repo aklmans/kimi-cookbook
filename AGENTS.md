@@ -401,6 +401,18 @@ Co-Authored-By: Kimi Code <noreply@moonshot.ai>
   copy-prompt buttons (`AgentReaderButton` book level, `ChapterActions`
   chapter level) demand a completeness self-check so silently truncated
   agent fetches get reported instead of passed off as the whole book.
+- **chapter share surfaces (Round-104)**: the reading-aids bar also
+  carries 二维码 (QR popover — reuses `/api/mp/qr.png`, encodes the
+  CANONICAL chapter URL from `lib/site`, never the preview origin) and
+  海报 (`/books/<slug>/<chapter>/poster.png`, an `ImageResponse` route
+  prerendered at build like the OG images). The poster serif is the
+  LOCAL Tsanger subset TTF — next/og rejects WOFF2 and Google-hosted
+  CJK families arrive as unicode-range shards, so `npm run gen:font`
+  also emits `assets/fonts/*.poster.ttf` (sfnt) alongside the woff2
+  subsets; regenerate after content edits. Satori quirks: multi-child
+  divs need explicit `display:flex`, and an accent stop-dot must be
+  glued to the title's last char with `whiteSpace:nowrap` or it wraps
+  onto a line of its own.
 
 ---
 

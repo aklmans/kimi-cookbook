@@ -10885,3 +10885,55 @@ html {
     display: none !important;
   }
 }
+
+/* ============================================================
+   Round-104 · Chapter share actions — 二维码 popover + 海报 download on
+   the reading-aids bar (Round-103). The QR popover is anchored to its
+   own icon (inside the .ch-actions__qr hover zone): hover shows, leave
+   hides, click pins open (touch has no hover), outside pointer-down /
+   Escape hides. It encodes the canonical chapter URL (not the preview
+   origin). The poster action is a same-origin `download` link to the
+   prerendered poster.png — no throwaway tab. Hidden in print like the
+   bar itself.
+   ============================================================ */
+.ch-actions__qr {
+  position: relative;
+  display: inline-flex;
+}
+.ch-actions__qr-pop {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 40;
+  display: block;
+  /* Absolute shrink-to-fit would collapse to the icon-button width —
+     size to the QR card content instead. */
+  width: max-content;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 14px;
+  text-align: center;
+}
+.ch-actions__qr-pop img {
+  display: block;
+  width: 176px;
+  height: 176px;
+}
+.ch-actions__qr-cap {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+@media (max-width: 640px) {
+  .ch-actions__qr-pop img {
+    width: 148px;
+    height: 148px;
+  }
+}
+@media print {
+  .ch-actions__qr-pop {
+    display: none !important;
+  }
+}

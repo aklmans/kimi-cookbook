@@ -31,6 +31,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "你对 Kimi 的印象, 大概还停在「长文本」那一年。它早不是那个工具了 —— 到 K3, 它长成一套对标 OpenAI / Anthropic 的全栈。这本书讲这套栈, 以及该用它的哪一面。",
+      posterSummary: "两年时间, 它从「能读长文的框」长成了模型、Agent、API 一整套栈。印象不更新, 你就只用到它的一个角。",
     },
     {
       slug: "02-stack",
@@ -41,6 +42,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "Kimi 现在的产品线几乎是照着 OpenAI 和 Anthropic 摆的: 聊天加会员、多模态模型、Agent 与 Agent Swarm、Deep Research、Kimi Code、API、开源权重。这章给整套栈画张图, 每块对标谁、缺了谁。",
+      posterSummary: "把 Kimi 的入口和 ChatGPT、Claude 一一对上号, 你会发现它早是一套完整的栈。这章只画地图: 哪一面对着你哪类活、对标谁。",
     },
     {
       slug: "03-models",
@@ -51,6 +53,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "K3 是 2.8 万亿参数、1M 上下文的新旗舰, 思考永远开着; K2.7-Code 仍是编码专线, K2.6 退为平价通用。这章讲三颗脑子怎么分工、什么时候值得付 K3 的价、什么时候回 frontier。",
+      posterSummary: "默认就是最强的 K3, 思考再也关不掉; 便宜的两颗也各有用处。什么时候值得付 K3 的价, 什么时候回 frontier, 这章算清。",
     },
     {
       slug: "04-modes",
@@ -61,6 +64,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "输入框那几个模式 ——Instant / Thinking / Agent / Agent Swarm—— 是 Kimi 把「问答」和「做事」分开的旋钮。挑错了要么慢、要么不够使。这章给一条线。",
+      posterSummary: "同一个输入框, 四档模式干的是四种活。核心判断只有一条: 挑能办成事的最低那一档。",
     },
     {
       slug: "05-agent",
@@ -71,6 +75,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "Agent 模式不只给答案, 它做出网站、幻灯、文档、表格。这章讲什么时候该把整件活交给它, 什么时候它只是花架子。",
+      posterSummary: "Agent 交的不是一段文字, 是排好版的 PPT、算好的表、能上线的网页。从这章开始, 一问一答变成「说清要什么, 直接收成品」。",
     },
     {
       slug: "06-swarm",
@@ -81,6 +86,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "一个 agent 不够, 就放一群。Agent Swarm 能调度上百个子 agent 并行干大活; Kimi Claw 是更新、更险的一条线。这章讲什么活值得动用这么大的阵仗。",
+      posterSummary: "一群子 agent 并行换时间, 一个常驻 agent 7×24 替你动手。两条线都猛, 代价也都要先认清。",
     },
     {
       slug: "07-research",
@@ -91,6 +97,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "有些问题要的不是一段回答, 是一份每条结论都带出处的报告。Kimi 的 Deep Research 会自己读几百个网页、交叉核对。这章讲什么活值得等这一趟。",
+      posterSummary: "它自己读几百个网页、交叉核对, 写成每条结论都带出处的报告。什么活值得等这几分钟, 什么活普通对话三秒就够。",
     },
     {
       slug: "08-code",
@@ -101,6 +108,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "Kimi Code 是跑在终端、对标 Claude Code 的第一方编码 agent; 开放平台有 OpenAI 与 Anthropic 两套兼容协议, Claude Code、OpenCode、Pi 改几行配置就能接, Codex 要借 CC-Switch 的本地路由。这章给每个 agent 的最小配置, 也说清哪里接不了。",
+      posterSummary: "终端里的 Kimi Code、OpenAI / Anthropic 双兼容的 API、一键切换的 CC-Switch —— 国内开发者的顺手三件套, 这章给最小配置。",
     },
     {
       slug: "09-selection",
@@ -111,6 +119,7 @@ export const meta: BookMeta = {
       publishedAt: "2026-06-12",
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       lede: "选档不是看价格, 是看你缺 Agent 次数、Agent 集群, 还是 Kimi Code 额度。这章把五档会员摆开, 说清订阅不含 API, 以及什么活该回 Claude / GPT、什么活交给 DeepSeek。",
+      posterSummary: "五档差的是分项额度, 不是模型。买哪一档、哪些活干脆别交给它, 这章一次算清。",
     },
     {
       slug: "10-playbook",
@@ -122,6 +131,7 @@ export const meta: BookMeta = {
       revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
       isLastChapter: true,
       lede: "前面把每一面单独讲透了, 这一页把判断压成一张表: 常见的活该走哪一面、怎么用、注意什么。对上哪一行, 就用那一面。",
+      posterSummary: "全书的判断压成一张表: 对上哪一行, 就走哪一面; 对不上的, 别硬留在 Kimi 这。",
     },
   ],
 };

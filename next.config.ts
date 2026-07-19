@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
     "/search-index.json": ["./content/books/**/*.mdx"],
     "/books/[slug]/llms.md": ["./content/books/**/*.mdx"],
     "/books/[slug]/[chapter]/llms.md": ["./content/books/**/*.mdx"],
+    "/books/[slug]/[chapter]/poster.png": ["./content/books/**/*.mdx"],
     "/api/mp/v1/chapters/[slug]": ["./content/books/**/*.mdx"],
   },
   /* Single-book site: the home page IS the book's intro page. Proxy `/`

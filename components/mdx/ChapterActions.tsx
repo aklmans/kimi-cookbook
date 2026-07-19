@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { T } from "@/components/T";
 import { useLang } from "@/components/LangProvider";
+import { absoluteUrl } from "@/lib/site";
 
 /* Chapter-level reading-aids bar, mounted at the foot of the chapter
    <Cover /> (after the byline, before the rule) — the tools a reader
    should see BEFORE reading, not after: in-chapter contents (reuses the
    ChapterOutline rail via GlobalUI's delegated `o` handler), the
-   chapter's llms.md, and the chapter-scoped AI prompt (copies to
-   clipboard). Shape follows the sister project's article assistant:
+   chapter's llms.md, the chapter-scoped AI prompt (copies to
+   clipboard), a QR popover for moving the chapter to a phone, and the
+   share poster. Shape follows the sister project's article assistant:
    frame-less mono uppercase actions with accent hairline icons. */
 
 const ICON_TOC = (
@@ -29,6 +31,21 @@ const ICON_AI = (
     <path d="M7 1.8l1.1 3.4 3.4 1.1-3.4 1.1L7 10.8 5.9 7.4 2.5 6.3l3.4-1.1z" />
   </svg>
 );
+const ICON_QR = (
+  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="1.8" y="1.8" width="4" height="4" />
+    <rect x="8.2" y="1.8" width="4" height="4" />
+    <rect x="1.8" y="8.2" width="4" height="4" />
+    <path d="M8.2 8.2h1.6v1.6H8.2zM10.6 10.6h1.6v1.6h-1.6zM8.2 12.2v-0.8M12.2 8.2v0.8" />
+  </svg>
+);
+const ICON_POSTER = (
+  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="1.8" y="1.8" width="10.4" height="10.4" />
+    <path d="M1.8 9.8l3-3 2.4 2.4 2-2 3 3" />
+    <circle cx="5" cy="4.8" r="0.9" />
+  </svg>
+);
 
 export function ChapterActions({
   bookSlug,
@@ -46,7 +63,29 @@ export function ChapterActions({
   lede?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [qrOpen, setQrOpen] = useState(false);
+  const qrWrapRef = useRef<HTMLDivElement>(null);
   const { lang } = useLang();
+
+  /* Close the QR popover on outside pointer-down or Escape. Registered
+     only while open so the bar costs zero listeners when idle. */
+  useEffect(() => {
+    if (!qrOpen) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (!qrWrapRef.current?.contains(event.target as Node)) {
+        setQrOpen(false);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setQrOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [qrOpen]);
 
   /* The outline rail + its toggle live in GlobalUI's delegated keyboard
      handler (`o`, registered on document). Dispatching the same key event
@@ -94,8 +133,15 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
     setTimeout(() => setStatus("idle"), 2000);
   };
 
+  /* The QR encodes the CANONICAL chapter URL (a phone scanning it lands
+     on the public site), so it comes from lib/site rather than
+     window.location.origin — localhost previews would 400 against the
+     qr.png route's site-host pin anyway. */
+  const chapterPageUrl = absoluteUrl(`/books/${bookSlug}/${chapterSlug}`);
+  const qrImgUrl = `/api/mp/qr.png?url=${encodeURIComponent(chapterPageUrl)}`;
+
   return (
-    <div className="ch-actions" aria-label="阅读辅助 / Reading aids">
+    <div className="ch-actions" ref={qrWrapRef} aria-label="阅读辅助 / Reading aids">
       <button
         className="ch-actions__action"
         type="button"
@@ -107,9 +153,45 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
           <T zh="目录" en="Contents" />
         </span>
       </button>
-      {/* Plain <a>, not next/link: llms.md is a route handler, and the
-          router would prefetch its (nonexistent) RSC payload, leaving a
-          pending fetch that never settles. */}
+      {/* QR lives with its popover in one hover zone: hover shows, leave
+          hides, click pins open (touch has no hover), outside
+          pointer-down / Escape hides. */}
+      <span
+        className="ch-actions__qr"
+        onMouseEnter={() => setQrOpen(true)}
+        onMouseLeave={() => setQrOpen(false)}
+      >
+        <button
+          className="ch-actions__action"
+          type="button"
+          onClick={() => setQrOpen(true)}
+          aria-expanded={qrOpen}
+          aria-label="章节二维码 / Chapter QR code"
+        >
+          {ICON_QR}
+          <span>
+            <T zh="二维码" en="QR" />
+          </span>
+        </button>
+        {qrOpen ? (
+          <span className="ch-actions__qr-pop">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrImgUrl}
+              width={176}
+              height={176}
+              alt="章节二维码 / Chapter QR code"
+            />
+            <span className="ch-actions__qr-cap">
+              <T zh="扫码在手机上阅读。" en="Scan to read on your phone." />
+            </span>
+          </span>
+        ) : null}
+      </span>
+      {/* Plain <a>, not next/link: llms.md / poster.png are route handlers,
+          and the router would prefetch their (nonexistent) RSC payload,
+          leaving a pending fetch that never settles. The poster downloads
+          straight away (same-origin `download`), no throwaway tab. */}
       <a
         className="ch-actions__action"
         href={`/books/${bookSlug}/${chapterSlug}/llms.md`}
@@ -118,6 +200,16 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
       >
         {ICON_MD}
         <span>MD</span>
+      </a>
+      <a
+        className="ch-actions__action"
+        href={`/books/${bookSlug}/${chapterSlug}/poster.png`}
+        download={`${bookSlug}-${chapterSlug}-poster.png`}
+      >
+        {ICON_POSTER}
+        <span>
+          <T zh="海报" en="Poster" />
+        </span>
       </a>
       <button
         className="ch-actions__action"

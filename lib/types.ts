@@ -30,6 +30,10 @@ export type Chapter = {
   /** Short lede shown on the chapter cover + RSS description. */
   lede?: string;
   ledeEn?: string;
+  /** Poster-only summary (2–3 sentences) filling the share poster's
+      middle band below the lede — written for people who will never
+      open the chapter, not as an excerpt from it. */
+  posterSummary?: string;
   /** Optional override for RSS pubDate / og article:published_time.
       "YYYY-MM-DD" or "YYYY-MM". When absent, the feed falls back to
       `revisions[0].date + "-01"` and finally to `book.date`. */

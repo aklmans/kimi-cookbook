@@ -36,6 +36,16 @@ const WEIGHTS = [
   { src: "TsangerJinKai02-W05.woff2", out: "TsangerJinKai02-W05.subset.woff2" },
 ];
 
+/* Same glyph set, raw-sfnt (TTF) outputs for Satori: next/og rejects WOFF2
+   ("Unsupported OpenType signature wOF2"), and Google-hosted CJK families
+   come as unicode-range shards (plus a slow multi-MB fetch) — so the
+   chapter share poster (app/books/[slug]/[chapter]/poster.png) renders
+   with these local files instead of loadGoogleFont. */
+const POSTER_TTFS = [
+  { src: "TsangerJinKai02-W04.woff2", out: "TsangerJinKai02-W04.poster.ttf" },
+  { src: "TsangerJinKai02-W05.woff2", out: "TsangerJinKai02-W05.poster.ttf" },
+];
+
 /* Punctuation / symbols the design may render even when absent from source text
    (kept explicit so a subset never drops a quote mark or dash). */
 const ALWAYS =
@@ -92,6 +102,16 @@ async function main() {
     console.log(
       `  ${w.out.padEnd(34)} ${(before / 1048576).toFixed(1)}MB → ` +
         `${(out.length / 1024).toFixed(0).padStart(4)}KB  (−${pct}%)`,
+    );
+  }
+
+  for (const w of POSTER_TTFS) {
+    const srcPath = path.join(FONT_DIR, w.src);
+    const buf = await readFile(srcPath);
+    const out = await subsetFont(buf, text, { targetFormat: "sfnt" });
+    await writeFile(path.join(FONT_DIR, w.out), out);
+    console.log(
+      `  ${w.out.padEnd(34)} ${(out.length / 1024).toFixed(0)}KB (sfnt, for next/og)`,
     );
   }
 
