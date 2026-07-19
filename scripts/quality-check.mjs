@@ -2959,6 +2959,21 @@ assertIncludes(
   "throw error;",
   "llms.md route must re-throw after logging so a missing file results in a 500, not an empty chapter.",
 );
+assertIncludes(
+  "app/books/[slug]/[chapter]/llms.md/route.ts",
+  "throw error;",
+  "Chapter llms.md route must re-throw after logging so a missing file results in a 500, not an empty chapter.",
+);
+assertIncludes(
+  "app/books/[slug]/[chapter]/llms.md/route.ts",
+  "export const dynamicParams = false;",
+  "Chapter llms.md route should disable unspecified dynamic params.",
+);
+assertIncludes(
+  "app/books/[slug]/[chapter]/llms.md/route.ts",
+  'from "@/lib/llms-clean-mdx"',
+  "Chapter llms.md route should reuse the shared cleanMdx pipeline.",
+);
 
 /* ── Smoke test script ──
    A browser-level smoke test guards against regressions that static

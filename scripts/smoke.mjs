@@ -143,6 +143,23 @@ async function main() {
     !kimiLlms.includes("<T "),
   );
 
+  // per-chapter llms.md
+  const chLlms = await fetchText(`${BASE_URL}/books/kimi/08-code/llms.md`);
+  check(
+    "/books/kimi/08-code/llms.md contains the chapter title",
+    chLlms.includes("# 写码"),
+  );
+  check(
+    "/books/kimi/08-code/llms.md has no <T ",
+    !chLlms.includes("<T "),
+  );
+  check(
+    "/books/kimi/08-code/llms.md links the whole-book markdown",
+    chLlms.includes("/books/kimi/llms.md"),
+  );
+  const chLlms404 = await fetchStatus(`${BASE_URL}/books/kimi/not-real/llms.md`);
+  check("/books/kimi/not-real/llms.md returns 404", chLlms404 === 404);
+
   // ── Mini Program content API (/api/mp/v1) ──
   async function fetchJson(url) {
     try {
