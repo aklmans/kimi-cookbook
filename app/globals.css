@@ -10824,28 +10824,64 @@ html {
 }
 
 /* ============================================================
-   Round-103 · Per-chapter Feed-to-AI row — a quiet action zone between
-   the chapter body and the chapter nav (ChapterAgentButton): the
-   bordered button on the left, the mono uppercase hint on the right.
+   Round-103 · Chapter reading-aids bar (ChapterActions, mounted at the
+   foot of the chapter cover — after the byline, before the rule). The
+   tools a reader should see BEFORE the body: 目录 (outline rail), MD
+   (chapter llms.md), AI 提示词 (copy prompt). Shape follows the sister
+   project's article assistant: frame-less mono uppercase actions with
+   accent hairline icons; hidden in print.
    ============================================================ */
-.ch-agent {
+.ch-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
-  margin: 56px 0 0;
+  gap: 8px 22px;
+  margin: 24px 0 0;
 }
-.ch-agent__hint {
+.ch-actions__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
   font-family: var(--mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-3);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+.ch-actions__action svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+  opacity: 0.82;
+  flex: none;
+}
+.ch-actions__action:hover,
+.ch-actions__action:focus-visible {
+  color: var(--accent);
+}
+.ch-actions__action:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
 }
 @media (max-width: 640px) {
-  .ch-agent {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .ch-actions {
+    gap: 6px 16px;
+  }
+  .ch-actions__action {
+    min-height: 28px;
+    font-size: 9.5px;
+  }
+}
+@media print {
+  .ch-actions {
+    display: none !important;
   }
 }

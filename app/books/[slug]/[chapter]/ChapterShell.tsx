@@ -8,7 +8,6 @@ import { ChapterOutline } from "@/components/ChapterOutline";
 import { Discussion } from "@/components/Discussion";
 import { T } from "@/components/T";
 import { NextBook } from "@/components/mdx/NextBook";
-import { ChapterAgentButton } from "@/components/ChapterAgentButton";
 import { getBook, getPreviousBook, chapterNumber, commentsMode } from "@/lib/books";
 import { formatReadTime } from "@/lib/format";
 import type { BookMeta, Chapter } from "@/lib/types";
@@ -78,17 +77,6 @@ export function ChapterShell({
           </div>
         )}
         {children}
-
-        {/* Per-chapter Feed-to-AI entry — copies the chapter-scoped
-            prompt (see ChapterAgentButton). */}
-        <ChapterAgentButton
-          bookSlug={book.slug}
-          bookTitle={book.title}
-          number={number}
-          chapterSlug={chapter.slug}
-          chapterTitle={chapter.title}
-          lede={chapter.lede}
-        />
 
         {/* Chapter nav */}
         <nav className="ch-nav" aria-label="章节导航 / Chapter navigation">

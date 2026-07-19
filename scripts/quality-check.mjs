@@ -2098,17 +2098,17 @@ assertIncludes(
   "ChapterShell should resolve the previous book for the terminal next-book recommendation.",
 );
 assertIncludes(
-  "app/books/[slug]/[chapter]/ChapterShell.tsx",
-  "ChapterAgentButton",
-  "Chapter pages should mount the per-chapter Feed-to-AI entry.",
+  "components/mdx/Cover.tsx",
+  "ChapterActions",
+  "The chapter cover should mount the reading-aids bar before the body.",
 );
 assertIncludes(
-  "components/ChapterAgentButton.tsx",
+  "components/mdx/ChapterActions.tsx",
   "llms.md",
   "The chapter agent prompt should fetch-first on the per-chapter markdown endpoint.",
 );
 assertIncludes(
-  "components/ChapterAgentButton.tsx",
+  "components/mdx/ChapterActions.tsx",
   "打不开链接",
   "The chapter agent prompt should keep the anti-improvisation rail.",
 );

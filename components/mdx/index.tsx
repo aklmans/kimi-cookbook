@@ -121,7 +121,7 @@ export function getMdxComponents(ctx: ChapterCtx) {
     OpenAIPickerLadder,
     OpenAICodexLadder,
     OpenAITierWalls,
-    Cover: () => <Cover chapter={ctx.chapter} number={ctx.number} />,
+    Cover: () => <Cover book={ctx.book} chapter={ctx.chapter} number={ctx.number} />,
     Footnote: ({ n }: { n: number }) => (
       <Footnote n={n} references={ctx.references} />
     ),

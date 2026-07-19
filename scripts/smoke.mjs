@@ -576,14 +576,14 @@ async function main() {
     const detailMarks = await page.locator(".book-detail__mark").count();
     check("Book detail renders the brand mark", detailMarks === 1);
 
-    // Per-chapter Feed-to-AI entry (chapter-scoped prompt)
+    // Chapter reading-aids bar (目录 / MD / AI 提示词) on the cover
     await page.goto(`${BASE_URL}/books/kimi/01-intro`, {
       waitUntil: "networkidle",
     });
-    const agentBtn = await page.locator(".ch-agent__btn").count();
+    const aidActions = await page.locator(".ch-actions__action").count();
     check(
-      "Chapter page renders the per-chapter Feed-to-AI button",
-      agentBtn === 1,
+      "Chapter cover renders the reading-aids bar with 3 actions",
+      aidActions === 3,
     );
 
     // Chapter reading pages must not overflow horizontally at tablet /
