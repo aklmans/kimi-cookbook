@@ -178,6 +178,22 @@ async function main() {
       mpCode.html.includes("<pre") &&
       mpCode.html.includes('style="color:'),
   );
+  check(
+    "/api/mp/v1/chapters/08-code ships an outline with anchor ids",
+    !!mpCode &&
+      Array.isArray(mpCode.outline) &&
+      mpCode.outline.length > 0 &&
+      mpCode.outline.every((o) => typeof o.id === "string" && o.id.length > 0) &&
+      mpCode.outline.some((o) => mpCode.html.includes(`id="${o.id}"`)),
+  );
+  check(
+    "/api/mp/v1/chapters/08-code ships structured references",
+    !!mpCode &&
+      Array.isArray(mpCode.references) &&
+      mpCode.references.length > 0 &&
+      typeof mpCode.references[0].body === "string" &&
+      mpCode.references[0].body.length > 0,
+  );
   const mpHtmlSafe = [mpIntro, mpCode].every(
     (c) =>
       c &&

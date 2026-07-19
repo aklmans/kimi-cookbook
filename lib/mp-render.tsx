@@ -15,6 +15,7 @@ import rehypeCodeTitle from "@/lib/rehype-code-title";
 import { ZHAPHAR_CODE_THEMES } from "@/lib/code-theme";
 import { chapterModifiedAt, chapterPublishedAt } from "@/lib/book-dates";
 import { chapterNumber } from "@/lib/books";
+import { extractChapterOutline } from "@/lib/chapter-outline";
 import { absoluteUrl } from "@/lib/site";
 import type { BookMeta, Chapter } from "@/lib/types";
 import type { Reference } from "@/components/mdx";
@@ -116,14 +117,16 @@ function MpCover({
 }
 
 function MpSectionTitle({
+  id,
   number,
   children,
 }: {
+  id?: string;
   number?: ReactNode;
   children?: ReactNode;
 }) {
   return (
-    <h2>
+    <h2 id={id}>
       {number ? <span style={{ color: ACCENT }}>— {number} </span> : null}
       {children}
       <span style={{ color: ACCENT }}>.</span>
@@ -289,20 +292,24 @@ function MpFigure({
     );
   }
   return (
-    <p>
-      <small>配图「{textOf(label) || "示意图"}」见网页版 kimi.read.wiki。</small>
-    </p>
+    <blockquote>
+      <p>
+        <small>配图「{textOf(label) || "示意图"}」见网页版 kimi.read.wiki。</small>
+      </p>
+    </blockquote>
   );
 }
 
 function MpDiagramNote({ caption }: { caption?: ReactNode }) {
   return (
-    <p>
-      <small>
-        示意图{textOf(caption) ? `「${textOf(caption)}」` : ""}见网页版
-        kimi.read.wiki。
-      </small>
-    </p>
+    <blockquote>
+      <p>
+        <small>
+          示意图{textOf(caption) ? `「${textOf(caption)}」` : ""}见网页版
+          kimi.read.wiki。
+        </small>
+      </p>
+    </blockquote>
   );
 }
 
@@ -834,22 +841,26 @@ function MpGallery({ children }: { cols?: number; children: ReactNode }) {
 }
 
 function MpFootnote({ n }: { n: number }) {
+  /* An anchor link, not a bare <sup>: the Mini Program turns the tap into a
+     reference bottom sheet (href "#fn-N"), and "#kc-refs" jumps to the list. */
   return (
-    <sup>
-      <span style={{ color: ACCENT }}>{n}</span>
-    </sup>
+    <a href={`#fn-${n}`}>
+      <sup>
+        <span style={{ color: ACCENT }}>{n}</span>
+      </sup>
+    </a>
   );
 }
 
 function MpReferences({ references }: { references: Reference[] }) {
   if (!references.length) return null;
   return (
-    <div>
+    <div id="kc-refs">
       <hr />
       <h3>引用与参考</h3>
       <ol>
         {references.map((r) => (
-          <li key={r.id}>
+          <li key={r.id} id={`fn-${r.id}`}>
             {r.body ?? r.bodyEn ?? ""}
             {r.url ? (
               <>
@@ -948,6 +959,8 @@ export type MpChapterPayload = {
   title: string;
   readTime: string;
   html: string;
+  outline: { id: string; level: number; title: string }[];
+  references: { id: number; body: string; url: string; urlLabel: string }[];
 };
 
 /** Render one chapter's MDX to the restricted Mini Program HTML. Throws
@@ -972,8 +985,13 @@ export async function renderChapterToMpHtml(
     ? (data.references as Reference[])
     : [];
 
+  // Same outline injection as the web chapter page: SectionTitle / H3 /
+  // markdown ### all gain stable ids, so the MP's in-chapter outline can
+  // scroll to them via mp-html's navigateTo.
+  const { outline, body: bodyWithOutlineIds } = extractChapterOutline(body);
+
   const { content } = await compileMDX({
-    source: body,
+    source: bodyWithOutlineIds,
     components: mpComponents({ book, chapter, index, references }),
     options: {
       blockJS: false,
@@ -1001,5 +1019,16 @@ export async function renderChapterToMpHtml(
     title: chapter.title,
     readTime: chapter.readTime,
     html: sanitizeHtml(renderToStaticMarkup(content)),
+    outline: outline.map((o) => ({
+      id: o.id,
+      level: o.level,
+      title: o.titleZh || o.titleEn,
+    })),
+    references: references.map((r) => ({
+      id: r.id,
+      body: r.body ?? r.bodyEn ?? "",
+      url: r.url ?? "",
+      urlLabel: r.urlLabel ?? "",
+    })),
   };
 }

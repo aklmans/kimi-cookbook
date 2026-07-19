@@ -2801,6 +2801,16 @@ assertIncludes(
   "sanitizeHtml",
   "Mini Program renderer should sanitize the emitted HTML subset.",
 );
+assertIncludes(
+  "lib/mp-render.tsx",
+  "extractChapterOutline",
+  "Mini Program renderer should inject outline ids like the web chapter page so in-chapter navigation works.",
+);
+assertIncludes(
+  "lib/mp-render.tsx",
+  'id="kc-refs"',
+  "Mini Program references block should carry the kc-refs anchor for jump-to-references.",
+);
 assertNotIncludes(
   "lib/mp-render.tsx",
   "rehypeAutolinkHeadings",
