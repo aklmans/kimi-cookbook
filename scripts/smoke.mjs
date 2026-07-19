@@ -194,6 +194,14 @@ async function main() {
       typeof mpCode.references[0].body === "string" &&
       mpCode.references[0].body.length > 0,
   );
+  check(
+    "/api/mp/v1/chapters/08-code ships copyable prompts + copy anchors",
+    !!mpCode &&
+      Array.isArray(mpCode.prompts) &&
+      mpCode.prompts.length > 0 &&
+      mpCode.prompts[0].template.length > 0 &&
+      mpCode.html.includes('href="#kc-prompt-0"'),
+  );
   const mpHtmlSafe = [mpIntro, mpCode].every(
     (c) =>
       c &&

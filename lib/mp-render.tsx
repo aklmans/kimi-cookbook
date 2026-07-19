@@ -777,11 +777,14 @@ function MpPromptBox({
   text,
   example,
   children,
+  promptId,
 }: {
   model?: ReactNode;
   text?: ReactNode;
   example?: ReactNode;
   children?: ReactNode;
+  /** Per-chapter prompt index — powers the Mini Program's copy anchor. */
+  promptId?: number;
 }) {
   return (
     <figure>
@@ -789,6 +792,12 @@ function MpPromptBox({
         <small>
           <strong>提示词</strong>
           {model ? ` · ${textOf(model)}` : ""}
+          {promptId !== undefined ? (
+            <>
+              {" · "}
+              <a href={`#kc-prompt-${promptId}`}>复制</a>
+            </>
+          ) : null}
         </small>
       </figcaption>
       <MpPromptText node={text ?? children} />
@@ -880,9 +889,17 @@ function mpComponents(ctx: {
   chapter: Chapter;
   index: number;
   references: Reference[];
-}) {
+}): {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  components: Record<string, any>;
+  prompts: { id: number; model: string; template: string; example: string }[];
+} {
   const note = <MpDiagramNote />;
-  return {
+  /* PromptBox instances self-register here so the payload can carry the raw
+     prompt text (the MP copies from the payload, not from the rendered HTML). */
+  let promptCount = 0;
+  const prompts: { id: number; model: string; template: string; example: string }[] = [];
+  const components = {
     T: MpT,
     StopPunct: MpStopPunct,
     Cover: () => (
@@ -924,7 +941,21 @@ function mpComponents(ctx: {
     Checklist: MpChecklist,
     Check: MpCheck,
     LinkCard: MpLinkCard,
-    PromptBox: MpPromptBox,
+    PromptBox: (props: {
+      model?: ReactNode;
+      text?: ReactNode;
+      example?: ReactNode;
+      children?: ReactNode;
+    }) => {
+      const id = promptCount++;
+      prompts.push({
+        id,
+        model: textOf(props.model),
+        template: textOf(props.text ?? props.children),
+        example: textOf(props.example),
+      });
+      return <MpPromptBox {...props} promptId={id} />;
+    },
     Gallery: MpGallery,
     GalleryItem: MpGalleryItem,
     ShowcaseCard: () => note,
@@ -939,6 +970,7 @@ function mpComponents(ctx: {
     Footnote: ({ n }: { n: number }) => <MpFootnote n={n} />,
     References: () => <MpReferences references={ctx.references} />,
   };
+  return { components, prompts };
 }
 
 /** Strip anything a rich renderer must never see (defensive — the MP
@@ -961,6 +993,7 @@ export type MpChapterPayload = {
   html: string;
   outline: { id: string; level: number; title: string }[];
   references: { id: number; body: string; url: string; urlLabel: string }[];
+  prompts: { id: number; model: string; template: string; example: string }[];
 };
 
 /** Render one chapter's MDX to the restricted Mini Program HTML. Throws
@@ -989,10 +1022,16 @@ export async function renderChapterToMpHtml(
   // markdown ### all gain stable ids, so the MP's in-chapter outline can
   // scroll to them via mp-html's navigateTo.
   const { outline, body: bodyWithOutlineIds } = extractChapterOutline(body);
+  const { components, prompts } = mpComponents({
+    book,
+    chapter,
+    index,
+    references,
+  });
 
   const { content } = await compileMDX({
     source: bodyWithOutlineIds,
-    components: mpComponents({ book, chapter, index, references }),
+    components,
     options: {
       blockJS: false,
       mdxOptions: {
@@ -1030,5 +1069,6 @@ export async function renderChapterToMpHtml(
       url: r.url ?? "",
       urlLabel: r.urlLabel ?? "",
     })),
+    prompts,
   };
 }
