@@ -392,6 +392,15 @@ Co-Authored-By: Kimi Code <noreply@moonshot.ai>
 - **Inner ASCII quotes inside Chinese strings break TS parsing** —
   use `「…」` instead of `"…"` for Chinese inner quotes inside
   meta.ts strings.
+- **agent-readable markdown (llms surfaces)**: whole-book
+  `/books/<slug>/llms.md` (~90 KB — TOC lines carry per-chapter md
+  links, and a top-of-file note with the build-time size + completeness
+  self-check) and per-chapter `/books/<slug>/<chapter>/llms.md` (the
+  truncation fallback, 5–25 KB each). `/llms.txt` lists every chapter
+  md; book + chapter pages carry `text/markdown` link alternates; the
+  copy-prompt buttons (`AgentReaderButton` book level, `ChapterActions`
+  chapter level) demand a completeness self-check so silently truncated
+  agent fetches get reported instead of passed off as the whole book.
 
 ---
 

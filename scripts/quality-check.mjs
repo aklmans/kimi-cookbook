@@ -1595,6 +1595,11 @@ assertIncludes(
 );
 assertIncludes(
   "next.config.ts",
+  '"/books/[slug]/[chapter]/llms.md"',
+  "outputFileTracingIncludes should cover the per-chapter /books/[slug]/[chapter]/llms.md route.",
+);
+assertIncludes(
+  "next.config.ts",
   '"./content/books/**/*.mdx"',
   "outputFileTracingIncludes should bundle the chapter MDX glob for both routes.",
 );
@@ -2952,6 +2957,54 @@ assertIncludes(
   "app/llms.txt/route.ts",
   "/license",
   "Site-level /llms.txt should state the content license and link /license for agents.",
+);
+assertIncludes(
+  "app/llms.txt/route.ts",
+  "逐章 markdown",
+  "Site-level /llms.txt should enumerate per-chapter markdown URLs so agents never have to guess chapter slugs.",
+);
+
+/* ── Agent-readable hardening: truncation fallback + discovery ──
+   Real-world agent fetches of the ~90 KB whole-book llms.md get silently
+   truncated by the agent's own tool budget; the agent then mistakes the
+   fragment for the book (and once guessed wrong chapter slugs because
+   the TOC carried no URLs). The guards: the llms.md TOC links every
+   chapter's md, a top-of-file machine note states size + fallback +
+   self-check, and the copied prompts demand the same self-check. */
+assertIncludes(
+  "app/books/[slug]/llms.md/route.ts",
+  "给 AI 读者的抓取说明",
+  "Whole-book llms.md should carry a top-of-file machine note: size, per-chapter fallback, and the completeness self-check.",
+);
+assertIncludes(
+  "app/books/[slug]/llms.md/route.ts",
+  "[md](${bookUrl}/${c.slug}/llms.md)",
+  "Whole-book llms.md TOC lines must carry each chapter's markdown URL so a truncated fetch still yields every chapter link.",
+);
+assertIncludes(
+  "app/books/[slug]/llms.md/route.ts",
+  "noteIndex",
+  "Whole-book llms.md computes its real size at build time and patches the top-of-file note (no drifting hard-coded KB).",
+);
+assertIncludes(
+  "components/AgentReaderButton.tsx",
+  "完整性自检",
+  "The book-level agent prompt must demand a completeness self-check so truncated fetches get reported instead of passed off as the whole book.",
+);
+assertIncludes(
+  "components/AgentReaderButton.tsx",
+  "completeness self-check",
+  "The EN agent prompt must carry the same completeness self-check.",
+);
+assertIncludes(
+  "app/books/[slug]/page.tsx",
+  '"text/markdown"',
+  "Book pages should advertise the whole-book markdown via alternates.types text/markdown.",
+);
+assertIncludes(
+  "app/books/[slug]/[chapter]/page.tsx",
+  '"text/markdown"',
+  "Chapter pages should advertise their markdown twin via alternates.types text/markdown.",
 );
 
 /* ── llms.md route hardening ──

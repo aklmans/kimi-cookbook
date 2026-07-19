@@ -1,4 +1,4 @@
-import { getAllBooks, bookDateShort } from "@/lib/books";
+import { getAllBooks, bookDateShort, chapterNumber } from "@/lib/books";
 import { absoluteUrl } from "@/lib/site";
 import { langLabel } from "@/lib/labels";
 
@@ -50,6 +50,16 @@ export function GET() {
     }
     lines.push(`- 阅读页 / Web: ${absoluteUrl(`/books/${book.slug}`)}`);
     lines.push(`- AI-readable markdown: ${absoluteUrl(`/books/${book.slug}/llms.md`)}`);
+    /* Chapter-granularity markdown — the fallback for agents whose fetch
+       budget truncates the whole-book file (and the only way to reach a
+       chapter without guessing its slug). */
+    lines.push(`- 逐章 markdown / Per-chapter markdown:`);
+    for (const [i, c] of book.chapters.entries()) {
+      const draftMarker = c.draft ? " (草稿)" : "";
+      lines.push(
+        `  - ${chapterNumber(i)} · ${c.title}${draftMarker}: ${absoluteUrl(`/books/${book.slug}/${c.slug}/llms.md`)}`,
+      );
+    }
     lines.push("");
   }
 

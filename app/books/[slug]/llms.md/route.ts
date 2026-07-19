@@ -70,6 +70,12 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
     `> 本书由 Zhapar 撰写, 于 kimi.read.wiki 完整免费阅读。允许 AI 摘读、引用、问答; 转载请保留作者署名与原文链接 (CC BY-NC-ND 4.0, ${absoluteUrl("/license")})。`,
   );
   lines.push("");
+  /* Agent-fetch note — filled in at the END of the build, once the total
+     byte size is known (the note itself sits near the top where a
+     truncated fetch still sees it). */
+  const noteIndex = lines.length;
+  lines.push("");
+  lines.push("");
   lines.push("---");
   lines.push("");
 
@@ -86,11 +92,16 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
   lines.push("");
 
   // ── Table of contents ──
+  // Every line carries the chapter's own markdown + web URLs: an agent
+  // holding even a truncated copy of this file can still fetch the book
+  // chapter by chapter instead of guessing slugs.
   lines.push("## 目录");
   lines.push("");
   for (const [i, c] of book.chapters.entries()) {
     const draftMarker = c.draft ? "  (草稿)" : "";
-    lines.push(`${chapterNumber(i)} · ${c.title}${draftMarker}`);
+    lines.push(
+      `${chapterNumber(i)} · ${c.title}${draftMarker} — [md](${bookUrl}/${c.slug}/llms.md) · [web](${bookUrl}/${c.slug})`,
+    );
   }
   lines.push("");
   lines.push("---");
@@ -101,7 +112,7 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
     const chapterUrl = `${bookUrl}/${c.slug}`;
     lines.push(`## 第 ${chapterNumber(i)} 章 · ${c.title}`);
     lines.push("");
-    lines.push(`[原文](${chapterUrl}) · [评论](${chapterUrl}#discussion)`);
+    lines.push(`[原文](${chapterUrl}) · [评论](${chapterUrl}#discussion) · [本章 md](${chapterUrl}/llms.md)`);
     lines.push("");
     if (c.lede) {
       lines.push(`> ${c.lede}`);
@@ -174,6 +185,11 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
   lines.push("");
   lines.push(`*Kimi · 从长文本到一套 agent 栈 · Zhapar 著 · CC BY-NC-ND 4.0 · ${bookUrl}*`);
   lines.push("");
+
+  // Patch the top-of-file agent note now that the total size is known.
+  const totalKb = Math.max(1, Math.round(lines.join("\n").length / 1024));
+  lines[noteIndex] =
+    `> 给 AI 读者的抓取说明: 本文件是全书完整文本 (约 ${totalKb} KB, 共 ${book.chapters.length} 章)。若你的抓取工具把它截断了, 请按下方目录逐章抓取 —— 目录每行都带该章的 markdown 链接 (md, 每章约 5–25 KB); 站点级索引: ${absoluteUrl("/llms.txt")}。完整性自检: 全文最后一行是以「*${book.title}」开头的斜体署名行 —— 没看到它, 说明你手上的不是全文, 别把片段当全书。`;
 
   return lines.join("\n");
 }

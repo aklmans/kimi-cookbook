@@ -58,7 +58,13 @@ export async function generateMetadata({
   return {
     title: { absolute: book.title },
     description: book.description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      // Machine discovery for AI readers: the whole-book markdown lives
+      // at /books/<slug>/llms.md (chapter-level twins sit on each
+      // chapter page's own alternates).
+      types: { "text/markdown": `${url}/llms.md` },
+    },
     openGraph: {
       type: "book",
       title: book.title,

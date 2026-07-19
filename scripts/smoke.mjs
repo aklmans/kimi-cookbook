@@ -160,6 +160,42 @@ async function main() {
   const chLlms404 = await fetchStatus(`${BASE_URL}/books/kimi/not-real/llms.md`);
   check("/books/kimi/not-real/llms.md returns 404", chLlms404 === 404);
 
+  // whole-book llms.md: truncation fallback + completeness surfaces
+  check(
+    "/books/kimi/llms.md carries the agent fetch note",
+    kimiLlms.includes("给 AI 读者的抓取说明"),
+  );
+  check(
+    "/books/kimi/llms.md TOC links per-chapter markdown",
+    kimiLlms.includes("/books/kimi/01-intro/llms.md"),
+  );
+  check(
+    "/books/kimi/llms.md TOC links 09-selection (no slug guessing)",
+    kimiLlms.includes("/books/kimi/09-selection/llms.md"),
+  );
+  check(
+    "/books/kimi/llms.md ends with the signed attribution line",
+    /\*Kimi · 从长文本到一套 agent 栈 · Zhapar 著/.test(kimiLlms.slice(-400)),
+  );
+
+  // llms.txt: chapter-granularity links
+  check(
+    "/llms.txt lists per-chapter markdown (09-selection)",
+    llmsTxt.includes("/books/kimi/09-selection/llms.md"),
+  );
+
+  // HTML pages advertise their markdown twins for machine discovery
+  const kimiBookHtml = await fetchText(`${BASE_URL}/books/kimi`);
+  check(
+    "/books/kimi advertises its text/markdown alternate",
+    kimiBookHtml.includes('type="text/markdown"'),
+  );
+  const kimiChHtml = await fetchText(`${BASE_URL}/books/kimi/08-code`);
+  check(
+    "/books/kimi/08-code advertises its text/markdown alternate",
+    kimiChHtml.includes('type="text/markdown"'),
+  );
+
   // ── Mini Program content API (/api/mp/v1) ──
   async function fetchJson(url) {
     try {

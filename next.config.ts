@@ -20,12 +20,14 @@ const nextConfig: NextConfig = {
   //
   // /search-index.json        — lib/searchIndex.ts fs.readFileSync
   // /books/[slug]/llms.md     — app/books/[slug]/llms.md/route.ts fs.readFile
+  // /books/[slug]/[chapter]/llms.md — app/books/[slug]/[chapter]/llms.md/route.ts fs.readFile
   //
   // meta.ts files are imported statically via lib/books.ts and are
   // already part of the bundle, so they do not need to be listed.
   outputFileTracingIncludes: {
     "/search-index.json": ["./content/books/**/*.mdx"],
     "/books/[slug]/llms.md": ["./content/books/**/*.mdx"],
+    "/books/[slug]/[chapter]/llms.md": ["./content/books/**/*.mdx"],
     "/api/mp/v1/chapters/[slug]": ["./content/books/**/*.mdx"],
   },
   /* Single-book site: the home page IS the book's intro page. Proxy `/`

@@ -564,19 +564,38 @@ typographic identity of the library.
 
 ---
 
-## 13 · MD route for AI agents (`/books/<slug>/llms.md`)
+## 13 · MD routes for AI agents (`llms.md`)
 
-Branded markdown export for any AI reader. Structure:
+Branded markdown export for any AI reader, at two granularities:
 
-1. **Provenance header** — author, first-published date, language,
-   canonical URL, license note
-2. **Subtitle + byline + description**
-3. **Table of contents**
-4. **Each chapter** as `## 第 N 章 · 标题`, with `[原文](.../slug)`
-   + `[评论](#discussion)` links, lede as blockquote, lightly
-   cleaned MDX body, references appended
-5. **Engagement footer** — comments URL, Twitter / GitHub / email,
-   support link, brand signature with license tag
+- **Whole book** — `/books/<slug>/llms.md` (~90 KB). Structure:
+  1. **Provenance header** — author, first-published date, language,
+     canonical URL, license note
+  2. **Agent fetch note** — total size (real KB count patched in at
+     build time), per-chapter fallback pointer, and the completeness
+     self-check (N chapters + the signed last line)
+  3. **Subtitle + byline + description**
+  4. **Table of contents** — every line links the chapter's own md +
+     web URLs, so even a truncated fetch yields every chapter address
+     (no slug guessing)
+  5. **Each chapter** as `## 第 N 章 · 标题`, with `[原文](...)` +
+     `[评论](#discussion)` + `[本章 md](...)` links, lede as
+     blockquote, lightly cleaned MDX body, references appended
+  6. **Engagement footer** — comments URL, Twitter / GitHub / email,
+     support link, brand signature with license tag (the signature
+     line doubles as the completeness sentinel)
+- **Per chapter** — `/books/<slug>/<chapter>/llms.md` (5–25 KB each):
+  compact provenance header, lede, cleaned body, references, prev /
+  next / whole-book links. The fallback for agents whose fetch budget
+  truncates the whole-book file.
+
+Discovery: site-level `/llms.txt` enumerates every book AND every
+chapter's md URL; book + chapter HTML pages advertise their markdown
+twins via `<link rel="alternate" type="text/markdown">`. The "Feed to
+AI" prompts (book-level `AgentReaderButton`, chapter-level
+`ChapterActions`) state the expected size and demand a completeness
+self-check, so a silently truncated fetch gets reported instead of
+passed off as the whole book.
 
 Every scraped copy carries its way home. License: CC BY-NC-ND 4.0
 (book content) / all-rights-reserved (source code).
