@@ -187,7 +187,11 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
   lines.push("");
 
   // Patch the top-of-file agent note now that the total size is known.
-  const totalKb = Math.max(1, Math.round(lines.join("\n").length / 1024));
+  // Buffer.byteLength, not String.length: the note must match the BYTES
+  // an agent's fetcher actually receives (CJK is 3 bytes/char in UTF-8
+  // but 1 char in JS — String.length would under-report by ~half).
+  const body = lines.join("\n");
+  const totalKb = Math.max(1, Math.round(Buffer.byteLength(body, "utf8") / 1024));
   lines[noteIndex] =
     `> 给 AI 读者的抓取说明: 本文件是全书完整文本 (约 ${totalKb} KB, 共 ${book.chapters.length} 章)。若你的抓取工具把它截断了, 请按下方目录逐章抓取 —— 目录每行都带该章的 markdown 链接 (md, 每章约 5–25 KB); 站点级索引: ${absoluteUrl("/llms.txt")}。完整性自检: 全文最后一行是以「*${book.title}」开头的斜体署名行 —— 没看到它, 说明你手上的不是全文, 别把片段当全书。`;
 

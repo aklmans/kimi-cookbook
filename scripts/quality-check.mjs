@@ -3022,6 +3022,11 @@ assertIncludes(
   "Whole-book llms.md computes its real size at build time and patches the top-of-file note (no drifting hard-coded KB).",
 );
 assertIncludes(
+  "app/books/[slug]/llms.md/route.ts",
+  "Buffer.byteLength",
+  "The llms.md size note must measure BYTES (what an agent's fetcher receives), not JS string length — CJK under-reports ~2x otherwise.",
+);
+assertIncludes(
   "components/AgentReaderButton.tsx",
   "完整性自检",
   "The book-level agent prompt must demand a completeness self-check so truncated fetches get reported instead of passed off as the whole book.",
