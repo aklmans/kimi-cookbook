@@ -2773,6 +2773,15 @@ assertExists(
   "Mini Program cache-invalidation version route must exist.",
 );
 assertExists(
+  "app/api/mp/qr.png/route.ts",
+  "Mini Program share-poster QR route must exist.",
+);
+assertIncludes(
+  "app/api/mp/qr.png/route.ts",
+  'target.host !== ALLOWED_HOST',
+  "Poster QR route must pin the url param to this site's own host.",
+);
+assertExists(
   "lib/mp-render.tsx",
   "Mini Program MDX → restricted-HTML renderer must exist.",
 );

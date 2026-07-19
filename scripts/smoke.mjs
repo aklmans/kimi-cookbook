@@ -225,6 +225,15 @@ async function main() {
   const mpMissing = await fetchStatus(`${BASE_URL}/api/mp/v1/chapters/not-real`);
   check("/api/mp/v1/chapters/not-real returns 404", mpMissing === 404);
 
+  const qrOk = await fetchStatus(
+    `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://kimi.read.wiki/books/kimi")}`,
+  );
+  check("/api/mp/qr.png serves a QR for a same-site url", qrOk === 200);
+  const qrForeign = await fetchStatus(
+    `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://example.com/x")}`,
+  );
+  check("/api/mp/qr.png rejects a foreign url", qrForeign === 400);
+
   // ── Browser checks (Playwright) ──
   const browser = await chromium.launch({ headless: true });
   try {
