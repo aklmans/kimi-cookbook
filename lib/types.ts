@@ -96,3 +96,49 @@ export type BookMeta = {
   comments?: CommentsMode;
   chapters: Chapter[];
 };
+
+/* ── Mini Program「关于本书」page payload (content/books/<slug>/about.ts) ──
+   Served as the top-level `about` key of GET /api/mp/v1/book. Every
+   user-facing string is PLAIN TEXT: no HTML, no Markdown, no newlines —
+   paragraph splitting is array-based. Quotes use 「」. */
+
+export type AboutMetaRow = { label: string; value: string };
+
+/** "toc" jumps to the MP's toc page; "copy" writes `value` to the
+    clipboard and toasts `toast`. */
+export type AboutWayAction =
+  | { kind: "toc"; label: string }
+  | { kind: "copy"; label: string; value: string; toast: string };
+
+export type AboutWay = {
+  label: string;
+  text: string;
+  action: AboutWayAction;
+};
+
+export type AboutContact = {
+  label: string;
+  text: string;
+  value: string;
+  toast: string;
+};
+
+export type AboutSection = {
+  no: string;
+  /** Section title — the MP appends the accent stop-dot itself, so the
+      copy must NOT end with a period. */
+  title: string;
+  paragraphs?: string[];
+  ways?: AboutWay[];
+  license?: string;
+  contacts?: AboutContact[];
+};
+
+export type BookAbout = {
+  lede: string;
+  bookline: string;
+  intro: string;
+  meta: AboutMetaRow[];
+  sections: AboutSection[];
+  kicker: string;
+};

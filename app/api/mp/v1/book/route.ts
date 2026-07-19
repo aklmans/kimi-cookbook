@@ -1,9 +1,11 @@
 import { getAllBooks, bookDateShort, chapterNumber } from "@/lib/books";
 import { absoluteUrl } from "@/lib/site";
+import { about } from "@/content/books/kimi/about";
 
-/* Mini Program content API — the single book's meta + chapter list.
-   Read-only, cached for an hour; the MP caches it locally and only
-   re-fetches on expiry (or when /api/mp/v1/version moves). */
+/* Mini Program content API — the single book's meta + chapter list,
+   plus the「关于本书」page payload (about). Read-only, cached for an
+   hour; the MP caches it locally and only re-fetches on expiry (or
+   when /api/mp/v1/version moves). */
 
 export const dynamic = "force-static";
 
@@ -23,6 +25,7 @@ export function GET() {
       updated: bookDateShort(book.date),
       readMinutes: book.readMinutes,
       site: absoluteUrl("/"),
+      about,
       chapters: book.chapters.map((c, i) => ({
         slug: c.slug,
         number: chapterNumber(i),

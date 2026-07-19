@@ -231,6 +231,12 @@ async function main() {
     "/api/mp/v1/book returns the single book with its chapter list",
     mpBook?.slug === "kimi" && mpBook?.chapters?.length === 10,
   );
+  check(
+    "/api/mp/v1/book carries the about page payload",
+    mpBook?.about?.sections?.length === 4 &&
+      mpBook.about.sections[2]?.ways?.length === 4 &&
+      Boolean(mpBook.about.sections[3]?.license),
+  );
 
   const mpVersion = await fetchJson(`${BASE_URL}/api/mp/v1/version`);
   check(
