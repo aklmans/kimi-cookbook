@@ -256,7 +256,7 @@ export default function AboutPage() {
                   en="The book ships AI-readable Markdown. Give it to your own agent for chapter summaries, follow-up questions, and citations."
                 />
               </p>
-              <span>/books/&lt;slug&gt;/llms.md</span>
+              <span>/books/kimi/llms.md</span>
             </div>
             <div className="about-routes__row">
               <h3>RSS</h3>

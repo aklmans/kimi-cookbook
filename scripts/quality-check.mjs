@@ -146,8 +146,8 @@ assertIncludes(
 );
 assertIncludes(
   "app/about/page.tsx",
-  "/books/&lt;slug&gt;/llms.md",
-  "About page should mention the per-book AI-readable Markdown route.",
+  "/books/kimi/llms.md",
+  "About page should mention the book's AI-readable Markdown route.",
 );
 assertIncludes(
   "app/about/page.tsx",
