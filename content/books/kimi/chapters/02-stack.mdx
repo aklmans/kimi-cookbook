@@ -1,36 +1,43 @@
 ---
 references:
   - id: 1
-    body: "Kimi 官网首页（kimi.com）—— 截至 2026-07 首屏标注「Kimi AI with K3 | Built for Agentic Coding & Knowledge Work」, 产品入口排着 Chat / Slides / Websites / Docs / Sheets / Deep Research / Agent / Agent Swarm / Kimi Code / Kimi Claw（入口已迁 /bot）, 侧边栏另有 Kimi Work（Beta）。这排入口就是它「不只是聊天框」的产品全景。"
+    body: "Kimi 官网首页(kimi.com)—— 截至 2026-07 首屏标注「Kimi AI with K3 | Built for Agentic Coding & Knowledge Work」, 产品入口排着 Chat / Slides / Websites / Docs / Sheets / Deep Research / Agent / Agent Swarm / Kimi Code / Kimi Claw(入口已迁 /bot), 侧边栏另有 Kimi Work(Beta)。这排入口就是它「不只是聊天框」的产品全景。"
     url: "https://www.kimi.com/"
     urlLabel: "Kimi 官网"
   - id: 2
-    body: "Hugging Face · moonshotai（Kimi-K2.6 / Kimi-K2.7-Code 模型卡）—— K2 系权重以宽松（Modified MIT）协议开源, 可下载、自托管、商用; 1 万亿参数 MoE、激活约 320 亿, 原生多模态, 256K 上下文。K3 权重官方承诺 2026 年 7 月 27 日前放出, 截至 2026-07-17 尚未上架。开源是 OpenAI / Anthropic 都不给的一条。"
+    body: "Kimi 官网 · 功能页(kimi.com/features)—— 官方对四件 agentic 成品的定位: Websites 把想法变成可发布的网站(描述需求、传图传视频、无需代码); Slides 把文字文档图片转成可编辑的 PPT; Sheets 生成带公式、数据透视表和图表的真 Excel; Docs 覆盖 Word / PDF 的生成、转换、审阅与批处理。截至 2026-07。"
+    url: "https://www.kimi.com/zh-tw/features/"
+    urlLabel: "Kimi 官网 · 功能页"
+  - id: 3
+    body: "Hugging Face · moonshotai(Kimi-K2.6 / Kimi-K2.7-Code 模型卡)—— K2 系权重以宽松(Modified MIT)协议开源, 可下载、自托管、商用; 1 万亿参数 MoE、激活约 320 亿, 原生多模态, 256K 上下文。K3 权重官方承诺 2026 年 7 月 27 日前放出, 截至 2026-07-17 尚未上架。开源是 OpenAI / Anthropic 都不给的一条。"
     url: "https://huggingface.co/moonshotai/Kimi-K2.6"
     urlLabel: "Hugging Face · moonshotai"
-  - id: 3
-    body: "Kimi 开放平台（platform.kimi.com）· API 总览 —— API base_url 为 https://api.moonshot.cn/v1, 在请求 / 响应格式上兼容 OpenAI Chat Completions, 可直接用 OpenAI SDK。消费端会员与开放平台 API 是两套账户、两条计费。截至 2026-07。"
+  - id: 4
+    body: "Kimi 开放平台(platform.kimi.com)· API 总览 —— API base_url 为 https://api.moonshot.cn/v1, 在请求 / 响应格式上兼容 OpenAI Chat Completions, 可直接用 OpenAI SDK。消费端会员与开放平台 API 是两套账户、两条计费。截至 2026-07。"
     url: "https://platform.kimi.com/docs/api/overview"
     urlLabel: "Kimi 开放平台 · API 总览"
+  - id: 5
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍(2026-05 上线)—— 一款为 AI Agent 设计的 Chrome / Edge 扩展: 与云端浏览器自动化不同, 它跑在你正在用的浏览器里、直接继承你的登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备, 扩展本身免费。截至 2026-07。"
+    url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
+    urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
 ---
 
 <Cover />
 
-<T zh="你天天用的是那个聊天框。但点开网页顶上的导航, 是一排你大概没怎么碰过的入口: Slides、Websites、Docs、Sheets、Deep Research、Agent、Agent Swarm、Kimi Code、Kimi Claw, 侧边栏还新添了桌面端的 Kimi Work。" />
+<T zh="你天天用的是那个聊天框。但把 Kimi 的产品线整个摆开, 其实是五件套: 网页里的 Kimi 本体、桌面端的 Kimi Work、终端里的 Kimi Code、浏览器扩展 Kimi WebBridge, 和最底下的 Kimi Platform 开放平台。" />
 
-<T zh={<>把这排入口和 ChatGPT、Claude 摆在一起, 你会发现两边几乎能对上号。<Footnote n={1} />Kimi 早不是「一个会读长文的聊天框」, 是一整套栈 —— 最上面是聊天与会员, 底下垫着多模态旗舰模型、一群 agent、和一套开放平台 API。这章不教任何一面怎么用（那是后面每一章的事）, 只做一件事: 给整套栈画张图, 让你看清哪一面对着你哪类活、对标的又是前沿的哪一个。</>} />
+<T zh={<>把这五件和 ChatGPT、Claude 摆在一起, 你会发现两边几乎能对上号。<Footnote n={1} />Kimi 早不是「一个会读长文的聊天框」, 是一整套栈 —— 最上面是聊天与会员, 底下垫着多模态旗舰模型、一群 agent、和一套开放平台 API。这章不教任何一面怎么用（那是后面每一章的事）, 只做一件事: 给整套栈画张图, 让你看清哪一面对着你哪类活、对标的又是前沿的哪一个。</>} />
 
 <SectionTitle number="I"><T zh="这套栈, 几乎是照着前沿描的" /></SectionTitle>
 
-<T zh="把 Kimi 的产品线一项项摆开, 你能在 OpenAI / Anthropic 那边给几乎每一项找到对应。" />
+<T zh="按官方自己的摆法, 五件套一件一件看过去, 你能在 OpenAI / Anthropic 那边给几乎每一件找到对应。" />
 
 <Dl>
-<Di term={<T zh="聊天 + 五档会员" />} desc={<T zh="对标 ChatGPT / Claude 的消费端 App 与订阅梯度 —— 从免费的 Adagio 到 ¥699 的 Allegro, 一条按用量铺开的会员阶梯。" />} />
-<Di term={<T zh="K3 旗舰 + K2.7-Code" />} desc={<T zh="对标 GPT / Claude 的「旗舰 + 编码」那一组。K3 是 2.8 万亿参数、1M 上下文、思考永远开的旗舰; K2.7-Code 仍是编码专线。" />} />
-<Di term={<T zh="Agent（做 Slides / Websites / Docs / Sheets）" />} desc={<T zh="对标把答案直接变成成品的 agentic 能力（Canvas / Artifacts 那一路）—— 它交回来的是网页、幻灯、表格, 不只是一段文字。" />} />
-<Di term={<T zh="Deep Research" />} desc={<T zh="对标 OpenAI / Gemini 的 Deep Research: 自己读几百个网页、交叉核对, 出一份带出处的报告。" />} />
-<Di term={<T zh="Kimi Code" />} desc={<T zh="对标 Claude Code / Codex: 跑在终端、能改你仓库的编码 agent。" />} />
-<Di term={<T zh="开放平台 API" />} desc={<T zh="对标 OpenAI / Anthropic API: base_url 兼容 OpenAI, 改一行就能接到现有工具上。" />} />
+<Di term={<T zh="Kimi(网页本体 + 五档会员)" />} desc={<T zh="对标 ChatGPT / Claude 的消费端 App 与订阅梯度 —— 从免费的 Adagio 到 ¥699 的 Allegro。聊天框之外还有一排 agentic 入口: Slides 出可编辑的 PPT、Websites 几分钟发布网站、Docs 做 Word / PDF 全流程、Sheets 生成带公式和透视表的真 Excel、Deep Research 出带出处的报告。<Footnote n={2} />" />} />
+<Di term={<T zh="Kimi Work(桌面端, Beta)" />} desc={<T zh="对标 Claude / Copilot 那一类「长在电脑里」的桌面 agent: 面向知识工作者, 直接接手你本机上的文件与软件干活, 不必把东西一次次拖进网页。" />} />
+<Di term={<T zh="Kimi Code(终端 / IDE)" />} desc={<T zh="对标 Claude Code / Codex: 跑在终端、能改你仓库的编码 agent。本书第八章全是它。" />} />
+<Di term={<T zh="Kimi WebBridge(浏览器扩展)" />} desc={<T zh="给 AI agent 用的「手」: 装进你自己的 Chrome / Edge, 继承你的登录态, 让 agent 像真人一样点网页、填表单、跨站取数 —— 本地优先, 数据不出设备, 扩展本身免费。<Footnote n={5} />" />} />
+<Di term={<T zh="Kimi Platform(开放平台 API)" />} desc={<T zh="对标 OpenAI / Anthropic API: base_url 兼容 OpenAI, 改一行就能接到现有工具上; K3 旗舰与 K2.7-Code 编码专线都在这上架。<Footnote n={4} />" />} />
 </Dl>
 
 <T zh="一一对上之后, 结论很直白: 它要的是 ChatGPT / Claude 那个货架上的位置, 而不是「国产长文本工具」那个标签。这也是为什么用两年前的眼光看它, 会一直看走眼。" />
@@ -43,7 +50,7 @@ references:
 
 <T zh="对标归对标, 它手里还攥着两样 OpenAI、Anthropic 给不了的东西。" />
 
-<T zh={<>第一样是开源。K2 系列的权重以宽松协议（Modified MIT）挂在 Hugging Face 上, 能下载、能自托管、能商用; K3 的权重官方承诺 7 月 27 日前放出, 截至发稿还没上架 —— 所以「搬回家」这句话, 现在只对 K2 系完全成立。<Footnote n={2} />Claude、GPT 你只能租它们的 API; 要数据不出门、要长期可控, 这一条压过任何能力对比。<strong>开源是国产这一档共同的底牌</strong> —— 这条线和 DeepSeek 那本书是同一条。</>} />
+<T zh={<>第一样是开源。K2 系列的权重以宽松协议(Modified MIT)挂在 Hugging Face 上, 能下载、能自托管、能商用; K3 的权重官方承诺 7 月 27 日前放出, 截至发稿还没上架 —— 所以「搬回家」这句话, 现在只对 K2 系完全成立。<Footnote n={3} />Claude、GPT 你只能租它们的 API; 要数据不出门、要长期可控, 这一条压过任何能力对比。<strong>开源是国产这一档共同的底牌</strong> —— 这条线和 DeepSeek 那本书是同一条。</>} />
 
 <T zh="第二样是它出身带的老本行: 一口气读几十万字的长上下文、和顺手的中文成稿。如今它们只是这套栈里的「其中一面」, 不再是它的全部身份 —— 但在中文长材料这类活上, 它仍比海外模型省心。旧定位没消失, 是被降级成了一项专长。认清这一点, 你才不会再拿「它中文好」当成选它的全部理由。" />
 
@@ -53,19 +60,19 @@ references:
 
 <T zh="能力早摆在那, 缺的是知道哪一面对你哪类活 —— 以及哪两条账别混。" />
 
-<T zh={<>用这张图, 先记两条边界。一条是账: <strong>消费端会员和开放平台 API 是两套账户、两条计费</strong>, 会员额度再多也不能拿去跑 API, 反过来也一样。<Footnote n={3} />另一条是能力的天花板: 「样样对得上」不等于「样样追平」—— 最难的推理、最吃打磨的活, 它还在前沿身后半步。这本书会在每一面标出那条线, 该回 frontier 就回。</>} />
+<T zh={<>用这张图, 先记两条边界。一条是账: <strong>消费端会员和开放平台 API 是两套账户、两条计费</strong>, 会员额度再多也不能拿去跑 API, 反过来也一样。<Footnote n={4} />另一条是能力的天花板: 「样样对得上」不等于「样样追平」—— 最难的推理、最吃打磨的活, 它还在前沿身后半步。这本书会在每一面标出那条线, 该回 frontier 就回。</>} />
 
-<T zh="所以后面的章节就是顺着这张图走: 先挑模型（K3 / K2.7-Code / K2.6）, 再分清四种模式, 然后一面面过 Agent、Agent Swarm、Deep Research、Kimi Code, 最后落到选档与取舍。你不必每一面都学 —— 对上你手头的活, 再翻那一章。" />
+<T zh="所以后面的章节就是顺着这张图走: 先挑模型(K3 / K2.7-Code / K2.6), 再分清四种模式, 然后一面面过 Agent、Agent Swarm、Deep Research、Kimi Code, 最后落到选档与取舍。你不必每一面都学 —— 对上你手头的活, 再翻那一章。" />
 
 <Steps>
   <Step title={<T zh="列出你在别处用的 3 个 AI 产品" />}>
     <T zh="比如 ChatGPT 聊天、Claude Code 写码、某个 Deep Research。写下你真在用的那几个。" />
   </Step>
   <Step title={<T zh="给每个在 Kimi 这张图上找对应" />}>
-    <T zh="聊天对 Chat、Claude Code 对 Kimi Code、Deep Research 对 Deep Research……一一连线。" />
+    <T zh="聊天对 Kimi 本体、Claude Code 对 Kimi Code、浏览器自动化对 Kimi WebBridge……一一连线。" />
   </Step>
   <Step title={<T zh="圈出你在 Kimi 也付了钱、却没用的那几面" />}>
-    <T zh="对得上、你却从没在 Kimi 里点开过的那几面, 就是这本书你最该先翻的章节。" />
+    <T zh="对得上、你却从没点开过的那几面, 就是这本书你最该先翻的章节。" />
   </Step>
 </Steps>
 

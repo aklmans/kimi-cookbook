@@ -64,6 +64,10 @@ references:
     body: "CC-Switch(farion1231/cc-switch,官网 ccswitch.io)—— v3.17.0(2026-07-13),约 12 万 star(GitHub API 118,315),Tauri 桌面应用(macOS 可 brew install --cask cc-switch);管理 Claude Code / Codex / Gemini CLI / OpenCode 等 8 个工具的供应商配置;配置存于 ~/.cc-switch/cc-switch.db(SQLite),切换时原子写入 ~/.claude/settings.json 的 env 块与 ~/.codex/auth.json + config.toml;Claude Code 支持热切换,Codex 需重开终端;自动检测 shell 环境变量冲突;内置 Kimi(api.moonshot.cn/anthropic,预设模型 kimi-k2.7-code)与 Kimi For Coding(api.kimi.com/coding/)预设;Codex 侧本地路由默认 127.0.0.1:15721。截至 2026-07-17。"
     url: "https://github.com/farion1231/cc-switch"
     urlLabel: "CC-Switch · GitHub"
+  - id: 17
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— 为 AI Agent 设计的 Chrome / Edge 浏览器扩展: 跑在你正在用的浏览器里、直接继承登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备; 扩展本身免费, 可配合 Kimi Code / Claude Code / Cursor / Codex 等本地 agent。截至 2026-07。"
+    url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
+    urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
 ---
 
 <Cover />
@@ -247,6 +251,10 @@ aider --model openai/kimi-k3
 <H3 id="cursor"><T zh="Cursor(明说: 官方接不了)" /></H3>
 
 <T zh={<>Cursor 的自带 Key(BYOK)只支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家, 文档里没有任意第三方 OpenAI 兼容端点的入口; 自定义 Key 还只覆盖标准聊天模型, Tab 补全照样走 Cursor 内置模型。<Footnote n={15} />设置里那个 OpenAI base URL override 开关, 即便你的版本里还在, 也不受官方支持、随时可能移除, 别把 workflow 押在上面。要在 Cursor 里用 Kimi 模型, 目前诚实的答案是: 不能, 换上面任何一家 agent。</>} />
+
+<H3 id="webbridge"><T zh="顺带: 你的 agent 想动浏览器, 装 Kimi WebBridge" /></H3>
+
+<T zh={<>配置再全, 上面这些 agent 也只会读写文件和跑命令 —— 碰不了网页。要让它像真人一样点按钮、填表单、跨站取数, 装一个 Kimi WebBridge: Chrome / Edge 扩展, 跑在你自己的浏览器里、直接继承你的登录态, 本地优先、数据不出设备, 扩展本身免费。<Footnote n={17} />Kimi Code、Claude Code、Cursor、Codex 这些本地 agent 都能挂; 装法是给 agent 发一句安装命令, 它自己把本地守护程序和技能装好。它解决的不是「模型接入」, 是「给 agent 一把手」。</>} />
 
 <Divider />
 

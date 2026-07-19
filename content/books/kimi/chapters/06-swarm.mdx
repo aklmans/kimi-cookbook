@@ -24,11 +24,11 @@ references:
 
 <T zh="它的本事不是更聪明, 是更多、更并行 —— 把一件能拆开的大活, 同时摊给几百个分身去干。" />
 
-<T zh={<>到 K3 时代, Agent Swarm 改由 K3 驱动（官方叫「K3 集群」）, 一次任务最多能派出约 <strong>300 个子智能体</strong>同时工作、跑超过 <strong>4,000 次工具调用</strong>, 比单个 agent 一步步串着干约快 4.5 倍 —— 这组数字还是 K2.6 时代那组, 官方没随 K3 更新。<Footnote n={1} />它扛的是「规模型」的活: 大规模检索、批量处理上百份文档、产出十万字以上的报告、复杂编程。给个对照: 单 Agent 是一个人加班到天亮, Agent Swarm 是一支临时组起的小队, 分头干完再归并。</>} />
+<T zh={<>到 K3 时代, Agent Swarm 改由 K3 驱动（官方叫「K3 集群」）, 一次任务最多能派出约 <strong>300 个子智能体</strong>同时工作、跑超过 <strong>4,000 次工具调用</strong>, 比单个 agent 一步步串着干约快 4.5 倍 —— 这组数字还是 K2.6 时代那组, 官方没随 K3 更新。<Footnote n={1} />给个对照: 单 Agent 是一个人加班到天亮, Agent Swarm 是一支临时组起的小队, 分头干完再归并。</>} />
 
 <KimiSwarmDiagram />
 
-<T zh={<>但规模是有标价的。Agent 集群按档限次、且<strong>消耗约为普通 Agent 任务的数倍</strong>, 目前仍带 Beta 说明, Moderato（¥99/月）档起有 25 次, Allegretto 50 次、Allegro 120 次 —— 门槛比本书上一版写的时候低了一档。<Footnote n={1} /><Footnote n={3} />所以它不是「更高级的默认」, 是一件你确认值得才动用的重型工具。</>} />
+<T zh={<>规模的标价同样具体: 按档限次、<strong>一次消耗约为普通 Agent 任务的数倍</strong>, Moderato（¥99/月）档每月 25 次、Allegretto 50 次、Allegro 120 次, 且仍带 Beta 说明。<Footnote n={1} /><Footnote n={3} />换句话说, 一个 Moderato 用户每月的集群预算只够动用二十几次 —— 它不是「更高级的默认」, 是一件你确认值得才动用的重型工具。</>} />
 
 <Divider />
 
@@ -50,7 +50,7 @@ references:
 
 <T zh="Agent Swarm 是「一次干一票大的」, Kimi Claw 是「一直替你干」—— 自主度高一截, 你要守的线也紧一截。" />
 
-<T zh={<>Kimi Claw 没有死，是搬了家: 入口从 /claw 迁到了 kimi.com/bot, 形态也从「云端常驻 agent」一个长成了一族 —— 云端 7×24、桌面端、安卓端三种部署, 加上微信 / 飞书 / 企微 / 钉钉 / 微博的 IM 机器人, 还有一个 Preview 状态的多 agent 协作空间「Claw 群聊」。7×24 常驻、40GB 云存储、ClawHub 5,000+ 技能、定时任务这些老本事都在, 内置 Kimi 模型、免你配 API。<Footnote n={2} />它能干的事, 比「做一份 PPT」大得多 —— 因为它不只动脑, 还常驻、联网、能替你动手。</>} />
+<T zh={<>Kimi Claw 没有死, 是搬了家: 入口从 /claw 迁到了 kimi.com/bot, 形态也从「云端常驻 agent」一个长成了一族 —— 云端 7×24、桌面端、安卓端三种部署, 加上微信 / 飞书 / 企微 / 钉钉 /微博的 IM 机器人, 还有一个 Preview 状态的多 agent 协作空间「Claw 群聊」。7×24 常驻、40GB 云存储、ClawHub 5,000+ 技能、定时任务这些老本事都在, 内置 Kimi 模型、免你配 API。<Footnote n={2} />它能干的事, 比「做一份 PPT」大得多 —— 因为它不只动脑, 还常驻、联网、能替你动手。</>} />
 
 <T zh={<>两处细节该知道: 一, Claw 本体的 Beta 角标摘了, 但新形态「Claw 群聊」仍标着 Preview —— 预发布的帽子是换了地方, 不是摘完了, 别当整条线已转正; 二, 默认模型官方两页说法不一（/bot 写 K2.6 Thinking、官方资源页写 K3), 以你部署时页面实际为准。档位要求没变, 仍是 Allegretto（¥199/月）起。<Footnote n={2} /><Footnote n={3} /></>} />
 

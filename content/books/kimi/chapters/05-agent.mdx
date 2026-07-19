@@ -8,29 +8,41 @@ references:
     body: "Kimi 帮助中心 · 会员套餐价格 —— Agent 用量与并行任务数随档位上升（Adagio 约 6、Andante 约 30、Moderato 约 60、Allegretto 约 150、Allegro 约 360）; 该次数为共享 token 额度池按常见任务折算的估值, Kimi Code 为单独额度池。截至 2026-07。"
     url: "https://www.kimi.com/zh-cn/help/membership/membership-pricing"
     urlLabel: "Kimi 帮助中心 · 会员价格"
+  - id: 3
+    body: "Kimi 官网 · 功能页（kimi.com/features）—— Slides 把文字文档图片转成可编辑 PPT; Websites 无需代码、几分钟发布上线; Docs 覆盖 Word / PDF 生成、转换、审阅与批处理; Sheets 生成带公式、数据透视表和图表的真 Excel。截至 2026-07。"
+    url: "https://www.kimi.com/zh-tw/features/"
+    urlLabel: "Kimi 官网 · 功能页"
 ---
 
 <Cover />
 
 <T zh="网页对话是一问一答; Agent 模式是另一回事 —— 你说清要什么, 它直接交你一个能用的成品: 一份排好版的 PPT、一张算好的数据表、一页能上线的网页, 而不是一段还得你自己去做的文字。" />
 
-<T zh={<>Agent 是这套栈里「替你做、不只答你」的那一面。<Footnote n={1} />这章讲什么时候该把整件活交给它, 什么时候它只是把活做快、做砸; 至于一次要派一群子 agent 的大场面（Agent Swarm）, 留到下一章。</>} />
+<T zh={<>Agent 是这套栈里「替你做、不只答你」的那一面。<Footnote n={1} />这章讲什么时候该把整件活交给它、一次交办的真实成本是多少, 什么时候它只是把活做快、做砸; 至于一次要派一群子 agent 的大场面（Agent Swarm）, 留到下一章。</>} />
 
 <SectionTitle number="I"><T zh="Agent 交的是成品, 不是文字" /></SectionTitle>
 
 <T zh="它的产出不是一段话, 是一个文件 —— 这是它和默认对话最实的区别。" />
 
-<T zh={<>默认对话给你一段文字, 你拿着文字自己去做 PPT、做表、建站。Agent 模式跳过这一步: 你描述要什么, 它直接交一份排好版的 PPT、一张算好的 Excel、一页能上线的网页。2026 年 4 月它又升级了全栈能力 —— 后端数据库、用户登录、版本管理、一键发布、代码导出, 做的网站不再只是静态页。<Footnote n={1} />给一个能截图的对照: 同一个需求, 默认对话给你一段文字大纲, Agent 模式给你一份能直接发出去的导出件。</>} />
+<T zh={<>默认对话给你一段文字, 你拿着文字自己去做 PPT、做表、建站。Agent 模式跳过这一步: Slides 把你的文字材料转成可编辑的 PPT, Websites 不写代码几分钟发布一页网站, Docs 包揽 Word / PDF 的生成转换审阅, Sheets 生成带公式、数据透视表和图表的真 Excel。2026 年 4 月它又升级了全栈能力 —— 后端数据库、用户登录、版本管理、一键发布、代码导出, 做的网站不再只是静态页。<Footnote n={3} /><Footnote n={1} />给一个最直观的对照: 同一个需求, 默认对话给你一段文字大纲, Agent 模式给你一份能直接发出去的导出件。</>} />
 
 <T zh="所以它真正替你省下的, 不是「想内容」那一步, 是「把内容落成一份像样文件」那几小时 —— 排版、套模板、把数据填进表格、把页面搭起来。内容你心里有数时, 它把这层体力活接过去; 这正是它和聊天框的分界。" />
 
 <Divider />
 
-<SectionTitle number="II"><T zh="它适合「结果说得清」的活" /></SectionTitle>
+<SectionTitle number="II"><T zh="一次交办的真实成本" /></SectionTitle>
+
+<T zh={<>交办不是免费的, 账单有三行, 都该在出发前知道。<strong>时间</strong>: 单次任务约 5–20 分钟, 期间你只能等, 别排即时要用的活。<strong>额度</strong>: 每跑一次吃掉共享额度池里的一份 —— 按常见任务折算, 各档约合 Adagio 6 次、Andante 30、Moderato 60、Allegretto 150、Allegro 360, 和 Kimi Code 的额度池分开算。<Footnote n={2} /><strong>上下文</strong>: 单次任务 128K token（约 10 万汉字）, 超出部分它自己裁剪 —— 素材给得多不如给得准。<Footnote n={1} /></>} />
+
+<T zh="三个数合起来就是交办的决策线: 月度次数有限、单次要等、材料窗口有限 —— 所以别把 Agent 当升级版的聊天用。一次把需求说透, 胜过拿次数反复试。" />
+
+<Divider />
+
+<SectionTitle number="III"><T zh="它适合「结果说得清」的活" /></SectionTitle>
 
 <T zh="你说得清, 它做得成; 你说不清, 它做得快 —— 快快地做出一个不是你要的东西。" />
 
-<T zh={<>Agent 模式吃「明确」。结果形态清楚（要一份 10 页的季度汇报 PPT）、素材现成（数据和要点你给齐）、能验收（做完你一眼看得出成没成）—— 这种活最适合交办, 也最吃共享额度池里的量。<Footnote n={2} />反过来, 开放式、要反复试方向的活（「帮我想想这个产品怎么定位」）, 留在对话里来回更省; 交给 Agent, 它只会一口气把一个还没定准的方向做到底。</>} />
+<T zh={<>Agent 模式吃「明确」。结果形态清楚（要一份 10 页的季度汇报 PPT）、素材现成（数据和要点你给齐）、能验收（做完你一眼看得出成没成）—— 这种活最适合交办。<strong>反过来, 开放式、要反复试方向的活（「帮我想想这个产品怎么定位」）, 留在对话里来回更省; 交给 Agent, 它只会一口气把一个还没定准的方向做到底。</strong></>} />
 
 <Callout kind="tip" zh={<>一个实用习惯: <strong>把验收标准前置</strong>。动手前先用一句话写清「做成什么样算成」, 再放手。它跑得越自动, 你越要在它出发前就把终点画好 —— 否则你拿回来的, 是一个做得很完整的错东西。</>} />
 
@@ -40,7 +52,7 @@ references:
 
 <Divider />
 
-<SectionTitle number="III"><T zh="它把对的事做成, 也把错的事做全" /></SectionTitle>
+<SectionTitle number="IV"><T zh="它把对的事做成, 也把错的事做全" /></SectionTitle>
 
 <T zh="自动化的好处和风险是同一件事: 它会把你交代的方向一做到底 —— 不管那个方向对不对。" />
 

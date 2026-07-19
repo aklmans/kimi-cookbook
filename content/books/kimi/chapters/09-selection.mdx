@@ -26,9 +26,19 @@ references:
 
 <T zh="你多付的钱, 买的是各项用量, 不是一个更聪明的模型 —— 五档跑的是同一套模型。" />
 
-<T zh={<>截至 2026-07, Kimi 会员五档全用音乐术语命名: Adagio（免费）、Andante ¥49、Moderato ¥99、Allegretto ¥199、Allegro ¥699。<Footnote n={1} />它们之间差的不是模型, 而是<strong>分项额度</strong>: Agent 用量（约 6 → 360 个）、Kimi Code 倍率（1x → 60x）、Agent 集群（Moderato 25 次 / Allegretto 50 / Allegro 120 —— 门槛比本书上一版低了一档）、专业数据库调用（200 → 12,000 次）, 以及 Kimi Claw 从 Allegretto（¥199）才解锁。还要注意额度结构变了: Agent、深度研究、PPT、Kimi Claw 这些<strong>共享一个 token 额度池</strong>（次数只是折算估值）, 只有 Kimi Code 是单独的池 —— 你 Swarm 跑得猛, 是真的会把 Agent 用量也吃紧的。<Footnote n={1} /></>} />
+<T zh={<>截至 2026-07, Kimi 会员五档全用音乐术语命名: Adagio（免费）、Andante ¥49、Moderato ¥99、Allegretto ¥199、Allegro ¥699。<Footnote n={1} />它们之间差的不是模型, 而是<strong>分项额度</strong>: Agent 用量（约 6 → 360 个）、Kimi Code 倍率（1x → 60x）、Agent 集群（Moderato 25 次 / Allegretto 50 / Allegro 120）、专业数据库调用（200 → 12,000 次）, 以及 Kimi Claw 从 Allegretto（¥199）才解锁。还要注意额度结构: Agent、深度研究、PPT、Kimi Claw 这些<strong>共享一个 token 额度池</strong>（次数只是折算估值）, 只有 Kimi Code 是单独的池 —— 你 Swarm 跑得猛, 是真的会把 Agent 用量也吃紧的。<Footnote n={1} /></>} />
 
-<T zh="所以选档先问: 你最吃的是哪一样? 重度写码的人盯 Kimi Code 倍率, 常交办成品的人盯 Agent 次数和集群, 多数轻度用户免费的 Adagio 或 ¥49 的 Andante 就够。别照着价目表挑「功能最全」的那档 —— 挑「补上你那块短缺」的那档。" />
+<T zh={<>把「缺哪样」落到数字上, 一个自测算法: 翻上个月的记录, 数出三样 —— 你办了几次成品（Agent 档次数）、跑了几次编码会话（Code 倍率）、动过几次集群。然后对表:</>} />
+
+| 你的月度用量 | 建议档 | 月费 | 关键额度 |
+| --- | --- | --- | --- |
+| 偶尔问答 + 几次交办 | Adagio（免费）| ¥0 | Agent 约 6 次试水 |
+| 每周几次交办, 不写码 | Andante | ¥49 | Agent 约 30 次 |
+| 交办 + 集群 + 日常写码 | Moderato | ¥99 | Agent 约 60 · 集群 25 · Code 4x |
+| 重度写码为主业 | Allegretto | ¥199 | Code 20x · 集群 50 · 解锁 Claw |
+| 全部拉满的重度栈用户 | Allegro | ¥699 | Code 60x · Agent 约 360 |
+
+<T zh={<>别照着价目表挑「功能最全」的那档 —— 挑「补上你那块短缺」的那档。重度写码的人盯 Kimi Code 倍率, 常交办成品的人盯 Agent 次数和集群, 多数轻度用户免费的 Adagio 或 ¥49 的 Andante 就够。<Footnote n={1} /></>} />
 
 <Divider />
 
@@ -36,7 +46,7 @@ references:
 
 <T zh="想把 Kimi 接进脚本和系统, 订阅那点额度不算数; API 是另一套账户、另一条账单。" />
 
-<T zh={<>这条线最容易踩。消费端会员和开放平台（platform.kimi.com）的 API 是两回事: 两套账户、两条计费, 会员买得再高也不附带 API 额度。<Footnote n={2} />API 按 token 计价（旗舰 kimi-k3 每百万 ¥20 输入 / ¥100 输出, 缓存命中 ¥2）, base_url 是 <C>https://api.moonshot.cn/v1</C>, 兼容 OpenAI（第八章那条）。另外第八章还讲过第三条账: 会员自带的 coding 端点（api.kimi.com/coding）—— 三套账户各算各的, 谁的 Key 也别串。判断很简单: 偶尔手动用 → 会员; 要稳定、批量、嵌进产品自动跑 → 走 API 单独算账。会员买的是你自己用, API 买的是让它替系统跑。</>} />
+<T zh={<>这条线最容易踩。消费端会员和开放平台（platform.kimi.com）的 API 是两回事: 两套账户、两条计费, 会员买得再高也不附带 API 额度。<Footnote n={2} />API 按 token 计价（旗舰 kimi-k3 每百万 ¥20 输入 / ¥100 输出, 缓存命中 ¥2）, base_url 是 <C>https://api.moonshot.cn/v1</C>, 兼容 OpenAI（第八章那条）。另外第八章还讲过第三条账: 会员自带的 coding 端点（api.kimi.com/coding）—— 三套账户各算各的, 谁的 Key 也别串。判断很简单: 偶尔手动用 → 会员; 要稳定、批量、嵌进产品自动跑 → 走 API 单独算账（第三章的解剖台就是干这个的）。会员买的是你自己用, API 买的是让它替系统跑。</>} />
 
 <T zh={<>顺带辟一个传言: 市面上流传的「Kimi Code 独立订阅 $19 / $39」是把国际版会员价张冠李戴。截至 2026-07-17, Kimi Code 仍随会员提供、不是独立商品; 官方只预告了「会员权益将与 Kimi Code 权益拆分、可按需分别购买」, 新套餐的档名和价格还没公布 —— 别按传言里的数字做预算。<Footnote n={4} /></>} />
 

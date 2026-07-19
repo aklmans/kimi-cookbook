@@ -12,6 +12,10 @@ references:
     body: "Kimi 帮助中心 · 会员价格 —— Agent 集群（Swarm）自 Moderato（¥99/月）起（25 / 50 / 120 次, 仍带 Beta 说明）; Kimi Claw 自 Allegretto（¥199/月）起, 本体页面已无 Beta 标记（新形态 Claw 群聊标 Preview）; 会员功能共享 token 额度池（Kimi Code 为单独池）。截至 2026-07。"
     url: "https://www.kimi.com/zh-cn/help/membership/membership-pricing"
     urlLabel: "Kimi 帮助中心 · 会员价格"
+  - id: 4
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— 为 AI Agent 设计的 Chrome / Edge 扩展: 继承你浏览器的登录态, 让 agent 像真人一样点网页、填表单、跨站取数; 本地优先、数据不出设备, 扩展本身免费。截至 2026-07。"
+    url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
+    urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
 ---
 
 <Cover />
@@ -26,18 +30,22 @@ references:
 
 | 这类活 | 走哪一面 | 怎么用（一句最佳实践） |
 | --- | --- | --- |
-| 查事实、要定义 | 默认聊天 · Instant | 直接问, 别开思考、别上 Agent |
-| 多步推理、算账、写逻辑 | 思考 · Thinking | 把背景和判断标准一次给够 |
-| 读懂几万字长材料 | 长上下文（贴文件） | 让它先定位原文再答, 抽查中段 |
-| 中文成稿 / 改稿 | 默认聊天 | 给素材和立场让它成稿; 改稿优于从零写 |
+| 查事实、要定义 | Instant | 直接问, 别开思考、别上 Agent |
+| 多步推理、算账、写逻辑 | Thinking | 把背景和判断标准一次给够 |
+| 10 万 token 内的摘要 / 翻译 | kimi-k2.6（关思考） | 几毛钱的事, 答错一眼能看出的活 |
+| 20 万 token 级长料一次吃完 | kimi-k3 | 分段会丢全局的活, 几元买不丢 |
 | 做 PPT / 网页 / 表格成品 | Agent | 验收标准前置, 数字只用你给的 |
 | 大规模盘点 / 几十份材料综述 | Agent Swarm | 框成可并行、每点标来源（Moderato+ 25 次起） |
 | 带出处的调研报告 | Deep Research | 每条结论标来源 + 日期, 抽查 2–3 条 |
-| 多文件、长链条代码改动 | Kimi Code · K3 | 先报方案再动手, 限范围 + 测试 + 可回滚 |
+| 日常小改编码 | kimi-k2.7-code | 几元一次, 修复率 31% 档够使 |
+| 难活编码一次过 | kimi-k3 | 「做对一次的成本」反而接近 |
+| 交互结对赶时间 | k2.7-code-highspeed | 翻倍价格买的是人不等, 后台别用 |
+| 批量千级条目处理 | kimi-k2.6 · Batch | 六折, 单条几厘, 全书性价比最高一格 |
 | 接进脚本 / 产品自动跑 | 开放平台 API | 改 base_url + model; 走 API 单独计费 |
+| 让 agent 动浏览器 | Kimi WebBridge | 扩展继承你的登录态, 数据不出设备 |
 | 7×24 常驻、定时任务 | Kimi Claw | 先拿无关紧要的定时任务试手 |
 
-<T zh={<>表里的「面」就是前面各章: 聊天与思考（第三、四章）、Agent（第五章）、Agent Swarm（第六章）、Deep Research（第七章）、Kimi Code 与 API（第八章）。<Footnote n={1} />要看具体怎么做, 翻回那一章。</>} />
+<T zh={<>表里的「面」就是前面各章: 模型（第三章）、模式（第四章）、Agent（第五章）、Agent Swarm（第六章）、Deep Research（第七章）、Kimi Code 与 API（第八章）。<Footnote n={1} />要看具体怎么做, 翻回那一章。</>} />
 
 <Divider />
 
@@ -61,6 +69,8 @@ references:
 
 - <T zh="拿 Agent / Swarm 去问一个事实 —— 等十分钟换一句本该秒回的话。" />
 - <T zh="把开放式构思（「帮我想想方向」）交给 Agent —— 它会把没定准的方向一口气做到底。" />
+- <T zh="拿 K3 去批量打标签 —— 它不在 Batch 内, 同样的活贵五倍。" />
+- <T zh="拿高速版跑后台任务 —— 翻倍的价格买的是「人不等」, 没人盯就纯浪费。" />
 - <T zh="冲着「便宜」选 Kimi —— 它已涨价离场, 省钱该看 DeepSeek。" />
 - <T zh={<>把会员额度当 API 用 —— 两套账, 订阅不含 API。<Footnote n={2} /></>} />
 - <T zh={<>拿 Kimi Claw 押要紧事 —— 要 Allegretto 以上才有, 常驻 agent 先拿无关紧要的定时任务试手, 边界想清再交。<Footnote n={3} /></>} />
