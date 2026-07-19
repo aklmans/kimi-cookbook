@@ -49,12 +49,15 @@ export function ChapterActions({
   const { lang } = useLang();
 
   /* The outline rail + its toggle live in GlobalUI's delegated keyboard
-     handler (`o`). Dispatching the same key event keeps one owner of the
-     panel state instead of duplicating the toggle logic here. Dispatched
-     on document.body so e.target is a real element (document itself has
-     no .closest() and GlobalUI's handler walks it). */
+     handler (`o`, registered on document). Dispatching the same key event
+     keeps one owner of the panel state instead of duplicating the toggle
+     logic here. Dispatched on document.body (a real element — document
+     itself has no .closest()) and WITH bubbles:true so it actually
+     reaches the document-level listener. */
   const toggleOutline = () => {
-    document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "o" }));
+    document.body.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "o", bubbles: true }),
+    );
   };
 
   const copyPrompt = async () => {
