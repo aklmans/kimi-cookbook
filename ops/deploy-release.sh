@@ -55,7 +55,7 @@ set +a
 
 # Source the operator environment before checking binaries so a BaoTa-managed
 # Node installation can expose its bin directory through PATH here.
-for command in curl node pm2; do
+for command in cmp curl node pm2 sha256sum; do
   command -v "$command" >/dev/null 2>&1 || die "$command is not installed or not on PATH"
 done
 
@@ -68,17 +68,70 @@ cron_secret="${CRON_SECRET:-}"
 [[ "$analytics_secret" != "$cron_secret" ]] ||
   die "ANALYTICS_SECRET and CRON_SECRET must be different"
 
+verify_release_identity() {
+  local target="$1"
+  local expected="$2"
+  local build_version
+
+  [[ -f "$target/server.js" ]] || die "$target: standalone server.js is missing"
+  [[ -f "$target/ecosystem.config.cjs" ]] ||
+    die "$target: PM2 ecosystem config is missing"
+  [[ -f "$target/RELEASE" ]] || die "$target: RELEASE marker is missing"
+  [[ "$(<"$target/RELEASE")" == "$expected" ]] ||
+    die "$target: release SHA does not match $expected"
+
+  build_version="$(
+    REQUIRED_SERVER_FILES="$target/.next/required-server-files.json" \
+      node -e '
+        const fs = require("node:fs");
+        const requiredFiles = JSON.parse(
+          fs.readFileSync(process.env.REQUIRED_SERVER_FILES, "utf8"),
+        );
+        const deploymentId = requiredFiles.config?.deploymentId;
+        if (typeof deploymentId !== "string") process.exit(1);
+        process.stdout.write(deploymentId);
+      '
+  )" || die "$target: Next deploymentId is missing"
+  [[ "$build_version" == "$expected" ]] ||
+    die "$target: Next deploymentId $build_version does not match $expected"
+}
+
+verify_release_checksums() {
+  local target="$1"
+
+  [[ -f "$target/RELEASE.sha256" ]] ||
+    die "$target: release checksum manifest is missing"
+  (
+    cd "$target"
+    sha256sum --check --quiet RELEASE.sha256
+  ) || die "$target: release checksum verification failed"
+}
+
+verify_release_bundle() {
+  local target="$1"
+  local expected="$2"
+
+  verify_release_identity "$target" "$expected"
+  verify_release_checksums "$target"
+}
+
 if [[ ! -d "$release_dir" ]]; then
   [[ -d "$staged_release" ]] || die "staged release not found: $staged_release"
-  [[ -f "$staged_release/server.js" ]] || die "standalone server.js is missing"
-  [[ -f "$staged_release/ecosystem.config.cjs" ]] ||
-    die "PM2 ecosystem config is missing"
-  [[ "$(<"$staged_release/RELEASE")" == "$release" ]] ||
-    die "staged release SHA does not match"
+  verify_release_bundle "$staged_release" "$release"
   mv "$staged_release" "$release_dir"
 else
-  [[ -f "$release_dir/server.js" ]] || die "existing release is incomplete"
+  verify_release_identity "$release_dir" "$release"
+  if [[ -f "$release_dir/RELEASE.sha256" ]]; then
+    verify_release_checksums "$release_dir"
+  elif [[ ! -d "$staged_release" ]]; then
+    echo "deploy: warning: legacy release $release has no checksum manifest" >&2
+  fi
   if [[ -d "$staged_release" ]]; then
+    verify_release_bundle "$staged_release" "$release"
+    [[ -f "$release_dir/RELEASE.sha256" ]] ||
+      die "release $release already exists without an artifact manifest"
+    cmp -s "$release_dir/RELEASE.sha256" "$staged_release/RELEASE.sha256" ||
+      die "release $release already exists with a different artifact manifest"
     rm -rf -- "$staged_release"
   fi
 fi
@@ -121,9 +174,44 @@ start_release() {
   export APP_PORT="$app_port"
   export RELEASE_DIR="$target"
   export DEPLOYMENT_VERSION="$version"
-  pm2 startOrReload "$target/ecosystem.config.cjs" \
+  # pm2 startOrReload keeps the originally-registered script path on reload —
+  # it refreshes env vars but never switches the process to a NEW release
+  # directory, so the app would serve the first-deployed release forever
+  # (with the new DEPLOYMENT_VERSION stamped on top, which masked the
+  # staleness behind a passing health check). Delete + start so the process
+  # always comes up on the new release dir; the path assertion below catches
+  # any future PM2 behavior change before the health probe can pass.
+  pm2 delete "$app_name" >/dev/null 2>&1 || true
+  pm2 start "$target/ecosystem.config.cjs" \
     --env production \
-    --update-env
+    --update-env &&
+    pm2 jlist | \
+      PM2_EXPECTED_APP="$app_name" PM2_EXPECTED_RELEASE="$target" \
+      node -e '
+        const path = require("node:path");
+        let apps = "";
+        process.stdin.setEncoding("utf8");
+        process.stdin.on("data", (chunk) => { apps += chunk; });
+        process.stdin.on("end", () => {
+          const app = JSON.parse(apps).find(
+            (candidate) => candidate.name === process.env.PM2_EXPECTED_APP,
+          );
+          if (!app) {
+            console.error("deploy: PM2 app is missing after start");
+            process.exit(1);
+          }
+          const expectedRoot = path.resolve(process.env.PM2_EXPECTED_RELEASE);
+          const expectedScript = path.join(expectedRoot, "server.js");
+          const actualScript = path.resolve(app.pm2_env?.pm_exec_path || "");
+          const actualCwd = path.resolve(app.pm2_env?.pm_cwd || "");
+          if (actualScript !== expectedScript || actualCwd !== expectedRoot) {
+            console.error(
+              `deploy: PM2 target mismatch (script=${actualScript}, cwd=${actualCwd})`,
+            );
+            process.exit(1);
+          }
+        });
+      '
 }
 
 healthy_release() {
@@ -143,18 +231,15 @@ healthy_release() {
 }
 
 switch_current "$release_dir"
-start_release "$release_dir"
-
-if ! healthy_release "$release"; then
-  echo "deploy: health check failed for $release; rolling back" >&2
+if ! start_release "$release_dir" || ! healthy_release "$release"; then
+  echo "deploy: activation check failed for $release; rolling back" >&2
   pm2 logs "$app_name" --lines 80 --nostream || true
 
   if [[ -n "$previous_release" && -d "$previous_release" &&
         -f "$previous_release/ecosystem.config.cjs" ]]; then
     switch_current "$previous_release"
-    start_release "$previous_release"
     previous_version="$(basename "$previous_release")"
-    healthy_release "$previous_version" ||
+    start_release "$previous_release" && healthy_release "$previous_version" ||
       die "new release failed and rollback health check also failed"
     pm2 save
     die "release $release failed; rolled back to $previous_version"

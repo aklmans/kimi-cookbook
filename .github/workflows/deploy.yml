@@ -150,7 +150,14 @@ jobs:
           install -m 644 ops/ecosystem.config.cjs .release/ecosystem.config.cjs
           install -m 755 ops/analytics-rollup.sh .release/ops/analytics-rollup.sh
           install -m 755 ops/deploy-release.sh .release/ops/deploy-release.sh
+          install -m 755 ops/nginx-cache-doctor.mjs .release/ops/nginx-cache-doctor.mjs
           printf '%s\n' "$GITHUB_SHA" > .release/RELEASE
+          (
+            cd .release
+            find . -type f ! -path './RELEASE.sha256' -print0 \
+              | LC_ALL=C sort -z \
+              | xargs -0 sha256sum > RELEASE.sha256
+          )
 
       - name: Configure SSH
         env:
@@ -337,18 +344,92 @@ jobs:
         run: |
           set -Eeuo pipefail
           site_url="${NEXT_PUBLIC_SITE_URL%/}"
+          expected_dpl="data-dpl-id=\"${GITHUB_SHA}\""
+          cache_buster="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          # Landing page plus a chapter page: the 2026-07 staleness incident
+          # surfaced on chapter HTML, so spot-check more than the home route.
+          # The chapter slug is pinned by tests/deploy-workflow.test.ts.
+          pages=("$site_url/" "$site_url/books/kimi/01-intro")
+
+          public_health_ok=0
           for attempt in {1..8}; do
             body="$(curl --fail --silent --show-error \
               --connect-timeout 5 --max-time 15 \
               "$site_url/api/health" 2>/dev/null || true)"
-            if [[ "$body" == *"\"version\":\"${GITHUB_SHA}\""* ]]; then
+            if HEALTH_BODY="$body" EXPECTED_SHA="$GITHUB_SHA" node -e '
+              const health = JSON.parse(process.env.HEALTH_BODY);
+              const expected = process.env.EXPECTED_SHA;
+              const matches =
+                health.ok === true &&
+                health.version === expected &&
+                health.releaseVersion === expected &&
+                health.buildVersion === expected &&
+                health.checks?.runtimeVersion === true &&
+                health.checks?.releaseVersion === true &&
+                health.checks?.buildVersion === true;
+              if (!matches) process.exit(1);
+            ' 2>/dev/null; then
               echo "Public health check passed: $site_url"
-              exit 0
+              public_health_ok=1
+              break
             fi
             sleep 3
           done
-          echo "::error::Public health check did not reach release $GITHUB_SHA."
-          exit 1
+          if (( public_health_ok == 0 )); then
+            echo "::error::Public health check did not reach release $GITHUB_SHA."
+            exit 1
+          fi
+
+          # Retry loop: the health probe above proves the API is up, but these
+          # page fetches cross the public network — a transient runner-side
+          # failure must not mark a good deploy red.
+          html_verified=0
+          last_error="public HTML verification did not run"
+          for attempt in {1..4}; do
+            html_verified=1
+            for page in "${pages[@]}"; do
+              canonical_body="$(curl --fail --silent --show-error \
+                --connect-timeout 5 --max-time 20 \
+                "$page" 2>/dev/null || true)"
+              cache_busted_body="$(curl --fail --silent --show-error \
+                --connect-timeout 5 --max-time 20 \
+                "${page}?deploy-check=${cache_buster}" 2>/dev/null || true)"
+
+              observed_canonical_dpl="$(
+                grep -o 'data-dpl-id="[0-9a-f]*"' <<<"$canonical_body" \
+                  | head -1 || true
+              )"
+              observed_busted_dpl="$(
+                grep -o 'data-dpl-id="[0-9a-f]*"' <<<"$cache_busted_body" \
+                  | head -1 || true
+              )"
+
+              if [[ -z "$canonical_body" || -z "$cache_busted_body" ]]; then
+                last_error="Could not fetch $page from the public URL."
+                html_verified=0
+                break
+              fi
+              if [[ "$cache_busted_body" != *"$expected_dpl"* ]]; then
+                last_error="Cache-busted $page came from the wrong build: ${observed_busted_dpl:-missing deployment id}."
+                html_verified=0
+                break
+              fi
+              if [[ "$canonical_body" != *"$expected_dpl"* ]]; then
+                last_error="Canonical $page is stale: ${observed_canonical_dpl:-missing deployment id}; cache-busted origin is $GITHUB_SHA. Check reverse-proxy caches."
+                html_verified=0
+                break
+              fi
+            done
+            (( html_verified == 1 )) && break
+            (( attempt < 4 )) && sleep 5
+          done
+
+          if (( html_verified == 0 )); then
+            echo "::error::$last_error"
+            exit 1
+          fi
+
+          echo "Public canonical and cache-busted HTML both match $GITHUB_SHA on ${#pages[@]} pages."
 
       - name: Remove SSH material
         if: always()
