@@ -2852,8 +2852,13 @@ assertIncludes(
 );
 assertIncludes(
   "app/api/mp/v1/book/route.ts",
-  'dynamic = "force-static"',
-  "Mini Program book API should be statically generated.",
+  'dynamic = "force-dynamic"',
+  "Mini Program book API must be dynamic so every fetch is tracked (mp_book_open).",
+);
+assertIncludes(
+  "app/api/mp/v1/book/route.ts",
+  'trackMpRead("mp_book_open"',
+  "Mini Program book API should track book opens.",
 );
 assertIncludes(
   "lib/mp-render.tsx",

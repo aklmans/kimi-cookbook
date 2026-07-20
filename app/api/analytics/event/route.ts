@@ -25,6 +25,8 @@ const VALID_TYPES = new Set([
   "outbound_click",
   "search_query",
   "not_found",
+  "qr_open",
+  "agent_prompt_copy",
 ]);
 const SIGNAL_TYPES = new Set(["outbound_click", "search_query", "not_found"]);
 // Caps for the free-form signal payloads stored in `extra`, keeping cardinality
@@ -36,6 +38,8 @@ const CHAPTER_TYPES = new Set([
   "chapter_view",
   "chapter_complete",
   "reading_heartbeat",
+  "qr_open",
+  "agent_prompt_copy",
 ]);
 
 /* Build the sets of valid tracking targets at module load from the

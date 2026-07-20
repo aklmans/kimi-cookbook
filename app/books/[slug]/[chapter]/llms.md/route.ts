@@ -38,7 +38,7 @@ export async function GET(
   if (!book || !found) notFound();
   const { chapter, index } = found;
 
-  trackAgentRead(slug, req.headers.get("user-agent"));
+  trackAgentRead(slug, req.headers.get("user-agent"), chapterSlug);
 
   const number = chapterNumber(index);
   const bookUrl = absoluteUrl(`/books/${slug}`);

@@ -1,19 +1,22 @@
 import { getAllBooks, bookDateShort, chapterNumber } from "@/lib/books";
 import { absoluteUrl } from "@/lib/site";
 import { about } from "@/content/books/kimi/about";
+import { trackMpRead } from "@/lib/analytics-server";
 
 /* Mini Program content API — the single book's meta + chapter list,
    plus the「关于本书」page payload (about). Read-only, cached for an
    hour; the MP caches it locally and only re-fetches on expiry (or
    when /api/mp/v1/version moves). */
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export function GET() {
+export function GET(req: Request) {
   const book = getAllBooks()[0];
   if (!book) {
     return Response.json({ error: "no book" }, { status: 404 });
   }
+
+  trackMpRead("mp_book_open", book.slug, null, req.headers.get("user-agent"));
 
   return Response.json(
     {

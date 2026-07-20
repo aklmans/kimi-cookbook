@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { T } from "@/components/T";
 import { useLang } from "@/components/LangProvider";
 import { absoluteUrl } from "@/lib/site";
+import { track } from "@/lib/analytics-client";
 
 /* Chapter-level reading-aids bar, mounted at the foot of the chapter
    <Cover /> (after the byline, before the rule) — the tools a reader
@@ -67,6 +68,12 @@ export function ChapterActions({
   const qrWrapRef = useRef<HTMLDivElement>(null);
   const { lang } = useLang();
 
+  /* Track the QR popover opening (hover or click). track() dedups per
+     page session, so repeated hovers count once. */
+  useEffect(() => {
+    if (qrOpen) track({ type: "qr_open", bookSlug, chapterSlug });
+  }, [qrOpen, bookSlug, chapterSlug]);
+
   /* Close the QR popover on outside pointer-down or Escape. Registered
      only while open so the bar costs zero listeners when idle. */
   useEffect(() => {
@@ -127,6 +134,7 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
     try {
       await navigator.clipboard.writeText(prompt);
       setStatus("copied");
+      track({ type: "agent_prompt_copy", bookSlug, chapterSlug });
     } catch {
       setStatus("error");
     }

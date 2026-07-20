@@ -970,6 +970,23 @@ export async function queryAnalytics(
        WHERE ts >= ? AND type = ? AND extra IS NOT NULL AND extra != '' AND ${HUMAN_OR_TRACKED}
        GROUP BY extra ORDER BY \`count\` DESC, value LIMIT 15`;
 
+    // Reading channels — the single-book question that actually matters:
+    // web reads vs Mini Program vs agent fetches vs RSS, over the range.
+    const channelsSql = `SELECT type, COUNT(*) as \`count\`
+       FROM events
+       WHERE ts >= ? AND type IN ('book_view','chapter_view','mp_chapter_read','agent_read','feed_read')
+       GROUP BY type`;
+    // Share-intent actions: poster downloads (server) + QR opens / Feed-to-AI
+    // copies (client, human-only).
+    const shareSql = `SELECT type, COUNT(*) as \`count\`
+       FROM events
+       WHERE ts >= ? AND type IN ('poster_download','qr_open','agent_prompt_copy') AND ${HUMAN_OR_TRACKED}
+       GROUP BY type`;
+    const shareTopChaptersSql = `SELECT chapter_slug, COUNT(*) as \`count\`
+       FROM events
+       WHERE ts >= ? AND type = 'poster_download' AND book_slug = ? AND ${HUMAN_OR_TRACKED}
+       GROUP BY chapter_slug ORDER BY \`count\` DESC, chapter_slug LIMIT 10`;
+
     const [
       bookTotalsRows,
       bookDailyTrend,
@@ -989,6 +1006,9 @@ export async function queryAnalytics(
       signalOutboundRows,
       signalSearchRows,
       signalNotFoundRows,
+      channelsRows,
+      shareRows,
+      shareTopChapterRows,
     ] =
       await Promise.all([
         d.all(
@@ -1115,6 +1135,9 @@ export async function queryAnalytics(
         d.all(signalTopSql, [since, "outbound_click"]),
         d.all(signalTopSql, [since, "search_query"]),
         d.all(signalTopSql, [since, "not_found"]),
+        d.all(channelsSql, [since]),
+        d.all(shareSql, [since]),
+        d.all(shareTopChaptersSql, [since, bookFilter ?? knownBookSlugs[0]]),
       ]);
 
     const referrerCategoryTotals = new Map<string, number>();
@@ -1145,6 +1168,37 @@ export async function queryAnalytics(
       // rounding / race ever makes returning momentarily exceed unique.
       new_visitors: Math.max(0, uniqueVisitors - returningVisitors),
     };
+
+    const channels = { web: 0, mp: 0, agent: 0, feed: 0 };
+    for (const row of channelsRows as { type: string; count: number }[]) {
+      if (row.type === "book_view" || row.type === "chapter_view") {
+        channels.web += row.count;
+      } else if (row.type === "mp_chapter_read") {
+        channels.mp += row.count;
+      } else if (row.type === "agent_read") {
+        channels.agent += row.count;
+      } else if (row.type === "feed_read") {
+        channels.feed += row.count;
+      }
+    }
+    const share = {
+      poster_download: 0,
+      qr_open: 0,
+      agent_prompt_copy: 0,
+      topChapters: shareTopChapterRows,
+    } as {
+      poster_download: number;
+      qr_open: number;
+      agent_prompt_copy: number;
+      topChapters: unknown;
+    };
+    for (const row of shareRows as { type: string; count: number }[]) {
+      if (row.type === "poster_download") share.poster_download = row.count;
+      else if (row.type === "qr_open") share.qr_open = row.count;
+      else if (row.type === "agent_prompt_copy") {
+        share.agent_prompt_copy = row.count;
+      }
+    }
 
     const result: Record<string, unknown> = {
       bookSlugs: knownBookSlugs.map((book_slug) => ({ book_slug })),
@@ -1186,9 +1240,13 @@ export async function queryAnalytics(
         searches: signalSearchRows,
         notFound: signalNotFoundRows,
       },
+      channels,
+      share,
     };
 
-    if (bookFilter) {
+    if (bookFilter || knownBookSlugs.length === 1) {
+      // Single-book site: the chapter funnel is the primary table, so it
+      // loads even without an explicit filter (same numbers either way).
       result.chapterStats = await d.all(
         `SELECT chapter_slug,
                 SUM(CASE WHEN type='chapter_view' THEN 1 ELSE 0 END) as views,
@@ -1205,7 +1263,7 @@ export async function queryAnalytics(
          FROM events
          WHERE book_slug = ? AND ts >= ? AND type IN ('chapter_view','chapter_complete') AND ${HUMAN_OR_TRACKED}
          GROUP BY chapter_slug ORDER BY chapter_slug`,
-        [bookFilter, since],
+        [bookFilter ?? knownBookSlugs[0], since],
       );
     }
 

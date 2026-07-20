@@ -138,6 +138,13 @@ interface OverviewData {
     searches: SignalValueRow[];
     notFound: SignalValueRow[];
   };
+  channels?: { web: number; mp: number; agent: number; feed: number };
+  share?: {
+    poster_download: number;
+    qr_open: number;
+    agent_prompt_copy: number;
+    topChapters: { chapter_slug: string; count: number }[];
+  };
 }
 
 type AuthState = "checking" | "login" | "authed";
@@ -506,7 +513,8 @@ export function AnalyticsDashboard() {
         </div>
         {activePanel !== "account" && (
           <div className="an-header__controls">
-            {(activePanel === "books" || activePanel === "insights") && (
+            {(activePanel === "books" || activePanel === "insights") &&
+              (overview?.bookSlugs.length ?? 0) > 1 && (
               <select
                 className="an-select an-select--book"
                 aria-label="Filter by book"
@@ -596,15 +604,28 @@ export function AnalyticsDashboard() {
                 />
                 <MetricCard label="Agent Reads" value={bookTotals.agent_reads} />
               </section>
+              {overview.channels && (
+                <section className="an-cards an-cards--compact">
+                  <MetricCard label="Web Reads" value={overview.channels.web} />
+                  <MetricCard label="Mini Program" value={overview.channels.mp} />
+                  <MetricCard
+                    label="Agent Fetches"
+                    value={overview.channels.agent}
+                  />
+                  <MetricCard label="RSS" value={overview.channels.feed} />
+                </section>
+              )}
               <TrendSection
                 title="Book Daily Trend"
                 rows={overview.bookDailyTrend}
                 empty="No book activity yet."
               />
-              {filterBook && overview.chapterStats ? (
+              {overview.chapterStats ? (
                 <ChapterStatsTable
                   rows={overview.chapterStats}
-                  bookSlug={filterBook}
+                  bookSlug={
+                    filterBook || overview.bookSlugs[0]?.book_slug || ""
+                  }
                 />
               ) : (
                 <TopBooksTable
@@ -616,6 +637,25 @@ export function AnalyticsDashboard() {
                 />
               )}
               <AgentReadsTable rows={overview.recentAgents} />
+              {overview.share && (
+                <>
+                  <section className="an-cards an-cards--compact">
+                    <MetricCard
+                      label="Poster Downloads"
+                      value={overview.share.poster_download}
+                    />
+                    <MetricCard
+                      label="QR Opens"
+                      value={overview.share.qr_open}
+                    />
+                    <MetricCard
+                      label="Feed-to-AI Copies"
+                      value={overview.share.agent_prompt_copy}
+                    />
+                  </section>
+                  <ShareTopTable rows={overview.share.topChapters} />
+                </>
+              )}
             </section>
           )}
 
@@ -1061,11 +1101,41 @@ function ChapterStatsTable({
   );
 }
 
+function ShareTopTable({
+  rows,
+}: {
+  rows: { chapter_slug: string; count: number }[];
+}) {
+  if (!rows || rows.length === 0) return null;
+  return (
+    <section className="an-section">
+      <h3 className="an-section__title">Top Shared Chapters (Poster)</h3>
+      <table className="an-table">
+        <thead>
+          <tr>
+            <th>Chapter</th>
+            <th>Poster Downloads</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((c) => (
+            <tr key={c.chapter_slug}>
+              <td>
+                <code>{c.chapter_slug}</code>
+              </td>
+              <td>{c.count}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
 function TopBooksTable({
   rows,
   onSelect,
-}: {
-  rows: BookRow[];
+}: {  rows: BookRow[];
   onSelect: (bookSlug: string) => void;
 }) {
   const selectBook = (bookSlug: string) => onSelect(bookSlug);

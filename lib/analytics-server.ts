@@ -10,6 +10,7 @@ import { classifyUserAgent } from "./analytics-visitor";
 export function trackAgentRead(
   bookSlug: string,
   userAgent: string | null,
+  chapterSlug: string | null = null,
 ): void {
   const visitor = classifyUserAgent(userAgent, { fallbackKind: "ai_agent" });
 
@@ -18,7 +19,56 @@ export function trackAgentRead(
   insertEvent({
     type: "agent_read",
     book_slug: bookSlug,
-    chapter_slug: null,
+    chapter_slug: chapterSlug,
+    session_id: null,
+    agent: userAgent?.slice(0, 200) ?? null,
+    visitor_id: null,
+    visitor_kind: visitor.visitor_kind,
+    country: null,
+    region: null,
+    device: visitor.device,
+    browser: visitor.browser,
+    os: visitor.os,
+  }).catch(() => {});
+}
+
+/** Mini Program reading channel (mp_book_open / mp_chapter_read). */
+export function trackMpRead(
+  type: "mp_book_open" | "mp_chapter_read",
+  bookSlug: string,
+  chapterSlug: string | null,
+  userAgent: string | null,
+): void {
+  const visitor = classifyUserAgent(userAgent);
+
+  insertEvent({
+    type,
+    book_slug: bookSlug,
+    chapter_slug: chapterSlug,
+    session_id: null,
+    agent: userAgent?.slice(0, 200) ?? null,
+    visitor_id: null,
+    visitor_kind: visitor.visitor_kind,
+    country: null,
+    region: null,
+    device: visitor.device,
+    browser: visitor.browser,
+    os: visitor.os,
+  }).catch(() => {});
+}
+
+/** Share poster download (poster.png is dynamic so every hit runs here). */
+export function trackPosterDownload(
+  bookSlug: string,
+  chapterSlug: string,
+  userAgent: string | null,
+): void {
+  const visitor = classifyUserAgent(userAgent);
+
+  insertEvent({
+    type: "poster_download",
+    book_slug: bookSlug,
+    chapter_slug: chapterSlug,
     session_id: null,
     agent: userAgent?.slice(0, 200) ?? null,
     visitor_id: null,

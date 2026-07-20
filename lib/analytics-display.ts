@@ -11,7 +11,6 @@ export interface PageDisplay {
 
 const STATIC_PAGE_LABELS: Record<StaticPageSlug, PageDisplay> = {
   home: { label: "Home", path: "/", kind: "page" },
-  library: { label: "Library", path: "/library", kind: "page" },
   about: { label: "About", path: "/about", kind: "page" },
   license: { label: "License", path: "/license", kind: "page" },
   feed: { label: "RSS Feed", path: "/feed.xml", kind: "feed" },
