@@ -98,7 +98,7 @@ function bandHtml({ caption, index, total }) {
   </body></html>`;
 }
 
-function cardHtml({ kicker, title, sub, qr }) {
+function cardHtml({ kicker, title, sub, qr, slogan }) {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${baseCss}
   body { background:#FAFAFA; }
   .disc { position:absolute; top:-110px; right:-150px; width:620px; height:620px;
@@ -136,7 +136,7 @@ function cardHtml({ kicker, title, sub, qr }) {
       <div class="kicker">${kicker}</div>
       <h1>${title}</h1>
       <div class="sub">${sub}</div>
-      <div class="slogan">Think clearly. Build with <em>Kimi</em>.</div>
+      ${slogan ? `<div class="slogan">Think clearly. Build with <em>Kimi</em>.</div>` : ""}
     </div>
     ${
       qr
@@ -170,6 +170,7 @@ render(
     kicker: "直播开发 · 全程实录",
     title: "4 小时直播,<br>我用 <em>Kimi</em> 做出<br>了一书三端。",
     sub: "一本书 · 一个网站 · 一个小程序",
+    slogan: true,
   }),
   `${OUT}/cards/hook.png`,
 );
