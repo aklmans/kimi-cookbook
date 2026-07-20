@@ -419,10 +419,10 @@ Co-Authored-By: Kimi Code <noreply@moonshot.ai>
 ## 12 · Files that explain themselves
 
 If you're trying to do something this brief doesn't cover, look at
-**[DESIGN.md](./DESIGN.md)** first — it documents the v3 *Editorial
-Reading* language end-to-end (colors, typography, voice, components,
-print, OG, agent-readable md). Then the canonical guide for that
-area is usually in the code:
+**[DESIGN.md](./DESIGN.md)** first — it documents **Zhaphar's Design
+Language · v3** (*Editorial Reading*) end-to-end (colors, typography,
+voice, components, print, OG, agent-readable md). Then the canonical
+guide for that area is usually in the code:
 
 - adding/changing books → existing meta.ts files under `content/books/*/`
 - cover sizing rules → `app/globals.css` Round-5 / Round-6 blocks

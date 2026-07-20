@@ -1,12 +1,16 @@
-# Design Language · v3 Editorial Reading
+# Zhaphar's Design Language · v3 — Editorial Reading
 
 A documentation file for any Agent (or human) that needs to keep
-the Kimi book site (kimi.read.wiki) visually + editorially coherent,
-OR wants to reuse this design language in another project.
+the Kimi Cookbook single-book site (kimi.read.wiki) visually +
+editorially coherent, OR wants to reuse this design language in
+another project.
 
 This is *not* a brand book. It's a working reference: every value
 is what currently ships, every rule is one that's been earned by a
-specific judgment in the codebase.
+specific judgment in the codebase. The language itself has a name —
+**Zhaphar's Design Language · v3** — and it applies end-to-end: the
+website, the printed PDF, the WeChat Mini Program, and the promo
+posters all draw from the same tokens, hairlines, and moon mark.
 
 ---
 
@@ -715,3 +719,4 @@ most are not.
 When a future change moves the goalposts (a new component, a new
 typographic slot, a new editorial rule), update this file in the
 same commit. Otherwise the file rots and the language drifts.*
+
