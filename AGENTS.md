@@ -431,5 +431,8 @@ guide for that area is usually in the code:
 - PDF quirks → `app/globals.css` Round-4 + `scripts/build-pdfs.mjs`
 - routing model → any `app/books/[slug]/**/*.tsx` (all follow the
   same `dynamicParams = false` + `generateStaticParams` pattern)
+- promo posters / video (小红书 assets) → `promo/README.md` — the
+  distilled poster + video grammar, palette/typography/text
+  disciplines, and the acceptance checklist
 
 Read those before inventing a new pattern.
