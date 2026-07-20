@@ -43,6 +43,30 @@ test("legacy client without visitorId falls back to the session id", async () =>
   assert.equal(row.visitor_id, "sess-legacy");
 });
 
+test("referrer is stored as origin + pathname (query stripped)", async () => {
+  __resetIngestRateLimit();
+  const res = await POST(
+    eventRequest({
+      type: "page_view",
+      pageSlug: "home",
+      sessionId: "sess-refstrip",
+      referrer:
+        "https://xhslink.com/a/b?xsec_token=SECRET123&xsec_source=pc_note",
+    }),
+  );
+  assert.equal(res.status, 204);
+  const db = openDb(process.env.DATABASE_URL!);
+  try {
+    const row = db
+      .prepare("SELECT referrer FROM events ORDER BY id DESC LIMIT 1")
+      .get() as { referrer: string };
+    assert.equal(row.referrer, "https://xhslink.com/a/b");
+    assert.ok(!row.referrer.includes("SECRET123"));
+  } finally {
+    db.close();
+  }
+});
+
 test("rejects oversized bodies (413) — declared and actual", async () => {
   const big = "x".repeat(5000);
   assert.equal(

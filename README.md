@@ -119,8 +119,9 @@ npm run build
 引导首次登录,之后可在面板里改密)。设计约束:
 
 - **不保存原始 IP、不保存 IP hash、不用 Cookie、不做指纹**:事件只有
-  类型、书目/章节、会话与访客随机 ID(localStorage UUID)、来源、
-  UA 粗分类(人 / 搜索 / AI agent / RSS);地理字段只来自平台头
+  类型、书目/章节、会话与访客随机 ID(localStorage UUID)、UA 粗分类
+  (人 / 搜索 / AI agent / RSS);来源(referrer)只存 origin + 路径,
+  查询串与 fragment 一律丢弃;地理字段只来自平台头
   `x-vercel-ip-country` 与 `x-vercel-ip-country-region`(由边缘节点解析
   后透传,服务端不接触地址本身);
 - **阅读时长语义**:章节页每 20s 发一次 **heartbeat**,带

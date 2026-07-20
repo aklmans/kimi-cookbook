@@ -61,6 +61,23 @@ function validPageSlug(slug: string): boolean {
   return false;
 }
 
+/* Referrers are stored as origin + pathname only — query strings and
+   fragments are dropped so tracking params, search terms, or stray tokens
+   in a referring URL never reach the database. Unparseable values are kept
+   as-is (capped), matching the pre-sanitization behavior. */
+function sanitizeReferrer(value: string): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return value.slice(0, 2048);
+    }
+    return `${url.origin}${url.pathname}`.slice(0, 2048);
+  } catch {
+    return value.slice(0, 2048);
+  }
+}
+
 /* Normalize + bound a signal's payload for storage in `extra`. Returns "" for
    anything unusable (empty, non-http outbound, un-parseable), which the caller
    turns into a 400. Outbound → destination host (external only); search → a
@@ -142,9 +159,9 @@ export async function POST(req: Request) {
       return new Response(null, { status: 400 });
     }
 
-    const rawReferrer: string | null = body.referrer
-      ? String(body.referrer).slice(0, 2048)
-      : null;
+    const rawReferrer = sanitizeReferrer(
+      body.referrer ? String(body.referrer) : "",
+    );
 
     // Site-level UX signals — no book / page target; the sanitized payload
     // (destination host / normalized query / 404 path) lands in `extra` under a
