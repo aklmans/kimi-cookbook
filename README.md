@@ -14,8 +14,10 @@
 - **一本书**(`content/books/kimi/`):10 章 MDX + 结构化 meta
   (标题、引文、修订记录、海报摘要、修订日期),含引用脚注;
 - **一个网站**(Next.js 16 App Router):逐字移植的 v3 *Editorial Reading*
-  设计语言、仓耳今楷字体子集、章节大纲轨、阅读辅助栏(目录 / MD /
-  让 Agent 读 / 二维码 / 海报)、giscus 评论、中英文 `<T>` 双语组件;
+  设计语言、仓耳今楷字体子集、**ChapterOutline 章节大纲轨**、阅读辅助栏
+  (目录 / MD / 让 Agent 读 / 二维码 / 海报)、giscus 评论、中英文 `<T>`
+  双语组件;**Bilingual PDF exports** —— 整书 PDF 跟随当前语言模式导出,
+  中英文版不互相串味;
 - **Agent 可读面**:全书与逐章 `llms.md`(含截断自检说明)、`/llms.txt`
   站点索引、`text/markdown` link alternates;
 - **小程序内容 API**(`/api/mp/v1/*`):书籍/章节载荷(受限 HTML)、
@@ -59,14 +61,22 @@ npm run build
 
 ## 分析与隐私
 
-`/internal/stats` 是站点自带的第一方访问分析,设计约束:
+`/internal/stats` 是站点自带的第一方访问分析(用 `ANALYTICS_SECRET`
+引导首次登录,之后可在面板里改密)。设计约束:
 
-- **无 IP、无 Cookie、无指纹**:事件只有类型、书目/章节、会话与访客随机 ID
-  (localStorage UUID)、来源、UA 粗分类(人/搜索/AI agent/RSS);
-  地理字段只来自平台头(Cloudflare/Vercel),不落任何 IP 或哈希;
-- **不出站**:数据只进自己的数据库——本地 SQLite(开发默认)、
-  或生产环境的 MySQL / Turso(`DATABASE_URL` 三选一,见
-  `docs/DEPLOYMENT_ALIYUN.md`);
+- **不保存原始 IP、不保存 IP hash、不用 Cookie、不做指纹**:事件只有
+  类型、书目/章节、会话与访客随机 ID(localStorage UUID)、来源、
+  UA 粗分类(人 / 搜索 / AI agent / RSS);地理字段只来自平台头
+  `x-vercel-ip-country` 与 `x-vercel-ip-country-region`(由边缘节点解析
+  后透传,服务端不接触地址本身);
+- **阅读时长语义**:章节页每 20s 发一次 **heartbeat**,带
+  `visible_ms`(页面可见时长)与 `active_ms`(前台活跃时长);统计时先按
+  会话取两者的 **MAX**,再进入均值与漏斗,避免多标签页与后台停留虚增;
+- **不出站**:数据只进自己的数据库 —— `DATABASE_URL` 三选一:
+  缺省本地 SQLite(生产落在 `shared/data`,随 release 软链持久);
+  本机 MySQL(`mysql://user:pass@127.0.0.1:3306/db`,凭据在 URL 内);
+  Turso / libsql(`DATABASE_URL=libsql://your-db.turso.io`
+  加 `DATABASE_AUTH_TOKEN`,两项必须同时存在);
 - 统计埋点全部开源:`app/api/analytics/event` 的入口校验、
   `lib/analytics-*` 的清洗与分类,可直接审。
 
