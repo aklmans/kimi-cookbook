@@ -42,8 +42,8 @@ export default function AboutPage() {
             </h1>
             <p className="about-library__lede">
               <T
-                zh="一本讲透 Kimi 的书, 和一个写字的人。"
-                en="One book that maps the Kimi stack, and the person who wrote it."
+                zh="一本讲 Kimi 的书, 和指挥 Kimi 写书的人。"
+                en="A book about Kimi — and the person who directed Kimi to write it."
               />
             </p>
             <p className="about-library__byline">
@@ -350,6 +350,7 @@ export default function AboutPage() {
                 </span>
               </div>
             </div>
+            <p className="about-motto">Think clearly. Build with Kimi. Keep growing.</p>
           </div>
         </section>
 

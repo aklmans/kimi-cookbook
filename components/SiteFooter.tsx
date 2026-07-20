@@ -17,6 +17,7 @@ export function SiteFooter({
       ) : (
         <span>Zhapar · {SITE_YEAR}</span>
       )}
+      <span className="v3-footer__motto">Think clearly. Build with Kimi.</span>
       <span className="v3-footer__right">
         <a href="https://x.com/ak_zhaphar">Twitter</a>
         <a href="https://github.com/aklmans/kimi-cookbook">GitHub</a>

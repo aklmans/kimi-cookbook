@@ -10959,3 +10959,27 @@ html {
     height: 96px;
   }
 }
+
+/* ============================================================
+   Round-106 · Zhapar's slogan — "Think clearly. Build with Kimi."
+   rides the site footer's middle slot (hidden on phones where the
+   colophon + links fill the row), and the full three-beat form closes
+   the /about author section after the contact rows.
+   ============================================================ */
+.v3-footer__motto {
+  color: var(--ink-3);
+}
+@media (max-width: 640px) {
+  .v3-footer__motto {
+    display: none;
+  }
+}
+.about-motto {
+  margin: 28px 0 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}

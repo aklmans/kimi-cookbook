@@ -15,7 +15,7 @@ const siteLabel = (path: string) =>
   absoluteUrl(path).replace(/^https?:\/\//, "");
 
 export const about: BookAbout = {
-  lede: "一本讲透 Kimi 的书, 和一个写字的人。",
+  lede: "一本讲 Kimi 的书, 和指挥 Kimi 写书的人。",
   bookline: `Kimi · 从长文本到一套 agent 栈 · Zhapar · ${SITE_YEAR}`,
   intro:
     "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。到 K3, 它长成一套对标 OpenAI / Anthropic 的 agent 栈: 四模式、做出成品的 Agent、上百子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code, 和一套双兼容的 API。这本书给这套栈画张图。",
