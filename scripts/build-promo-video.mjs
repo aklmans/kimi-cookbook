@@ -113,7 +113,7 @@ function cardHtml({ kicker, title, sub, qr, slogan }) {
   .sub { margin-top:52px; font-size:36px; line-height:1.7; color:#3A3A3A; }
   .slogan { margin-top:48px; font-size:24px; letter-spacing:.18em; color:#6B6B6B; }
   .slogan em { color:#1783FF; font-style:normal; font-weight:500; }
-  .qr { position:absolute; left:50%; transform:translateX(-50%); top:980px;
+  .qr { position:absolute; left:50%; transform:translateX(-50%); top:920px;
         width:300px; background:#fff; border:1px solid #C0BFBA; padding:20px 20px 16px; }
   .qr img { display:block; width:100%; }
   .qr .cap { margin-top:12px; font-size:22px; text-align:center; color:#1A1A1A; }
