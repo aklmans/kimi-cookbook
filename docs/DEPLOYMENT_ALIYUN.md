@@ -98,21 +98,26 @@ GitHub Secret，再执行一次部署。
 会在接触生产进程之前失败。
 
 单机部署可以不设置 `DATABASE_URL`：每个 release 的 `./data` 都会链接到
-`shared/data`，默认 SQLite 因此可以跨版本保留。使用 Turso 时，在 GitHub 增加
-`DATABASE_URL` 与 `DATABASE_AUTH_TOKEN` 两个 Repository Secrets。
+`shared/data`，默认 SQLite 因此可以跨版本保留。使用远程数据库时，在 GitHub
+增加 `DATABASE_URL`（以及 libsql 需要的 `DATABASE_AUTH_TOKEN`）Repository
+Secrets。支持三种形态：
 
-创建新的 Turso 数据库（本机已安装并登录 Turso CLI）：
+- **本机 MySQL / MariaDB**(`mysql://`)：与应用同机的宝塔 MySQL 是零外网依赖
+  的选项。先在宝塔建库与用户（只允许 127.0.0.1 连接），然后：
 
 ```bash
-turso db create aklman-ebooks-analytics --wait
-turso db show aklman-ebooks-analytics --url
-turso db tokens create aklman-ebooks-analytics --expiration 365d
+# 形式: mysql://用户:密码@127.0.0.1:3306/库名
+# 密码含特殊字符时必须先做 URL 百分号编码
+DATABASE_URL=mysql://kimi_analytics:PASSWORD@127.0.0.1:3306/kimi_analytics
 ```
 
-第二条命令的完整输出写入 `DATABASE_URL`，第三条命令的完整输出写入
-`DATABASE_AUTH_TOKEN`。Token 必须有写权限：不要添加 `--read-only`，因为应用
-需要插入事件、更新认证信息和自动初始化 schema。两项必须同时存在；部署会先从
-GitHub Runner 执行 `SELECT 1` 预检，连接或鉴权失败时不会更新生产配置。
+  mysql:// 不需要 `DATABASE_AUTH_TOKEN`（凭据在 URL 里；配了反而会被校验拒绝）。
+- **Turso / libsql**(`libsql://` 或 `https://`):`DATABASE_URL` 与
+  `DATABASE_AUTH_TOKEN` 必须同时存在，token 必须有写权限（不要 `--read-only`,
+  应用要插入事件、更新认证信息和自动初始化 schema）。
+
+部署都会先做预检：libsql 走 `SELECT 1`,mysql:// 走 mysql2 的 `SELECT 1`,
+连接或鉴权失败时不会更新生产配置。
 
 无论使用本地 SQLite 还是 Turso，都应在宝塔里配置数据库/目录备份；不要备份
 整个 `releases`。真正需要保护的是 `shared/data`；若备份
@@ -132,8 +137,8 @@ Repository secrets：
 | `DEPLOY_SSH_PRIVATE_KEY` | 完整私钥，包括 BEGIN/END 行 |
 | `ANALYTICS_SECRET` | 至少 32 字符；可用 `openssl rand -hex 32` 生成 |
 | `CRON_SECRET` | 另一个至少 32 字符的随机值 |
-| `DATABASE_URL` | 可选；Turso/libsql URL |
-| `DATABASE_AUTH_TOKEN` | 可选；Turso/libsql token |
+| `DATABASE_URL` | 可选；`mysql://u:p@127.0.0.1:3306/db`、`libsql://…` 或 `https://…` |
+| `DATABASE_AUTH_TOKEN` | 可选；仅 libsql/https 需要，mysql:// 不用 |
 
 `DEPLOY_KNOWN_HOSTS` 不要在 Actions 中用 `accept-new` 临时生成。先通过可信的
 宝塔终端核对 `/etc/ssh/ssh_host_ed25519_key.pub`，默认 22 端口的格式是：

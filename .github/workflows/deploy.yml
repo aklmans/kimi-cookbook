@@ -267,20 +267,22 @@ jobs:
             exit 1
           }
 
-          database_configured=0
           if [[ -n "$DATABASE_URL" || -n "$DATABASE_AUTH_TOKEN" ]]; then
-            if [[ -z "$DATABASE_URL" || -z "$DATABASE_AUTH_TOKEN" ]]; then
-              echo "::error::DATABASE_URL and DATABASE_AUTH_TOKEN must be configured together."
-              exit 1
-            fi
-            [[ "$DATABASE_URL" =~ ^(libsql|https):// ]] || {
-              echo "::error::DATABASE_URL must use the libsql:// or https:// scheme."
+            [[ "$DATABASE_URL" =~ ^(libsql|https|mysql|mysqls):// ]] || {
+              echo "::error::DATABASE_URL must use the libsql://, https://, or mysql:// scheme."
               exit 1
             }
-            database_configured=1
+            if [[ "$DATABASE_URL" =~ ^(libsql|https):// && -z "$DATABASE_AUTH_TOKEN" ]]; then
+              echo "::error::DATABASE_AUTH_TOKEN is required for libsql:// and https:// DATABASE_URL."
+              exit 1
+            fi
+            if [[ "$DATABASE_URL" =~ ^mysqls?:// && -n "$DATABASE_AUTH_TOKEN" ]]; then
+              echo "::error::DATABASE_AUTH_TOKEN is not used with mysql:// URLs — put credentials in the URL."
+              exit 1
+            fi
           fi
 
-          if (( database_configured )); then
+          if [[ "$DATABASE_URL" =~ ^(libsql|https):// ]]; then
             node --input-type=module -e '
               import { createClient } from "@libsql/client";
               const client = createClient({
@@ -294,6 +296,17 @@ jobs:
               }
             '
             echo "Database credential preflight passed."
+          elif [[ "$DATABASE_URL" =~ ^mysqls?:// ]]; then
+            node --input-type=module -e '
+              import mysql from "mysql2/promise";
+              const pool = mysql.createPool(process.env.DATABASE_URL);
+              try {
+                await pool.query("SELECT 1");
+              } finally {
+                await pool.end();
+              }
+            '
+            echo "MySQL credential preflight passed."
           fi
 
           {

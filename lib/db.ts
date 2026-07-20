@@ -3,11 +3,19 @@
  *
  * Driver auto-selection via `DATABASE_URL`:
  * - `libsql://…` or `https://…` → Turso (@libsql/client)
+ * - `mysql://…` or `mysqls://…` → MySQL / MariaDB (mysql2/promise)
  * - file path or absent          → local SQLite (better-sqlite3)
  *
- * Both drivers expose the same async interface so callers don't need
+ * All drivers expose the same async interface so callers don't need
  * to know which backend is active. Two tables, no ORM. Append-only
  * events + pre-aggregated daily_stats.
+ *
+ * Portability rules (all three dialects share the query SQL below):
+ * string concat is CONCAT(), day bucketing is SUBSTR(ts,1,10) (ts is
+ * always an ISO-UTC string), and the daily_stats count column and
+ * count aliases stay backticked (MySQL reserves COUNT; SQLite accepts
+ * backticks too). Dialect-specific SQL (schema, upserts, REPLACE) is
+ * branched on `activeDialect`.
  */
 
 /* eslint-disable @typescript-eslint/no-require-imports */
@@ -19,6 +27,20 @@ import {
   BOOK_TOTAL_ANALYTICS_EVENTS,
   PAGE_ANALYTICS_EVENTS,
 } from "./analytics-events";
+
+export type Dialect = "sqlite" | "libsql" | "mysql";
+
+/** Map a DATABASE_URL to its backend dialect. */
+export function dialectFor(url: string): Dialect {
+  if (url.startsWith("libsql://") || url.startsWith("https://")) return "libsql";
+  if (url.startsWith("mysql://") || url.startsWith("mysqls://")) return "mysql";
+  return "sqlite";
+}
+
+/** ISO-UTC second string matching the strftime('%Y-%m-%dT%H:%M:%SZ') shape. */
+function utcNowString(): string {
+  return `${new Date().toISOString().slice(0, 19)}Z`;
+}
 
 // ── Types ──
 
@@ -156,7 +178,7 @@ CREATE TABLE IF NOT EXISTS daily_stats (
   book_slug    TEXT NOT NULL,
   chapter_slug TEXT NOT NULL DEFAULT '',
   type         TEXT NOT NULL,
-  count        INTEGER NOT NULL DEFAULT 0,
+  \`count\`    INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, book_slug, chapter_slug, type)
 );
 
@@ -167,9 +189,63 @@ CREATE TABLE IF NOT EXISTS analytics_auth (
 );
 `;
 
+/* MySQL / MariaDB variant of the same two tables. Differences: AUTO_INCREMENT
+   instead of AUTOINCREMENT, VARCHAR(n) instead of TEXT on indexed columns
+   (MySQL cannot index unbounded TEXT), `count` backticked (reserved word),
+   and no expression DEFAULT on ts — insertEvent() always sets ts explicitly,
+   which keeps us compatible with MySQL < 8.0.13 and MariaDB alike. CREATE
+   INDEX has no IF NOT EXISTS in MySQL, so the driver swallows errno 1061
+   (duplicate key) when initializing against an existing database. */
+const MYSQL_SCHEMA = `
+CREATE TABLE IF NOT EXISTS events (
+  id           INT PRIMARY KEY AUTO_INCREMENT,
+  ts           VARCHAR(32) NOT NULL,
+  type         VARCHAR(32) NOT NULL,
+  book_slug    VARCHAR(64) NOT NULL,
+  chapter_slug VARCHAR(64),
+  session_id   VARCHAR(64),
+  agent        TEXT,
+  referrer     TEXT,
+  extra        TEXT,
+  visitor_id   VARCHAR(64),
+  visitor_kind VARCHAR(32),
+  country      VARCHAR(64),
+  region       VARCHAR(64),
+  device       VARCHAR(64),
+  browser      VARCHAR(64),
+  os           VARCHAR(64),
+  active_ms    INT,
+  visible_ms   INT,
+  scroll_depth INT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE INDEX idx_events_type         ON events(type);
+CREATE INDEX idx_events_book         ON events(book_slug);
+CREATE INDEX idx_events_ts           ON events(ts);
+CREATE INDEX idx_events_type_ts      ON events(type, ts);
+CREATE INDEX idx_events_book_ts_type ON events(book_slug, ts, type);
+CREATE INDEX idx_events_session      ON events(session_id);
+
+CREATE TABLE IF NOT EXISTS daily_stats (
+  day          VARCHAR(10) NOT NULL,
+  book_slug    VARCHAR(64) NOT NULL,
+  chapter_slug VARCHAR(64) NOT NULL DEFAULT '',
+  type         VARCHAR(32) NOT NULL,
+  \`count\`    INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, book_slug, chapter_slug, type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS analytics_auth (
+  username      VARCHAR(128) PRIMARY KEY,
+  password_hash TEXT NOT NULL,
+  updated_at    VARCHAR(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+`;
+
 // ── Driver ──
 
 let driver: Driver | null = null;
+let activeDialect: Dialect = "sqlite";
 
 /* Whether a one-shot "production is using local SQLite" warning has
    already been emitted. Avoids spamming the log on every request. */
@@ -181,15 +257,17 @@ let warnedLocalProductionDb = false;
    see the DB is unreachable. */
 let warnedInsertFailure = false;
 
-/** Split the SCHEMA blob into individual statements for drivers that execute
-    one statement per call (libsql / Turso; local better-sqlite3 runs the whole
-    blob via .exec). Line comments are stripped FIRST: a stray ';' inside a
-    `-- comment` would otherwise split off a comment-only chunk, which libsql
-    rejects with SQL_PARSE_ERROR ("SQL string does not contain any statement")
-    and which aborts schema init. Our SCHEMA has no '--' inside string literals,
-    so a blanket line-comment strip is safe. */
-export function schemaStatements(): string[] {
-  return SCHEMA.replace(/--[^\n]*/g, "")
+/** Split a schema blob into individual statements for drivers that execute
+    one statement per call (libsql / mysql; local better-sqlite3 runs the
+    whole blob via .exec). Line comments are stripped FIRST: a stray ';'
+    inside a `-- comment` would otherwise split off a comment-only chunk,
+    which libsql rejects with SQL_PARSE_ERROR ("SQL string does not contain
+    any statement") and which aborts schema init. Our schemas have no '--'
+    inside string literals, so a blanket line-comment strip is safe. */
+export function schemaStatements(dialect: Dialect = "sqlite"): string[] {
+  const schema = dialect === "mysql" ? MYSQL_SCHEMA : SCHEMA;
+  return schema
+    .replace(/--[^\n]*/g, "")
     .split(";")
     .map((s) => s.trim())
     .filter(Boolean);
@@ -267,8 +345,9 @@ function getDriver(): Driver {
   if (driver) return driver;
 
   const url = process.env.DATABASE_URL || "./data/analytics.db";
+  const dialect = dialectFor(url);
 
-  if (url.startsWith("libsql://") || url.startsWith("https://")) {
+  if (dialect === "libsql") {
     // Turso / LibSQL over HTTP — natively async.
     // Run migrations as a tracked promise and gate every query on it
     // so cold-start can't race a query against an unbuilt schema.
@@ -280,7 +359,7 @@ function getDriver(): Driver {
 
     const schemaReady = (async () => {
       try {
-        for (const stmt of schemaStatements()) {
+        for (const stmt of schemaStatements("sqlite")) {
           await client.execute(stmt);
         }
         await runEventColumnMigrations(
@@ -298,6 +377,7 @@ function getDriver(): Driver {
       }
     })();
 
+    activeDialect = "libsql";
     driver = {
       run: async (sql: string, params: unknown[]) => {
         await schemaReady;
@@ -307,6 +387,68 @@ function getDriver(): Driver {
         await schemaReady;
         const r = await client.execute({ sql, args: params });
         return r.rows;
+      },
+    };
+  } else if (dialect === "mysql") {
+    // MySQL / MariaDB via mysql2/promise. Same gating pattern as libsql:
+    // every query awaits the one-time schema init.
+    const { createPool } = require("mysql2/promise");
+    const parsed = new URL(url);
+    const database = parsed.pathname.replace(/^\//, "");
+    const pool = createPool({
+      host: parsed.hostname,
+      port: parsed.port ? Number(parsed.port) : 3306,
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database,
+      charset: "utf8mb4",
+      waitForConnections: true,
+      connectionLimit: 5,
+      /* better-sqlite3 returns JS numbers for integer/aggregate columns;
+         MySQL sends SUM/AVG/ROUND (NEWDECIMAL) as strings — pull them up
+         to numbers so the dashboard's JSON payloads look identical on
+         every backend. */
+      decimalNumbers: true,
+    });
+
+    const schemaReady = (async () => {
+      try {
+        for (const stmt of schemaStatements("mysql")) {
+          try {
+            await pool.query(stmt);
+          } catch (error) {
+            // 1061 = duplicate index on an existing database — idempotent.
+            if ((error as { errno?: number }).errno !== 1061) throw error;
+          }
+        }
+        await runEventColumnMigrations(
+          async () => {
+            const [rows] = await pool.query(
+              "SELECT COLUMN_NAME AS name FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'events'",
+              [database],
+            );
+            return rows as unknown[];
+          },
+          async (sql) => {
+            await pool.query(sql);
+          },
+        );
+      } catch (error) {
+        console.error("[analytics] Failed to initialize MySQL schema", error);
+        throw error;
+      }
+    })();
+
+    activeDialect = "mysql";
+    driver = {
+      run: async (sql: string, params: unknown[]) => {
+        await schemaReady;
+        await pool.execute(sql, params);
+      },
+      all: async (sql: string, params: unknown[]) => {
+        await schemaReady;
+        const [rows] = await pool.execute(sql, params);
+        return rows as unknown[];
       },
     };
   } else {
@@ -341,14 +483,25 @@ function getDriver(): Driver {
   return driver;
 }
 
+/** Scalar two-arg min is spelled differently per dialect: MIN(a,b) on
+    SQLite/libsql (LEAST doesn't exist there), LEAST(a,b) on MySQL (MIN
+    is the aggregate only). Interpolated into the completion_rate clamps;
+    activeDialect is set by getDriver() before any query is built. */
+function scalarMinFn(): "MIN" | "LEAST" {
+  return activeDialect === "mysql" ? "LEAST" : "MIN";
+}
+
 // ── Public API ──
 
 export async function insertEvent(row: EventInsert): Promise<void> {
   try {
     // Geo fields are intended to come from platform headers only.
     // Raw IP addresses and IP hashes are intentionally never persisted.
+    // ts is set explicitly (not via a DB default) so MySQL < 8.0.13 and
+    // MariaDB — which lack expression defaults — behave identically.
     await getDriver().run(
       `INSERT INTO events (
+         ts,
          type,
          book_slug,
          chapter_slug,
@@ -367,8 +520,9 @@ export async function insertEvent(row: EventInsert): Promise<void> {
          visible_ms,
          scroll_depth
        )
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
+        utcNowString(),
         row.type,
         row.book_slug,
         row.chapter_slug ?? null,
@@ -430,13 +584,22 @@ export async function setAnalyticsPasswordHash(
   username: string,
   passwordHash: string,
 ): Promise<void> {
+  // Upsert + timestamp shape are dialect-branched; the timestamp itself is
+  // computed here so neither side needs a server-side date function.
+  const now = utcNowString();
   await getDriver().run(
-    `INSERT INTO analytics_auth (username, password_hash, updated_at)
-     VALUES (?, ?, strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-     ON CONFLICT(username) DO UPDATE SET
-       password_hash = excluded.password_hash,
-       updated_at = excluded.updated_at`,
-    [username, passwordHash],
+    activeDialect === "mysql"
+      ? `INSERT INTO analytics_auth (username, password_hash, updated_at)
+         VALUES (?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           password_hash = VALUES(password_hash),
+           updated_at = VALUES(updated_at)`
+      : `INSERT INTO analytics_auth (username, password_hash, updated_at)
+         VALUES (?, ?, ?)
+         ON CONFLICT(username) DO UPDATE SET
+           password_hash = excluded.password_hash,
+           updated_at = excluded.updated_at`,
+    [username, passwordHash, now],
   );
 }
 
@@ -470,27 +633,27 @@ async function queryQuickWindows(
 
     if (kinds === "books") {
       arms.push(
-        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as count FROM events
+        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as \`count\` FROM events
          WHERE ts >= ? AND book_slug IN (${bookSlugSql})
            AND type IN (${bookTotalTypeSql})${bookFilterSql} AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(currentSince, ...knownBookSlugs, ...BOOK_TOTAL_ANALYTICS_EVENTS, ...(bookFilter ? [bookFilter] : []));
 
       arms.push(
-        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as count FROM events
+        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as \`count\` FROM events
          WHERE ts >= ? AND ts < ? AND book_slug IN (${bookSlugSql})
            AND type IN (${bookTotalTypeSql})${bookFilterSql} AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(previousSince, currentSince, ...knownBookSlugs, ...BOOK_TOTAL_ANALYTICS_EVENTS, ...(bookFilter ? [bookFilter] : []));
     } else {
       arms.push(
-        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as count FROM events
+        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as \`count\` FROM events
          WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(currentSince, ...PAGE_ANALYTICS_EVENTS);
 
       arms.push(
-        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as count FROM events
+        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as \`count\` FROM events
          WHERE ts >= ? AND ts < ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(previousSince, currentSince, ...PAGE_ANALYTICS_EVENTS);
@@ -543,19 +706,19 @@ async function queryAudienceBreakdowns(
   await Promise.all(
     audienceBreakdowns.map(async ({ key, column }) => {
       result[key] = await d.all(
-        `SELECT ${column}, COUNT(*) as count
+        `SELECT ${column}, COUNT(*) as \`count\`
          FROM (
            SELECT
              ${column},
-             COALESCE(session_id, visitor_id, 'event-' || id) as audience_session_key
+             COALESCE(session_id, visitor_id, CONCAT('event-', id)) as audience_session_key
            FROM events
            WHERE ts >= ?
              AND ${column} IS NOT NULL
              AND ${column} != ''${scopeSql}
-           GROUP BY ${column}, COALESCE(session_id, visitor_id, 'event-' || id)
+           GROUP BY ${column}, COALESCE(session_id, visitor_id, CONCAT('event-', id))
          ) audience_sessions
          GROUP BY ${column}
-         ORDER BY count DESC, ${column}
+         ORDER BY \`count\` DESC, ${column}
          LIMIT 10`,
         [since, ...scopeParams],
       );
@@ -581,7 +744,7 @@ function heartbeatScope(
 
 function heartbeatSessionAggregateSql(whereSql: string): string {
   return `SELECT
-            COALESCE(session_id, visitor_id, 'event-' || id) as reading_session_key,
+            COALESCE(session_id, visitor_id, CONCAT('event-', id)) as reading_session_key,
             book_slug,
             chapter_slug,
             COALESCE(MAX(active_ms), 0) as max_active_ms,
@@ -590,7 +753,7 @@ function heartbeatSessionAggregateSql(whereSql: string): string {
           FROM events
           WHERE ${whereSql}
           GROUP BY
-            COALESCE(session_id, visitor_id, 'event-' || id),
+            COALESCE(session_id, visitor_id, CONCAT('event-', id)),
             book_slug,
             chapter_slug`;
 }
@@ -802,10 +965,10 @@ export async function queryAnalytics(
     const referrerBaseParams = bookFilter ? [since, bookFilter] : [since];
     // Site-level UX signals (outbound host / search query / 404 path) live in
     // `extra` — top N per type, human-only, always site-wide.
-    const signalTopSql = `SELECT extra as value, COUNT(*) as count
+    const signalTopSql = `SELECT extra as value, COUNT(*) as \`count\`
        FROM events
        WHERE ts >= ? AND type = ? AND extra IS NOT NULL AND extra != '' AND ${HUMAN_OR_TRACKED}
-       GROUP BY extra ORDER BY count DESC, value LIMIT 15`;
+       GROUP BY extra ORDER BY \`count\` DESC, value LIMIT 15`;
 
     const [
       bookTotalsRows,
@@ -837,26 +1000,26 @@ export async function queryAnalytics(
              COALESCE(SUM(CASE WHEN type = 'agent_read' THEN 1 ELSE 0 END), 0) as agent_reads,
              CASE
                WHEN SUM(CASE WHEN type = 'chapter_view' THEN 1 ELSE 0 END) > 0
-               THEN MIN(100, ROUND(
+               THEN ${scalarMinFn()}(100, ROUND(
                  SUM(CASE WHEN type = 'chapter_complete' THEN 1 ELSE 0 END) * 100.0 /
                  SUM(CASE WHEN type = 'chapter_view' THEN 1 ELSE 0 END),
                  1
                ))
                ELSE 0
              END as completion_rate,
-             COUNT(*) as count
+             COUNT(*) as \`count\`
            FROM events
            WHERE ${bookTotalWhere}`,
           bookTotalParams,
         ),
         d.all(
-          `SELECT strftime('%Y-%m-%d', ts) as day,
+          `SELECT SUBSTR(ts, 1, 10) as day,
              SUM(CASE WHEN type = 'book_view' THEN 1 ELSE 0 END) as book_views,
              SUM(CASE WHEN type = 'chapter_view' THEN 1 ELSE 0 END) as chapter_views,
              SUM(CASE WHEN type = 'chapter_complete' THEN 1 ELSE 0 END) as completions,
              SUM(CASE WHEN type = 'pdf_download' THEN 1 ELSE 0 END) as pdf_downloads,
              SUM(CASE WHEN type = 'agent_read' THEN 1 ELSE 0 END) as agent_reads,
-             COUNT(*) as count
+             COUNT(*) as \`count\`
            FROM events
            WHERE ${bookTotalWhere}
            GROUP BY day ORDER BY day`,
@@ -869,17 +1032,17 @@ export async function queryAnalytics(
                   SUM(CASE WHEN type = 'chapter_complete' THEN 1 ELSE 0 END) as completions,
                   CASE
                     WHEN SUM(CASE WHEN type = 'chapter_view' THEN 1 ELSE 0 END) > 0
-                    THEN MIN(100, ROUND(
+                    THEN ${scalarMinFn()}(100, ROUND(
                       SUM(CASE WHEN type = 'chapter_complete' THEN 1 ELSE 0 END) * 100.0 /
                       SUM(CASE WHEN type = 'chapter_view' THEN 1 ELSE 0 END),
                       1
                     ))
                     ELSE 0
                   END as completion_rate,
-                  COUNT(*) as count
+                  COUNT(*) as \`count\`
            FROM events
            WHERE ${bookEventWhere}
-           GROUP BY book_slug ORDER BY count DESC LIMIT 20`,
+           GROUP BY book_slug ORDER BY \`count\` DESC LIMIT 20`,
           bookEventParams,
         ),
         d.all(
@@ -892,16 +1055,16 @@ export async function queryAnalytics(
           `SELECT
              COALESCE(SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END), 0) as page_views,
              COALESCE(SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END), 0) as feed_reads,
-             COUNT(*) as count
+             COUNT(*) as \`count\`
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
           [since, ...PAGE_ANALYTICS_EVENTS],
         ),
         d.all(
-          `SELECT strftime('%Y-%m-%d', ts) as day,
+          `SELECT SUBSTR(ts, 1, 10) as day,
              SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END) as page_views,
              SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END) as feed_reads,
-             COUNT(*) as count
+             COUNT(*) as \`count\`
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}
            GROUP BY day ORDER BY day`,
@@ -911,22 +1074,22 @@ export async function queryAnalytics(
           `SELECT book_slug as page_slug,
              SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END) as page_views,
              SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END) as feed_reads,
-             COUNT(*) as count
+             COUNT(*) as \`count\`
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}
            GROUP BY page_slug
-           ORDER BY count DESC, page_slug LIMIT 20`,
+           ORDER BY \`count\` DESC, page_slug LIMIT 20`,
           [since, ...PAGE_ANALYTICS_EVENTS],
         ),
         d.all(
-          `SELECT referrer, COUNT(*) as count
+          `SELECT referrer, COUNT(*) as \`count\`
            FROM events
            WHERE ${referrerBaseWhere} AND referrer IS NOT NULL AND referrer != ''
-           GROUP BY referrer ORDER BY count DESC LIMIT 10`,
+           GROUP BY referrer ORDER BY \`count\` DESC LIMIT 10`,
           referrerBaseParams,
         ),
         d.all(
-          `SELECT referrer, COUNT(*) as count
+          `SELECT referrer, COUNT(*) as \`count\`
            FROM events
            WHERE ${referrerBaseWhere}
            GROUP BY referrer`,
@@ -942,7 +1105,7 @@ export async function queryAnalytics(
              COUNT(*) as unique_visitors,
              COALESCE(SUM(CASE WHEN active_days >= 2 THEN 1 ELSE 0 END), 0) as returning_visitors
            FROM (
-             SELECT visitor_id, COUNT(DISTINCT strftime('%Y-%m-%d', ts)) as active_days
+             SELECT visitor_id, COUNT(DISTINCT SUBSTR(ts, 1, 10)) as active_days
              FROM events
              WHERE ${visitorWhere}
              GROUP BY visitor_id
@@ -1032,7 +1195,7 @@ export async function queryAnalytics(
                 SUM(CASE WHEN type='chapter_complete' THEN 1 ELSE 0 END) as completions,
                 CASE
                   WHEN SUM(CASE WHEN type='chapter_view' THEN 1 ELSE 0 END) > 0
-                  THEN MIN(100, ROUND(
+                  THEN ${scalarMinFn()}(100, ROUND(
                     SUM(CASE WHEN type='chapter_complete' THEN 1 ELSE 0 END) * 100.0 /
                     SUM(CASE WHEN type='chapter_view' THEN 1 ELSE 0 END),
                     1
@@ -1058,7 +1221,7 @@ export async function queryAnalytics(
                 SUM(CASE WHEN type='chapter_complete' THEN 1 ELSE 0 END) as completions,
                 CASE
                   WHEN SUM(CASE WHEN type='chapter_view' THEN 1 ELSE 0 END) > 0
-                  THEN MIN(100, ROUND(
+                  THEN ${scalarMinFn()}(100, ROUND(
                     SUM(CASE WHEN type='chapter_complete' THEN 1 ELSE 0 END) * 100.0 /
                     SUM(CASE WHEN type='chapter_view' THEN 1 ELSE 0 END),
                     1
@@ -1071,7 +1234,7 @@ export async function queryAnalytics(
         [opts.bookSlug, since],
       ),
       d.all(
-        `SELECT strftime('%Y-%m-%d', ts) as day, COUNT(*) as count
+        `SELECT SUBSTR(ts, 1, 10) as day, COUNT(*) as \`count\`
          FROM events
          WHERE book_slug = ? AND ts >= ? AND type IN (${bookTotalTypeSql}) AND ${HUMAN_OR_TRACKED}
          GROUP BY day ORDER BY day`,
@@ -1102,9 +1265,14 @@ export async function queryAnalytics(
 export async function rollupDailyStats(): Promise<number> {
   try {
     const d = getDriver();
+    // INSERT OR REPLACE (SQLite/libsql) ≡ REPLACE INTO (MySQL).
+    const insert =
+      activeDialect === "mysql"
+        ? "REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, `count`)"
+        : "INSERT OR REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, `count`)";
     await d.run(
-      `INSERT OR REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, count)
-       SELECT strftime('%Y-%m-%d', ts) as day, book_slug,
+      `${insert}
+       SELECT SUBSTR(ts, 1, 10) as day, book_slug,
               COALESCE(chapter_slug, ''), type, COUNT(*)
        FROM events
        GROUP BY day, book_slug, COALESCE(chapter_slug, ''), type`,

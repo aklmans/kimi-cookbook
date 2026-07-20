@@ -1363,12 +1363,12 @@ const audienceBreakdownSource = audienceBreakdownMatch?.[0] ?? "";
 if (!audienceBreakdownSource.includes("audience_session_key")) {
   fail("Audience breakdowns should count deduplicated audience sessions, not raw event rows.");
 }
-if (!audienceBreakdownSource.includes("COALESCE(session_id, visitor_id, 'event-' || id)")) {
+if (!audienceBreakdownSource.includes("COALESCE(session_id, visitor_id, CONCAT('event-', id))")) {
   fail("Audience breakdowns should derive a stable session key from session_id / visitor_id / event id.");
 }
 if (
   !audienceBreakdownSource.includes(
-    "GROUP BY ${column}, COALESCE(session_id, visitor_id, 'event-' || id)",
+    "GROUP BY ${column}, COALESCE(session_id, visitor_id, CONCAT('event-', id))",
   ) &&
   !audienceBreakdownSource.includes("COUNT(DISTINCT")
 ) {
@@ -1427,7 +1427,7 @@ assertNotIncludes(
 );
 assertIncludes(
   "lib/db.ts",
-  "for (const stmt of schemaStatements())",
+  'for (const stmt of schemaStatements("sqlite"))',
   "Turso schema migration should preserve statement order.",
 );
 assertIncludes(
@@ -1930,8 +1930,8 @@ assertIncludes(
 // referrers.
 assertIncludes(
   "lib/db.ts",
-  "MIN(100, ROUND(",
-  "completion_rate must be clamped at 100% — chapter_complete can outrun chapter_view across window boundaries.",
+  "${scalarMinFn()}(100, ROUND(",
+  "completion_rate must be clamped at 100% — chapter_complete can outrun chapter_view across window boundaries (scalar min is MIN on sqlite/libsql, LEAST on mysql).",
 );
 assertIncludes(
   "lib/db.ts",
