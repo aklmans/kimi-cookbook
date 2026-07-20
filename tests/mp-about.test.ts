@@ -51,13 +51,12 @@ test("section III offers 4 ways, each with a typed action", () => {
   }
 });
 
-test("section IV carries license + contacts", () => {
+test("section IV carries license (contacts are commented out for now)", () => {
   const iv = about.sections[3];
   assert.ok(iv.license, "license missing");
-  assert.equal(iv.contacts?.length, 3);
-  for (const contact of iv.contacts ?? []) {
-    assert.ok(contact.label && contact.text && contact.value && contact.toast);
-  }
+  // contacts deliberately offline in the payload (simplified response);
+  // the web /about page still lists them.
+  assert.equal(iv.contacts, undefined);
 });
 
 test("every user-facing string is plain text (no HTML / newlines)", () => {

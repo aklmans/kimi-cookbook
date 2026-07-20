@@ -10937,3 +10937,25 @@ html {
     display: none !important;
   }
 }
+
+/* ============================================================
+   Round-105 · About-page Mini Program QR — the 小程序 row in the
+   /about routes list carries the MP code (public/miniapp-qrcode.jpg)
+   in the 150px action column: small, hairline-framed, right-aligned,
+   collapses under the text on phones.
+   ============================================================ */
+.about-routes__qr {
+  display: block;
+  width: 112px;
+  height: 112px;
+  justify-self: end;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+@media (max-width: 640px) {
+  .about-routes__qr {
+    justify-self: start;
+    width: 96px;
+    height: 96px;
+  }
+}

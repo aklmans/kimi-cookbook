@@ -138,7 +138,7 @@ function cardHtml({ kicker, title, sub, qr }) {
     ${
       qr
         ? `<div class="qr"><img src="${pathToFileURL(
-            path.resolve("assets/brand/miniapp-qrcode.jpg"),
+            path.resolve("public/miniapp-qrcode.jpg"),
           )}"><div class="cap">微信扫码 · 小程序直达</div></div>`
         : ""
     }

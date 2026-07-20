@@ -89,33 +89,20 @@ export const about: BookAbout = {
     },
     {
       no: "IV",
-      title: "作者与边界",
+      title: "作者与立场",
       paragraphs: [
         "这本书由 Zhapar 撰写与维护。作者写代码, 也写字, 长期关心的是工具怎样进入真实工作, 而不是发布当天的漂亮话。这里默认站在付费用户一侧: 可以推荐, 但要说清为什么; 可以喜欢一个产品, 也必须写它的 trade-off。",
-        "这里不做 affiliate 排序, 不夹带课程软广, 不为了新模型发布重写整本书。大改版会补边注, 判断变了会开新章。读到哪一章想说点什么, 章末和本页末尾都有评论区, 也可以直接发邮件。",
+        "这里不做 affiliate 排序, 不夹带课程软广, 不为了新模型发布重写整本书。大改版会补边注, 判断变了会开新章。读到哪一章想说点什么, 章末和本页末尾都有评论区。",
       ],
       license:
         "本书内容遵循 CC BY-NC-ND 4.0: 允许免费阅读、AI 摘读、引用与转发, 须保留作者署名 (Zhapar) 与原文链接; 禁止商业再发布与衍生改写。",
-      contacts: [
-        {
-          label: "Twitter / X",
-          text: "@ak_zhaphar",
-          value: "https://x.com/ak_zhaphar",
-          toast: "链接已复制",
-        },
-        {
-          label: "GitHub",
-          text: "aklmans/kimi-cookbook",
-          value: "https://github.com/aklmans/kimi-cookbook",
-          toast: "链接已复制",
-        },
-        {
-          label: "Email",
-          text: "hi@zhaphar.com",
-          value: "hi@zhaphar.com",
-          toast: "邮箱已复制",
-        },
-      ],
+      // contacts 暂时从载荷下线(简化返回; 恢复时取消注释即可) —
+      // 网页版 /about 仍保留 Twitter / GitHub / Email 行。
+      // contacts: [
+      //   { label: "Twitter / X", text: "@ak_zhaphar", value: "https://x.com/ak_zhaphar", toast: "链接已复制" },
+      //   { label: "GitHub", text: "aklmans/kimi-cookbook", value: "https://github.com/aklmans/kimi-cookbook", toast: "链接已复制" },
+      //   { label: "Email", text: "hi@zhaphar.com", value: "hi@zhaphar.com", toast: "邮箱已复制" },
+      // ],
     },
   ],
 

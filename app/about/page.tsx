@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -259,6 +260,24 @@ export default function AboutPage() {
               <span>/books/kimi/llms.md</span>
             </div>
             <div className="about-routes__row">
+              <h3>
+                <T zh="小程序" en="Mini Program" />
+              </h3>
+              <p>
+                <T
+                  zh="在微信里读这本书, 扫码即开, 支持深色模式。"
+                  en="Read it inside WeChat — scan to open, dark mode included."
+                />
+              </p>
+              <Image
+                className="about-routes__qr"
+                src="/miniapp-qrcode.jpg"
+                alt="Kimi Cookbook 小程序码 / Mini Program QR code"
+                width={112}
+                height={112}
+              />
+            </div>
+            <div className="about-routes__row">
               <h3>RSS</h3>
               <p>
                 <T
@@ -277,7 +296,7 @@ export default function AboutPage() {
           <header className="about-section__head">
             <p className="about-section__label">— IV</p>
             <h2 className="about-section__title" id="about-author-title">
-              <T zh="作者与边界" en="Author & Boundaries" />
+              <T zh="作者与立场" en="Author & Principles" />
               <span className="stop">.</span>
             </h2>
           </header>
