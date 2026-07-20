@@ -297,16 +297,37 @@ jobs:
             '
             echo "Database credential preflight passed."
           elif [[ "$DATABASE_URL" =~ ^mysqls?:// ]]; then
+            # A private MySQL lives on the deploy host's loopback — the runner
+            # can't reach it (its 127.0.0.1 is itself, ECONNREFUSED). Tunnel
+            # through the deploy SSH connection and preflight through it: a
+            # real credential check against the production MySQL, before
+            # production config is touched.
+            tunnel_pid=""
+            cleanup_tunnel() {
+              [[ -n "$tunnel_pid" ]] && kill "$tunnel_pid" 2>/dev/null || true
+            }
+            trap cleanup_tunnel EXIT
+            ssh \
+              -i "$HOME/.ssh/deploy_key" \
+              -p "$DEPLOY_SSH_PORT" \
+              -o BatchMode=yes \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=yes \
+              -o ExitOnForwardFailure=yes \
+              -N -L 3307:127.0.0.1:3306 \
+              "$DEPLOY_USER@$DEPLOY_HOST" &
+            tunnel_pid=$!
+            sleep 3
             node --input-type=module -e '
               import mysql from "mysql2/promise";
-              const pool = mysql.createPool(process.env.DATABASE_URL);
-              try {
-                await pool.query("SELECT 1");
-              } finally {
-                await pool.end();
-              }
+              const url = new URL(process.env.DATABASE_URL);
+              url.port = "3307"; // through the SSH tunnel to the deploy host
+              const pool = mysql.createPool(url.toString());
+              try { await pool.query("SELECT 1"); } finally { await pool.end(); }
             '
-            echo "MySQL credential preflight passed."
+            cleanup_tunnel
+            trap - EXIT
+            echo "MySQL credential preflight passed (via SSH tunnel)."
           fi
 
           {
