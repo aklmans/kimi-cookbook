@@ -5,7 +5,7 @@ references:
     url: "https://www.kimi.com/"
     urlLabel: "Kimi 官网"
   - id: 2
-    body: "Kimi K3 官方博客（2026-07-16）—— K3 是 2.8 万亿参数的 MoE（896 专家、每 token 激活 16）、1M token 上下文、原生视觉、思考默认 max 档; 官方承诺「full model weights will be released by July 27, 2026」。K2 系权重（Kimi-K2.6 / Kimi-K2.7-Code）早已以 Modified MIT 挂在 Hugging Face。截至 2026-07-17, K3 权重尚未上架。"
+    body: "Kimi K3 官方博客（2026-07-16）—— K3 是 2.8 万亿参数的 MoE（896 专家、每 token 激活 16）、1M token 上下文、原生视觉、思考默认 max 档; 官方承诺「full model weights will be released by July 27, 2026」。同一篇博客里官方自评整体仍「trails the most powerful proprietary models」, 点名 Claude Fable 5 与 GPT 5.6 Sol, Limitations 承认与这两家有「a noticeable gap in user experience」。K2 系权重（Kimi-K2.6 / Kimi-K2.7-Code）早已以 Modified MIT 挂在 Hugging Face。截至 2026-07-17, K3 权重尚未上架。"
     url: "https://www.kimi.com/blog/kimi-k3"
     urlLabel: "Kimi K3 官方博客"
   - id: 3
@@ -16,23 +16,33 @@ references:
     body: "钛媒体 ·「Kimi K2.6 涨 58% 的 API 定价」（2026-04）—— 独立报道, 指出 K2.6 输入价较上一代 K2.5 上涨约 58%、输出约三成, 解读为月之暗面不再以低价抢量、转向对标前沿。本书引它作外部参照, 不作权威终点。"
     url: "https://www.tmtpost.com/7961404.html"
     urlLabel: "钛媒体 · K2.6 定价"
+  - id: 5
+    body: "DeepSWE 官方榜单（页面标注更新于 2026-07-17, 113 个任务、16 个模型, 统一 mini-swe-agent harness）—— kimi-k3[max] 69%±5%、第 4, 榜首 gpt-5.6-sol[max] 73%±3%, 误差棒与二三位重叠; 单任务成本 $4.65, 为前五中第二低。独立第三方实测, 这是独立执行类榜单首个收录 K3 的成绩。"
+    url: "https://deepswe.datacurve.ai/"
+    urlLabel: "DeepSWE 官方榜"
+  - id: 6
+    body: "Kimi 帮助中心 · Agent Swarm —— 截至 2026-07, Agent Swarm 由 Kimi K3 驱动（K3 集群）; 单次任务最多部署约 300 个子智能体同时工作。产品层随模型层一起换脑, 是「一套栈」而非「一组单品」的直接证据。"
+    url: "https://www.kimi.com/zh-cn/help/agent/agent-swarm"
+    urlLabel: "Kimi 帮助中心 · Agent Swarm"
+  - id: 7
+    body: "Kimi 帮助中心 · 会员套餐价格 —— Agent、深度研究、PPT、Kimi Claw 等功能共享一个 token 额度池（次数只是按常见任务折算的估值）, 只有 Kimi Code 是单独的池; 一个会员账号串起所有入口。截至 2026-07。"
+    url: "https://www.kimi.com/zh-cn/help/membership/membership-pricing"
+    urlLabel: "Kimi 帮助中心 · 会员价格"
 ---
 
 <Cover />
 
-<T zh="你大概是这样记住 Kimi 的: 2024 年那个能一口气读进几十万字的框 —— 把一整本书、一份几百页的合同丢进去, 它真能读完、答得上。那一下确实惊艳, 也是它出圈的原因。" />
+<T zh="我记住 Kimi, 是在 2024 年: 一个能一口气读进几十万字的框 —— 把一整本书、一份几百页的合同丢进去, 它真能读完、答得上。那一下确实惊艳。我为这个框付了费, 然后用了两年: 读长文, 写中文, 没了。" />
 
-<T zh={<>问题是, 那是两年前的 Kimi。你的印象停在了「长文本」, 它却早走远了。到 K3, 它不再是一个特长生, 而是一套对标 OpenAI 和 Anthropic 的<strong>全栈</strong>: 2.8 万亿参数、1M 上下文的旗舰模型、能做出网站幻灯文档表格的 Agent、调度一大群子 agent 的 Agent Swarm、Deep Research、跑在终端的 Kimi Code, 底下还垫着一套 OpenAI 兼容、权重开源的 API。<Footnote n={1} />这本书讲的, 就是这套你大概率只用了一个角的栈。</>} />
+<T zh={<>到 K3 发布, 我回官网看了一眼, 才发现自己的印象停在一张过期快照上: 它早长成一套对标 OpenAI 和 Anthropic 的<strong>全栈</strong> —— 2.8 万亿参数、1M 上下文的旗舰, 能做出网站幻灯文档表格的 Agent, 调度几百个子 agent 的 Agent Swarm, Deep Research, 跑在终端的 Kimi Code, 底下垫着一套 OpenAI 兼容、权重开源的 API。<Footnote n={1} />我大概率只用到了这套栈的一个角。这本书, 是我把这个角之外的部分一块块拆开看过的记录。</>} />
 
-<SectionTitle number="I"><T zh="你记得的是 2024 年那个 Kimi" /></SectionTitle>
+<SectionTitle number="I"><T zh="我停在了 2024 年那张快照上" /></SectionTitle>
 
-<T zh="先认下这一句: 你脑子里的 Kimi, 是它当年用来出圈的那张底牌, 不是它现在的样子。" />
+<T zh="Kimi 出圈靠的是长上下文: 一次吃下几万、几十万字, 别人要分段喂, 它一口吞; 加上中文写得顺, 它成了很多人手里那个「读长文、写中文」的工具 —— 包括我。这张底牌今天还在, 也仍是强项, 这本书后面照样会用到它。但只认得这张底牌, 看到的就是两年前的它。" />
 
-<T zh={<>Kimi 出名靠的是长上下文: 一次吃下几万、几十万字, 别人要分段喂, 它一口吞; 再加上中文写得顺, 它成了很多人手里那个「读长文、写中文」的工具。这张底牌今天还在, 也仍是强项 —— 这本书后面照样会用到它。但如果你对它的认识只停在这里, 你看到的是一张过期快照: 它早不是只会这两件事的特长生了。</>} />
+<T zh="判断它的标准, 也跟着变了。2024 年我问的是「它能不能读完这份长文」, 一道是非题; 现在该问的是「这套栈里, 哪一面对得上我手头这类活」, 一张地图。从是非题换成地图 —— 这是我写这本书的原因, 也是读它的方法。" />
 
-<T zh="判断它的标准, 也跟着变了。当年你问的是「它能不能读完这份长文」; 现在该问的是「这套栈里, 哪一面对得上我手头这类活」。问题从一道是非题, 变成了一张地图 —— 而多数人手里还攥着两年前那道是非题。" />
-
-<Timeline caption={<T zh="一年六代 —— 你记得的 Kimi, 已经是好几代以前的事了。截至 2026-07。" />}>
+<Timeline caption={<T zh="一年六代 —— 我记忆里的 Kimi, 已经是好几代以前的事了。截至 2026-07。" />}>
   <Milestone date="2025-07" label="K2" note={<T zh="开源的万亿 MoE, 出圈之作" />} />
   <Milestone date="2025-11" label="K2 Thinking" note={<T zh="加上推理（思考）" />} />
   <Milestone date="2026-01" label="K2.5" note={<T zh="多模态 + Agent Swarm" />} />
@@ -45,11 +55,11 @@ references:
 
 <SectionTitle number="II"><T zh="它长成了一套对标前沿的栈" /></SectionTitle>
 
-<T zh="把它现在的产品线摆出来, 你会发现几乎是照着 OpenAI 和 Anthropic 描的。" />
+<T zh={<>把它的产品线摆出来, 几乎能跟 OpenAI 和 Anthropic 一一对上。旗舰模型 K3 是 2.8 万亿参数的 MoE、1M token 上下文, 原生多模态、思考永远开着, 权重官方承诺 7 月 27 日前放出。<Footnote n={2} />往上按官方的摆法是五件套: 网页里的 Kimi 本体（聊天加五档会员, 外带 Agent 做成品、Agent Swarm、Deep Research、Kimi Claw 一排入口）、桌面端的 Kimi Work、终端里的 Kimi Code、浏览器扩展 Kimi WebBridge, 和最底下的 Kimi Platform 开放平台 API。<Footnote n={1} /></>} />
 
-<T zh={<>旗舰模型 K3 是 2.8 万亿参数的 MoE、1M token 上下文, 原生多模态、思考永远开着; 权重官方承诺 7 月 27 日前放出, K2 系的早就以宽松协议挂在 Hugging Face 上。<Footnote n={2} />往上是一整套产品, 按官方的摆法是五件套: 网页里的 Kimi 本体（聊天加五档会员, 外带 Agent 做成品、Agent Swarm、Deep Research、Kimi Claw 一排入口）、桌面端的 Kimi Work、终端里的 Kimi Code、浏览器扩展 Kimi WebBridge, 和最底下的 Kimi Platform 开放平台 API。<Footnote n={1} />这张表几乎能和 ChatGPT / Claude 那两套一一对上 —— 它要的就是这个位置, 而不是「国产长文本工具」那个位置。</>} />
+<T zh={<>「一一对上」只证明形态, 证明不了它们是一体的。让我改口叫它「栈」的, 是两层咬合。<strong>同一颗脑子</strong>: 四模式、Agent、Swarm、Kimi Code 背后是同一条模型线 —— K3 一发布, 官方把 Agent 集群也切到它驱动, 没有各产品各养各的模型。<Footnote n={6} /><strong>同一本账</strong>: 一个会员账号串起所有入口, 聊天之外的成品、研究、集群共享一个 token 额度池 —— 第九章会算到, Swarm 跑得猛, 是真的会把 Agent 的额度吃紧。<Footnote n={7} />一颗脑子加一本账, 动一层、其他层跟着动, 这是「栈」和「杂货铺」的区别。丑话也说在这: 生态那一层还薄 —— 插件、第三方集成、企业采购的成熟度, 都还追不上那两家。所以本书说「对标」, 说的是产品形态和模型能力两层; 生态这层, 先不算数。</>} />
 
-<T zh={<>最能说明它换了打法的是价格。两年三级跳: K2.5 输入每百万 token ¥4.00, K2.6 涨到 ¥6.50, K3 直接定到 ¥20.00、输出 ¥100.00。<Footnote n={3} /><Footnote n={4} />一个还在抢市场的便宜货不会这样定价; 敢定, 是因为它认定自己值这个钱。<strong>抢量、拼便宜那条路, 现在是 DeepSeek 在走; Kimi 把自己搬到了对标前沿的货架上。</strong>你该用什么眼光看它, 这个动作说得比任何 benchmark 都清楚。</>} />
+<T zh={<>最能说明它换了打法的, 是价格。两年三级跳: K2.5 输入每百万 token ¥4.00, K2.6 涨到 ¥6.50, K3 直接定到 ¥20.00、输出 ¥100.00。<Footnote n={3} /><Footnote n={4} />一个还在抢量的便宜货不会这样定价。但话要说准: 价格证明的是它的自我定位, 证明不了它值这个钱 —— 值不值, 要看单位任务成本和独立实测, 那是第三章一笔一笔算的账。<strong>抢量、拼便宜那条路, 现在是 DeepSeek 在走; Kimi 把自己摆上了对标前沿的货架</strong> —— 摆没摆稳, 价格说了不算, 后面一格一格验。</>} />
 
 <BarCompare unit={<T zh="¥ / 百万 token · 输入价" />} caption={<T zh="K2.5 → K3, 输入价两年五倍 —— 它把自己挪出了「便宜」那一栏。" />}>
   <Bar label={<T zh="K2.5" />} value="4.00" />
@@ -57,47 +67,21 @@ references:
   <Bar label={<T zh="K3" />} value="20.00" accent note={<T zh="×5" />} />
 </BarCompare>
 
-<Compare>
-<Before label={<T zh="你印象里的 Kimi" />}>
-
-<T zh="一个读长文、写中文的框。一张底牌, 一个特长生 —— 拿它跟「国产某某」比。" />
-
-</Before>
-<After label={<T zh="现在的 Kimi" />}>
-
-<T zh="多模态旗舰 + 思考、Agent 做成品、Agent Swarm、Deep Research、Kimi Code、开源 API —— 一套对标前沿的栈。长文本只是其中一面。" />
-
-</After>
-</Compare>
-
 <Divider />
 
 <SectionTitle number="III"><T zh="这本书给这套栈画一张图" /></SectionTitle>
 
-<T zh="能力早就在那里, 缺的是一张图: 哪一面对上你哪类活, 哪些根本不必学。" />
+<T zh={<>这本书不列全部功能, 也不教点哪个按钮（界面几个月一变, 判断不会）。它给这张地图标的是: 每一面<strong>对标前沿的哪一个、省什么、什么时候用、什么时候别用</strong>。后面顺着这套栈走 —— 全景、挑模型、四种模式、Agent 交办、Agent Swarm 与 Claw、Deep Research、Kimi Code 与 API, 然后是选档与取舍, 末尾一页实战速查。</>} />
 
-<T zh={<>这本书不列全部功能, 也不教你点哪个按钮（界面几个月一变, 判断不会）。它给你一张栈的地图: 每一面<strong>对标前沿的哪一个、省你什么、什么时候用、什么时候别用</strong>。后面的章节顺着这套栈走 —— 全景、挑模型、四种模式、Agent 交办、Agent Swarm 与 Claw、Deep Research、Kimi Code 与 API, 然后是选档与取舍, 末尾再附一页实战速查。</>} />
+<T zh={<>也把话说在前头: 「长成全栈」不等于「样样第一」。我说的「差前沿半步」, 点名道姓、带上刻度: 最难的推理、最吃打磨的 agentic coding、一锤定音的输出, 地盘仍归 Claude Fable 5 和 GPT 5.6 Sol —— 独立榜 DeepSWE（2026-07-17）上 K3 是 69%、榜首 73%, 差 4 个点、误差棒还重叠; 官方在发布博客里自己也承认「trails the most powerful proprietary models」。<Footnote n={5} /><Footnote n={2} />「半步」就是这个距离: 看得见, 还没追上。本书每一面都会标出这条线, 该回 frontier 就回。还有一条最容易踩的: <strong>会员订阅不含 API</strong>, 开放平台（platform.kimi.com）是另一套账户、另一条账单。<Footnote n={3} />它们重要, 只是别混成一笔账。</>} />
 
-<T zh={<>也把话说在前头: 「长成全栈」不等于「样样第一」。最难的推理、最吃打磨的 agentic coding、一锤定音的输出, 仍是 Claude、GPT 这些前沿的地盘, Kimi 还差半步 —— 这本书会在每一面标出那条线, 该回 frontier 就回。还有一条最容易踩的: <strong>会员订阅不含 API</strong>, 开放平台（platform.kimi.com）是另一套账户、另一条账单。<Footnote n={3} />它们重要, 只是别混成一笔账。</>} />
+<Callout kind="note" zh={<>立场说在前面: 我拿自己的钱用它, 没拿 Moonshot 的钱。官网自己能写的话这里不写; 不接 affiliate, 推荐一样东西会说清为什么, 也会说清它的代价。模型版本、价格、上下文长度都标了日期 —— Kimi 迭代很快（这一年从 K2 一路走到 K3）, 看到本书时请以官网当时的页面为准。</>} />
 
-<Callout kind="note" zh={<>立场说在前面: 我是付费用它的人, 不是 Moonshot 的产品经理。官网自己能写的话这里不写; 不接 affiliate, 推荐一样东西会告诉你为什么, 也会告诉你它的代价。模型版本、价格、上下文长度都标了日期 —— Kimi 迭代很快（这一年从 K2 一路走到 K3）, 看到本书时请以官网当时的页面为准。</>} />
-
-<T zh="动手之前先照一次镜子 —— 看看这套栈, 你到底只用了哪几面:" />
-
-<Steps>
-  <Step title={<T zh="翻两周记录, 数一个数" />}>
-    <T zh="打开你的 Kimi 历史, 数过去两周有多少件活不是「默认聊天」—— 交办、研究、写码、集群都算。多数人数出来是 0 或 1。" />
-  </Step>
-  <Step title={<T zh="读完第十章, 再数一次" />}>
-    <T zh="这个数就是这本书对你的全部作用: 不追求「全用上」, 追求「该用的没错过」。" />
-  </Step>
-</Steps>
-
-<T zh="做完你会发现: 不是 Kimi 少了哪样能力, 是你一直只站在这套栈的一个入口。" />
+<T zh="动笔之前, 我先照了一次镜子。翻自己两周的 Kimi 记录, 数「有几件不是默认聊天」—— 数出来是 1。这个数本身没意义: 多点开几个入口不等于把活干好, 它量的是「用没用」, 不是「有没有用」。我改成记三笔账: 哪件事它替我省了时间, 哪件原来做不成的做成了, 哪件质量明显上去了。三笔都记不出来的那一面, 对我仍是摆设。后面九章, 每一章都是在替我回答: 这面能不能记上账。" />
 
 <References />
 
 <Kicker
-  zh={"你印象里的 Kimi 是张快照,\n它早长成了一套栈"}
+  zh={"我印象里的 Kimi 是张旧快照,\n它早长成了一套栈"}
   sig="Kimi · Zhaphar"
 />

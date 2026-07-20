@@ -24,14 +24,14 @@ export const meta: BookMeta = {
   chapters: [
     {
       slug: "01-intro",
-      title: "引子 · 你印象里的 Kimi 是旧的",
+      title: "引子 · 我印象里的 Kimi 是旧的",
       titleShort: "引子",
       titleEn: "",
       readTime: "5 MIN",
       publishedAt: "2026-06-12",
-      revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }],
-      lede: "你对 Kimi 的印象, 大概还停在「长文本」那一年。它早不是那个工具了 —— 到 K3, 它长成一套对标 OpenAI / Anthropic 的全栈。这本书讲这套栈, 以及该用它的哪一面。",
-      posterSummary: "两年时间, 它从「能读长文的框」长成了模型、Agent、API 一整套栈。印象不更新, 你就只用到它的一个角。",
+      revisions: [{ v: 1, date: "2026-06" }, { v: 2, date: "2026-07" }, { v: 3, date: "2026-07" }],
+      lede: "我对 Kimi 的印象, 曾停在「长文本」那一年 —— 付了费, 却只用它读长文、写中文。到 K3 回头一看, 它早长成一套对标 OpenAI / Anthropic 的全栈。这本书, 是我把这套栈一块块拆开看的记录。",
+      posterSummary: "两年时间, 它从「能读长文的框」长成模型、Agent、API 一整套栈。印象不更新, 就只用到它的一个角。",
     },
     {
       slug: "02-stack",
