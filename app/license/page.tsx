@@ -158,7 +158,7 @@ export default function LicensePage() {
             — <T zh="站点源码" en="Source Code" />
           </p>
           <h2 className="section-head__title">
-            <T zh="保留所有权利 (暂)" en="All Rights Reserved (for now)" />
+            <T zh="MIT 许可证" en="MIT License" />
             <span className="stop">.</span>
           </h2>
         </header>
@@ -166,25 +166,14 @@ export default function LicensePage() {
         <div className="prose">
           <p lang="zh">
             仓库里 Next.js 应用代码、React 组件、构建脚本、CSS 扩展、MDX
-            组件库等所有非内容部分, 暂时 <em>保留所有权利</em>。
-            仓库公开是为了让人看到这个站怎么搭、提 Issue 反馈, 但代码复用
-            需要先经过作者授权。
+            组件库等所有非内容部分, 以 <em>MIT 许可证</em>发布 —— 可自由使用、
+            修改与再分发, 保留版权声明即可。
           </p>
           <p lang="en">
             Everything else in the repo — Next.js code, React components,
-            build scripts, CSS extensions, the MDX component library — is{" "}
-            <em>all rights reserved</em> for now. The repo is public so
-            others can see how the site is built and file issues; reuse
-            requires permission.
-          </p>
-          <p lang="zh">
-            想用某一段代码, 写信告诉我用途, <a href="mailto:hi@zhaphar.com">hi@zhaphar.com</a>。
-            未来开源整套代码的可能性也在考虑里。
-          </p>
-          <p lang="en">
-            If you want to reuse a specific piece, email me with the use
-            case at <a href="mailto:hi@zhaphar.com">hi@zhaphar.com</a>.
-            Open-sourcing the whole site is on the to-do list.
+            build scripts, CSS extensions, the MDX component library — is
+            released under the <em>MIT License</em>: free to use, modify and
+            redistribute with the copyright notice intact.
           </p>
         </div>
 
@@ -195,6 +184,35 @@ export default function LicensePage() {
           <p lang="en">
             Source repository:{" "}
             <a href="https://github.com/aklmans/kimi-cookbook">github.com/aklmans/kimi-cookbook</a>
+          </p>
+        </div>
+
+        <div className="v3-divider" aria-hidden="true" />
+
+        {/* Font credit */}
+        <header className="section-head">
+          <p className="section-head__label">
+            — <T zh="字体致谢" en="Font Credit" />
+          </p>
+          <h2 className="section-head__title">
+            <T zh="仓耳今楷" en="Tsanger JinKai" />
+            <span className="stop">.</span>
+          </h2>
+        </header>
+
+        <div className="prose">
+          <p lang="zh">
+            本站中文与英文正文字体为「仓耳今楷 05-W04」(另用 W05 字重),
+            Copyright © <a href="https://tsanger.cn/">仓耳字库</a>。
+            感谢仓耳字库开放旗下字体免费下载、允许个人使用 ——
+            这本书和这座站的气质, 一半是这款字给的。
+          </p>
+          <p lang="en">
+            The site&apos;s body typeface, for both Chinese and English, is
+            Tsanger JinKai 05-W04 (with the W05 weight alongside), copyright ©{" "}
+            <a href="https://tsanger.cn/">仓耳字库 (Tsanger)</a>. Our thanks to
+            Tsanger for making their typefaces freely downloadable and free for
+            personal use — half of this site&apos;s voice comes from this font.
           </p>
         </div>
       </main>

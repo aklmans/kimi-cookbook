@@ -34,6 +34,17 @@ academic course packs, derived works), contact `hi@zhaphar.com`.
 
 ---
 
+## Fonts
+
+The body typeface files under `assets/fonts/` (TsangerJinKai02 subsets,
+仓耳今楷 05-W04 / W05) are **not** covered by the licenses above. They
+remain Copyright © [仓耳字库](https://tsanger.cn/) — our thanks to
+Tsanger for making their typefaces freely downloadable and free for
+personal use. If you reuse this repo's font subsets, check Tsanger's
+own terms at <https://tsanger.cn/> first.
+
+---
+
 ## Source code
 
 Everything else in this repository (the Next.js application code,
