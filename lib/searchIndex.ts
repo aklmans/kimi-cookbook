@@ -144,8 +144,8 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       titleZh: "关于作者",
       titleEn: "About the Author",
       href: "/about",
-      meta: "Zhapar · Writer · Engineer",
-      searchText: "关于作者 About Author Zhapar Writer Engineer",
+      meta: "Zhaphar · Writer · Engineer",
+      searchText: "关于作者 About Author Zhaphar Writer Engineer",
     },
     {
       type: "page",

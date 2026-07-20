@@ -67,7 +67,7 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
   lines.push(`**原文与最新版** ${bookUrl}`);
   lines.push("");
   lines.push(
-    `> 本书由 Zhapar 撰写, 于 kimi.read.wiki 完整免费阅读。允许 AI 摘读、引用、问答; 转载请保留作者署名与原文链接 (CC BY-NC-ND 4.0, ${absoluteUrl("/license")})。`,
+    `> 本书由 Zhaphar 撰写, 于 kimi.read.wiki 完整免费阅读。允许 AI 摘读、引用、问答; 转载请保留作者署名与原文链接 (CC BY-NC-ND 4.0, ${absoluteUrl("/license")})。`,
   );
   lines.push("");
   /* Agent-fetch note — filled in at the END of the build, once the total
@@ -183,7 +183,7 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
   lines.push("");
   lines.push("---");
   lines.push("");
-  lines.push(`*Kimi · 从长文本到一套 agent 栈 · Zhapar 著 · CC BY-NC-ND 4.0 · ${bookUrl}*`);
+  lines.push(`*Kimi · 从长文本到一套 agent 栈 · Zhaphar 著 · CC BY-NC-ND 4.0 · ${bookUrl}*`);
   lines.push("");
 
   // Patch the top-of-file agent note now that the total size is known.

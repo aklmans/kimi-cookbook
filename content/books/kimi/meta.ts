@@ -14,7 +14,7 @@ export const meta: BookMeta = {
   titleShort: "Kimi",
   lede: "别再把它当长文本工具 —— K3 旗舰思考永远开, 一套整合的 agent 栈加双兼容 API, 国内可达、中文长材料顺手; 该用的那几面替你挑出来, 什么时候回 frontier 也说清。",
   cover: "/books/kimi/cover.jpg",
-  author: "Zhapar",
+  author: "Zhaphar",
   date: "2026-07-17",
   language: "zh",
   draft: false,

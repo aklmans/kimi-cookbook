@@ -149,7 +149,7 @@ text-transform: uppercase;
 color: var(--ink-3);
 ```
 
-Used for: eyebrows ("— LATEST"), byline ("By Zhapar · 10 Chapters"),
+Used for: eyebrows ("— LATEST"), byline ("By Zhaphar · 10 Chapters"),
 section heads, footer labels. Highly repeated — this is the
 sound of the design language.
 

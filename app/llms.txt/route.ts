@@ -15,8 +15,8 @@ export function GET() {
 
   lines.push("# Kimi · 从长文本到一套 agent 栈");
   lines.push("");
-  lines.push("> 《Kimi · 从长文本到一套 agent 栈》—— Zhapar 写给已经付费 Kimi、却只用到一小部分的人：每块产品干什么、买哪档够用、什么时候回 frontier。完整章节，在线阅读，并允许 AI 摘读、引用与问答。");
-  lines.push("> A book by Zhapar about the Kimi agent stack — what each product surface does, which tier is enough, and when to go back to the frontier. Full chapters, free to read online; AI summarization, quoting, and Q&A welcome.");
+  lines.push("> 《Kimi · 从长文本到一套 agent 栈》—— Zhaphar 写给已经付费 Kimi、却只用到一小部分的人：每块产品干什么、买哪档够用、什么时候回 frontier。完整章节，在线阅读，并允许 AI 摘读、引用与问答。");
+  lines.push("> A book by Zhaphar about the Kimi agent stack — what each product surface does, which tier is enough, and when to go back to the frontier. Full chapters, free to read online; AI summarization, quoting, and Q&A welcome.");
   lines.push("");
 
   lines.push("## 站点入口 / Site entry");
@@ -65,7 +65,7 @@ export function GET() {
 
   lines.push("## 授权 / License");
   lines.push("");
-  lines.push("本书内容遵循 CC BY-NC-ND 4.0：允许免费阅读、AI 摘读、引用与转发，须保留作者署名 (Zhapar) 与原文链接；禁止商业再发布与衍生改写。");
+  lines.push("本书内容遵循 CC BY-NC-ND 4.0：允许免费阅读、AI 摘读、引用与转发，须保留作者署名 (Zhaphar) 与原文链接；禁止商业再发布与衍生改写。");
   lines.push("The book's content is licensed under CC BY-NC-ND 4.0 — free to read, quote, and feed to AI; commercial reuse and derivative works are not permitted.");
   lines.push(`License: ${absoluteUrl("/license")}`);
   lines.push("");

@@ -7,7 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 # Kimi · 从长文本到一套 agent 栈 — Agent Brief
 
 Editorial single-book ebook site — 《Kimi · 从长文本到一套 agent 栈》
-by **Zhapar**, at <https://kimi.read.wiki>. The site brand is **Kimi
+by **Zhaphar**, at <https://kimi.read.wiki>. The site brand is **Kimi
 Cookbook** (header logo + name); the book itself keeps its full title
 for metadata / RSS / OG. One book about the Kimi agent stack, for
 readers who already pay for Kimi but only use a fraction of it.

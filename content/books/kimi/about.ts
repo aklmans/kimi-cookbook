@@ -16,7 +16,7 @@ const siteLabel = (path: string) =>
 
 export const about: BookAbout = {
   lede: "一本讲 Kimi 的书, 和指挥 Kimi 写书的人。",
-  bookline: `Kimi · 从长文本到一套 agent 栈 · Zhapar · ${SITE_YEAR}`,
+  bookline: `Kimi · 从长文本到一套 agent 栈 · Zhaphar · ${SITE_YEAR}`,
   intro:
     "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。到 K3, 它长成一套对标 OpenAI / Anthropic 的 agent 栈: 四模式、做出成品的 Agent、上百子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code, 和一套双兼容的 API。这本书给这套栈画张图。",
 
@@ -91,11 +91,11 @@ export const about: BookAbout = {
       no: "IV",
       title: "作者与立场",
       paragraphs: [
-        "这本书由 Zhapar 撰写与维护。作者写代码, 也写字, 长期关心的是工具怎样进入真实工作, 而不是发布当天的漂亮话。这里默认站在付费用户一侧: 可以推荐, 但要说清为什么; 可以喜欢一个产品, 也必须写它的 trade-off。",
+        "这本书由 Zhaphar 撰写与维护。作者写代码, 也写字, 长期关心的是工具怎样进入真实工作, 而不是发布当天的漂亮话。这里默认站在付费用户一侧: 可以推荐, 但要说清为什么; 可以喜欢一个产品, 也必须写它的 trade-off。",
         "这里不做 affiliate 排序, 不夹带课程软广, 不为了新模型发布重写整本书。大改版会补边注, 判断变了会开新章。读到哪一章想说点什么, 章末和本页末尾都有评论区。",
       ],
       license:
-        "本书内容遵循 CC BY-NC-ND 4.0: 允许免费阅读、AI 摘读、引用与转发, 须保留作者署名 (Zhapar) 与原文链接; 禁止商业再发布与衍生改写。",
+        "本书内容遵循 CC BY-NC-ND 4.0: 允许免费阅读、AI 摘读、引用与转发, 须保留作者署名 (Zhaphar) 与原文链接; 禁止商业再发布与衍生改写。",
       // contacts 暂时从载荷下线(简化返回; 恢复时取消注释即可) —
       // 网页版 /about 仍保留 Twitter / GitHub / Email 行。
       // contacts: [

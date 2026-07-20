@@ -63,7 +63,7 @@ export default async function Image() {
           margin: "40px 0 0 0",
         }}
       >
-        Zhapar 著 · 十章 · 在线阅读 · PDF · llms.md
+        Zhaphar 著 · 十章 · 在线阅读 · PDF · llms.md
       </p>
     </div>,
     {

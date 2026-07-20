@@ -292,8 +292,8 @@ export function bookPrintBackCover(
           </p>
           <p className="print-backcover__biotext">
             <T
-              zh="Zhapar —— 写给已经付费 Kimi、却只用到一小部分的人：这套 agent 栈里该用哪一面、买哪档够用、什么时候回 frontier。写代码，也写字。"
-              en="Zhapar — for people already paying for Kimi but using only a fraction of it: which surface of the agent stack to use, which tier is enough, and when to go back to the frontier. A writer and engineer."
+              zh="Zhaphar —— 写给已经付费 Kimi、却只用到一小部分的人：这套 agent 栈里该用哪一面、买哪档够用、什么时候回 frontier。写代码，也写字。"
+              en="Zhaphar — for people already paying for Kimi but using only a fraction of it: which surface of the agent stack to use, which tier is enough, and when to go back to the frontier. A writer and engineer."
             />
           </p>
         </div>
@@ -337,7 +337,7 @@ export function bookPrintBackCover(
       <span className="print-backcover__rule" />
 
       <div className="print-backcover__legal">
-        <p className="print-backcover__copy">© {year} · Zhapar</p>
+        <p className="print-backcover__copy">© {year} · Zhaphar</p>
         <p className="print-backcover__disclaimer">
           <T
             zh="本书仅供学习交流，内容基于公开资料整理，不构成商业建议。"

@@ -2,7 +2,7 @@ import { SITE_YEAR } from "@/lib/site";
 
 /* `.v3-footer` — README CSS-class map. Server component.
    The chapter variant shows page numbers on the left
-   (`<NN> / <total>`); every other page shows "Zhapar · <year>". */
+   (`<NN> / <total>`); every other page shows "Zhaphar · <year>". */
 export function SiteFooter({
   pages,
 }: {
@@ -15,7 +15,7 @@ export function SiteFooter({
           <span className="accent">{pages.current}</span> / {pages.total}
         </span>
       ) : (
-        <span>Zhapar · {SITE_YEAR}</span>
+        <span>Zhaphar · {SITE_YEAR}</span>
       )}
       <span className="v3-footer__motto">
         Think clearly. Build with{" "}

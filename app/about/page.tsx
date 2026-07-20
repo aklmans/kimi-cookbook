@@ -12,13 +12,13 @@ import { SITE_YEAR } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About the Book",
   description:
-    "《Kimi · 从长文本到一套 agent 栈》—— Zhapar 写给已经付费 Kimi、却只用到一小部分的人: 每块产品干什么、买哪档够用、什么时候回 frontier。",
+    "《Kimi · 从长文本到一套 agent 栈》—— Zhaphar 写给已经付费 Kimi、却只用到一小部分的人: 每块产品干什么、买哪档够用、什么时候回 frontier。",
   alternates: { canonical: "/about" },
   openGraph: {
     type: "website",
     title: "About the Book · Kimi",
     description:
-      "《Kimi · 从长文本到一套 agent 栈》—— Zhapar 写给已经付费 Kimi、却只用到一小部分的人。",
+      "《Kimi · 从长文本到一套 agent 栈》—— Zhaphar 写给已经付费 Kimi、却只用到一小部分的人。",
     url: "/about",
     siteName: "Kimi Cookbook",
   },
@@ -48,8 +48,8 @@ export default function AboutPage() {
             </p>
             <p className="about-library__byline">
               <T
-                zh={`Kimi · 从长文本到一套 agent 栈 · Zhapar · ${SITE_YEAR}`}
-                en={`Kimi · From Long Context to an Agent Stack · Zhapar · ${SITE_YEAR}`}
+                zh={`Kimi · 从长文本到一套 agent 栈 · Zhaphar · ${SITE_YEAR}`}
+                en={`Kimi · From Long Context to an Agent Stack · Zhaphar · ${SITE_YEAR}`}
               />
             </p>
             <hr className="about-library__rule" />
@@ -304,12 +304,12 @@ export default function AboutPage() {
           <div className="about-colophon">
             <div className="prose">
               <p lang="zh">
-                这本书由 Zhapar 撰写与维护。作者写代码, 也写字, 长期关心的是工具怎样进入
+                这本书由 Zhaphar 撰写与维护。作者写代码, 也写字, 长期关心的是工具怎样进入
                 真实工作, 而不是发布当天的漂亮话。这里默认站在付费用户一侧: 可以推荐,
                 但要说清为什么; 可以喜欢一个产品, 也必须写它的 trade-off。
               </p>
               <p lang="en">
-                The book is written and maintained by Zhapar, a writer and engineer
+                The book is written and maintained by Zhaphar, a writer and engineer
                 more interested in how tools enter real work than in launch-day
                 polish. The default side is the paying user: recommendations need
                 reasons; affection for a product still has to include its trade-offs.
@@ -357,7 +357,7 @@ export default function AboutPage() {
         <Kicker
           zh={"工具替你做事,\n替不了你判断"}
           en={"Tools can do the work,\nnot the judgment"}
-          sig={`Zhapar · ${SITE_YEAR}`}
+          sig={`Zhaphar · ${SITE_YEAR}`}
         />
 
         <Discussion />

@@ -93,8 +93,8 @@ export default function LicensePage() {
             <span className="v3-list__marker">—</span>
             <span className="v3-list__body">
               <T
-                zh="保留作者 (Zhapar) 署名 + 原文 URL"
-                en="Retain the author's name (Zhapar) and the canonical URL"
+                zh="保留作者 (Zhaphar) 署名 + 原文 URL"
+                en="Retain the author's name (Zhaphar) and the canonical URL"
               />
             </span>
           </li>

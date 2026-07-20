@@ -10,13 +10,13 @@ export function GET(req: Request) {
   const feed = new Feed({
     title: "Kimi · 从长文本到一套 agent 栈",
     description:
-      "Zhapar 写给已经付费 Kimi、却只用到一小部分的人 —— 每写完一章, 这里更新一次。",
+      "Zhaphar 写给已经付费 Kimi、却只用到一小部分的人 —— 每写完一章, 这里更新一次。",
     id: absoluteUrl("/"),
     link: absoluteUrl("/"),
     language: "zh-CN",
-    copyright: `Zhapar · ${SITE_YEAR}`,
+    copyright: `Zhaphar · ${SITE_YEAR}`,
     feedLinks: { rss: absoluteUrl("/feed.xml") },
-    author: { name: "Zhapar", link: absoluteUrl("/about") },
+    author: { name: "Zhaphar", link: absoluteUrl("/about") },
   });
 
   const usedDates = new Set<string>();

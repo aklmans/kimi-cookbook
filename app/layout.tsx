@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     template: "%s · Kimi Cookbook",
   },
   description:
-    "Zhapar 写给已经付费 Kimi、却只用到一小部分的人 —— K3 旗舰与 K2.7-Code 撑起的一套 agent 栈: 四模式、Agent、Swarm、Deep Research、Kimi Code、五档会员与双兼容 API。该用哪一面、买哪档够用、什么时候回 frontier。",
+    "Zhaphar 写给已经付费 Kimi、却只用到一小部分的人 —— K3 旗舰与 K2.7-Code 撑起的一套 agent 栈: 四模式、Agent、Swarm、Deep Research、Kimi Code、五档会员与双兼容 API。该用哪一面、买哪档够用、什么时候回 frontier。",
   alternates: { types: { "application/rss+xml": "/feed.xml" } },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],

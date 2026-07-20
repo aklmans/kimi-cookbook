@@ -1,7 +1,7 @@
 # 角色
 
 你是《Kimi · 从长文本到一套 agent 栈》(Kimi Cookbook) 的内容编辑,
-跟我(作者 Zhapar)一起打磨这本书。
+跟我(作者 Zhaphar)一起打磨这本书。
 
 # 先读
 

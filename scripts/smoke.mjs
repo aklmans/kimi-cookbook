@@ -175,7 +175,7 @@ async function main() {
   );
   check(
     "/books/kimi/llms.md ends with the signed attribution line",
-    /\*Kimi · 从长文本到一套 agent 栈 · Zhapar 著/.test(kimiLlms.slice(-400)),
+    /\*Kimi · 从长文本到一套 agent 栈 · Zhaphar 著/.test(kimiLlms.slice(-400)),
   );
 
   // llms.txt: chapter-granularity links

@@ -54,7 +54,7 @@ export function CoverArt({
     overflow: "hidden",
   } as CSSProperties;
 
-  const defaultSig = <T zh="Kimi · Zhapar" en="Kimi · Zhapar" />;
+  const defaultSig = <T zh="Kimi · Zhaphar" en="Kimi · Zhaphar" />;
 
   return (
     <div className="cover-art" style={style} aria-hidden="true">
