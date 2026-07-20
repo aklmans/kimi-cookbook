@@ -126,6 +126,16 @@ body {
   margin-top: 4px;
 }
 
-/* ── 月亮 tile 内联 SVG 的通用 mask ─────────────── */
-/* 每张海报在 body 里内联一次 .brand-tile 的 svg,图形与
-   assets/brand/mp-avatar.svg 保持一致。 */
+/* ── Zhapar's slogan(蓝色加粗 Kimi)───────────────────── */
+.slogan {
+  margin-top: 40px;
+  font-size: 26px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.slogan em {
+  color: var(--blue);
+  font-style: normal;
+  font-weight: 500;
+}

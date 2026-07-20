@@ -111,6 +111,8 @@ function cardHtml({ kicker, title, sub, qr }) {
   h1 { font-size:${title.length > 14 ? 84 : 104}px; line-height:1.35; font-weight:500; color:#1A1A1A; }
   h1 em { color:#1783FF; font-style:normal; }
   .sub { margin-top:52px; font-size:36px; line-height:1.7; color:#3A3A3A; }
+  .slogan { margin-top:48px; font-size:24px; letter-spacing:.18em; color:#6B6B6B; }
+  .slogan em { color:#1783FF; font-style:normal; font-weight:500; }
   .qr { position:absolute; left:50%; transform:translateX(-50%); top:980px;
         width:300px; background:#fff; border:1px solid #C0BFBA; padding:20px 20px 16px; }
   .qr img { display:block; width:100%; }
@@ -134,6 +136,7 @@ function cardHtml({ kicker, title, sub, qr }) {
       <div class="kicker">${kicker}</div>
       <h1>${title}</h1>
       <div class="sub">${sub}</div>
+      <div class="slogan">Think clearly. Build with <em>Kimi</em>.</div>
     </div>
     ${
       qr
