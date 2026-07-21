@@ -17,30 +17,30 @@ references:
     url: "https://platform.kimi.com/docs/api/overview"
     urlLabel: "Kimi 开放平台 · API 总览"
   - id: 5
-    body: "Kimi 帮助中心 · Kimi WebBridge 介绍(2026-05 上线)—— 一款为 AI Agent 设计的 Chrome / Edge 扩展: 与云端浏览器自动化不同, 它跑在你正在用的浏览器里、直接继承你的登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备, 扩展本身免费。截至 2026-07。"
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍(2026-05 上线)—— 一款为 AI Agent 设计的 Chrome / Edge 扩展: 与云端浏览器自动化不同, 它跑在你正在用的浏览器里、直接继承你的登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备, 扩展本身不收钱。截至 2026-07。"
     url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
     urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
 ---
 
 <Cover />
 
-<T zh="你天天用的是那个聊天框。但把 Kimi 的产品线整个摆开, 其实是五件套: 网页里的 Kimi 本体、桌面端的 Kimi Work、终端里的 Kimi Code、浏览器扩展 Kimi WebBridge, 和最底下的 Kimi Platform 开放平台。" />
+<T zh="我天天用的, 只是那个聊天框。把 Kimi 的产品线整个摆开, 其实是五件套: 网页里的 Kimi 本体、桌面端的 Kimi Work、终端里的 Kimi Code、浏览器扩展 Kimi WebBridge, 和最底下的 Kimi Platform 开放平台。" />
 
-<T zh={<>把这五件和 ChatGPT、Claude 摆在一起, 你会发现两边几乎能对上号。<Footnote n={1} />Kimi 早不是「一个会读长文的聊天框」, 是一整套栈 —— 最上面是聊天与会员, 底下垫着多模态旗舰模型、一群 agent、和一套开放平台 API。这章不教任何一面怎么用（那是后面每一章的事）, 只做一件事: 给整套栈画张图, 让你看清哪一面对着你哪类活、对标的又是前沿的哪一个。</>} />
+<T zh={<>我把这五件和 ChatGPT、Claude 摆在一起, 两边几乎都能对上号。<Footnote n={1} />Kimi 早不是「一个会读长文的聊天框」, 是一整套栈 —— 最上面是聊天与会员, 底下垫着多模态旗舰模型、一群 agent、和一套开放平台 API。这章不教任何一面怎么用（那是后面每一章的事）, 只做一件事: 给整套栈画张图, 让你看清哪一面对着你哪类活、对标的又是前沿的哪一个。</>} />
 
 <SectionTitle number="I"><T zh="这套栈, 几乎是照着前沿描的" /></SectionTitle>
 
-<T zh="按官方自己的摆法, 五件套一件一件看过去, 你能在 OpenAI / Anthropic 那边给几乎每一件找到对应。" />
+<T zh="按官方自己的摆法, 我把五件套一件一件看过去, 在 OpenAI / Anthropic 那边能给几乎每一件找到对应。" />
 
 <Dl>
-<Di term={<T zh="Kimi(网页本体 + 五档会员)" />} desc={<T zh="对标 ChatGPT / Claude 的消费端 App 与订阅梯度 —— 从免费的 Adagio 到 ¥699 的 Allegro。聊天框之外还有一排 agentic 入口: Slides 出可编辑的 PPT、Websites 几分钟发布网站、Docs 做 Word / PDF 全流程、Sheets 生成带公式和透视表的真 Excel、Deep Research 出带出处的报告。<Footnote n={2} />" />} />
-<Di term={<T zh="Kimi Work(桌面端, Beta)" />} desc={<T zh="对标 Claude / Copilot 那一类「长在电脑里」的桌面 agent: 面向知识工作者, 直接接手你本机上的文件与软件干活, 不必把东西一次次拖进网页。" />} />
-<Di term={<T zh="Kimi Code(终端 / IDE)" />} desc={<T zh="对标 Claude Code / Codex: 跑在终端、能改你仓库的编码 agent。本书第八章全是它。" />} />
-<Di term={<T zh="Kimi WebBridge(浏览器扩展)" />} desc={<T zh="给 AI agent 用的「手」: 装进你自己的 Chrome / Edge, 继承你的登录态, 让 agent 像真人一样点网页、填表单、跨站取数 —— 本地优先, 数据不出设备, 扩展本身免费。<Footnote n={5} />" />} />
+<Di term={<T zh="Kimi(网页本体 + 五档会员)" />} desc={<T zh="对标 ChatGPT / Claude 的消费端 App 与订阅梯度 —— 从 ¥0 的 Adagio 到 ¥699 的 Allegro。聊天框之外还有一排 agentic 入口: Slides 出可编辑的 PPT、Websites 几分钟发布网站、Docs 做 Word / PDF 全流程、Sheets 生成带公式和透视表的真 Excel、Deep Research 出带出处的报告。<Footnote n={2} />" />} />
+<Di term={<T zh="Kimi Work(桌面端, Beta)" />} desc={<T zh="对标 Claude / Copilot 那一类「长在电脑里」的桌面 agent: 面向知识工作者, 直接接手本机上的文件与软件干活, 不必把东西一次次拖进网页。" />} />
+<Di term={<T zh="Kimi Code(终端 / IDE)" />} desc={<T zh="对标 Claude Code / Codex: 跑在终端、能直接改仓库的编码 agent。本书第八章全是它。" />} />
+<Di term={<T zh="Kimi WebBridge(浏览器扩展)" />} desc={<T zh="给 AI agent 用的「手」: 装进你自己的 Chrome / Edge, 继承登录态, 让 agent 像真人一样点网页、填表单、跨站取数 —— 本地优先, 数据不出设备, 扩展本身不收钱。<Footnote n={5} />" />} />
 <Di term={<T zh="Kimi Platform(开放平台 API)" />} desc={<T zh="对标 OpenAI / Anthropic API: base_url 兼容 OpenAI, 改一行就能接到现有工具上; K3 旗舰与 K2.7-Code 编码专线都在这上架。<Footnote n={4} />" />} />
 </Dl>
 
-<T zh="一一对上之后, 结论很直白: 它要的是 ChatGPT / Claude 那个货架上的位置, 而不是「国产长文本工具」那个标签。这也是为什么用两年前的眼光看它, 会一直看走眼。" />
+<T zh="一一对上之后, 我的结论很直白: 它要的是 ChatGPT / Claude 那个货架上的位置, 而不是「国产长文本工具」那个标签。用两年前的眼光看它, 会一直看走眼 —— 我自己就停在那张旧快照上, 直到 K3 发布。" />
 
 <KimiStackDiagram />
 
@@ -50,15 +50,15 @@ references:
 
 <T zh="对标归对标, 它手里还攥着两样 OpenAI、Anthropic 给不了的东西。" />
 
-<T zh={<>第一样是开源。K2 系列的权重以宽松协议(Modified MIT)挂在 Hugging Face 上, 能下载、能自托管、能商用; K3 的权重官方承诺 7 月 27 日前放出, 截至发稿还没上架 —— 所以「搬回家」这句话, 现在只对 K2 系完全成立。<Footnote n={3} />Claude、GPT 你只能租它们的 API; 要数据不出门、要长期可控, 这一条压过任何能力对比。<strong>开源是国产这一档共同的底牌</strong> —— 这条线和 DeepSeek 那本书是同一条。</>} />
+<T zh={<>第一样是开源。K2 系列的权重以宽松协议(Modified MIT)挂在 Hugging Face 上, 能下载、能自托管、能商用; K3 的权重官方承诺 7 月 27 日前放出, 截至发稿还没上架 —— 所以「搬回家」这句话, 现在只对 K2 系完全成立。<Footnote n={3} />Claude、GPT 只能租它们的 API; 要数据不出门、要长期可控, 这一条压过任何能力对比。<strong>开源是国产这一档共同的底牌</strong> —— 这条线和 DeepSeek 那本书是同一条。</>} />
 
 <T zh="第二样是它出身带的老本行: 一口气读几十万字的长上下文、和顺手的中文成稿。如今它们只是这套栈里的「其中一面」, 不再是它的全部身份 —— 但在中文长材料这类活上, 它仍比海外模型省心。旧定位没消失, 是被降级成了一项专长。认清这一点, 你才不会再拿「它中文好」当成选它的全部理由。" />
 
 <Divider />
 
-<SectionTitle number="III"><T zh="这是一张图, 不是一份清单" /></SectionTitle>
+<SectionTitle number="III"><T zh="这张图, 先记两条边界" /></SectionTitle>
 
-<T zh="能力早摆在那, 缺的是知道哪一面对你哪类活 —— 以及哪两条账别混。" />
+<T zh="能力早摆在那, 缺的是知道哪一面对上哪类活 —— 以及哪两条账别混。" />
 
 <T zh={<>用这张图, 先记两条边界。一条是账: <strong>消费端会员和开放平台 API 是两套账户、两条计费</strong>, 会员额度再多也不能拿去跑 API, 反过来也一样。<Footnote n={4} />另一条是能力的天花板: 「样样对得上」不等于「样样追平」—— 最难的推理、最吃打磨的活, 它还在前沿身后半步。这本书会在每一面标出那条线, 该回 frontier 就回。</>} />
 
@@ -66,4 +66,4 @@ references:
 
 <References />
 
-<Kicker zh={"它不是一个聊天框,\n是一整套栈"} sig="Kimi · Zhaphar" />
+<Kicker zh={"我天天用的只是那个框,\n它背后是一整套栈"} sig="Kimi · Zhaphar" />

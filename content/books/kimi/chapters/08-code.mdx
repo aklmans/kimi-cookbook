@@ -65,16 +65,16 @@ references:
     url: "https://github.com/farion1231/cc-switch"
     urlLabel: "CC-Switch · GitHub"
   - id: 17
-    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— 为 AI Agent 设计的 Chrome / Edge 浏览器扩展: 跑在你正在用的浏览器里、直接继承登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备; 扩展本身免费, 可配合 Kimi Code / Claude Code / Cursor / Codex 等本地 agent。截至 2026-07。"
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— 为 AI Agent 设计的 Chrome / Edge 浏览器扩展: 跑在你正在用的浏览器里、直接继承登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备; 扩展本身不收钱, 可配合 Kimi Code / Claude Code / Cursor / Codex 等本地 agent。截至 2026-07。"
     url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
     urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
 ---
 
 <Cover />
 
-<T zh="如果你完全不碰代码, 这章可以跳过 —— 这正是把它单拎出来的原因。" />
+<T zh="如果你完全不碰代码, 这章可以跳过 —— 这正是我把它单拎出来的原因。" />
 
-<T zh={<>这章给开发者三道门: 一道是 <strong>Kimi Code</strong>, 跑在终端、对标 Claude Code 的第一方编码 agent; 一道是<strong>开放平台 API</strong> —— OpenAI 与 Anthropic 两套兼容协议, 改几行配置就能把你已经在用的 agent 接过来; 还有一道是 <strong>CC-Switch</strong>, 把多套供应商配置收进一个面板、一键切换。便宜不是它的卖点了(第三章那次定价说过), 但「国内可达 + 两套协议 + 开放权重」这三样, 对国内开发者仍是少有的顺。</>} />
+<T zh={<>这一章我给开发者摆三道门: 一道是 <strong>Kimi Code</strong>, 跑在终端、对标 Claude Code 的第一方编码 agent; 一道是<strong>开放平台 API</strong> —— OpenAI 与 Anthropic 两套兼容协议, 改几行配置就能把你已经在用的 agent 接过来; 还有一道是 <strong>CC-Switch</strong>, 把多套供应商配置收进一个面板、一键切换。便宜不是它的卖点了(第三章那次定价说过), 但「国内可达 + 两套协议 + 开放权重」这三样, 对国内开发者仍是少有的顺。</>} />
 
 <SectionTitle number="I"><T zh="Kimi Code 是第一方的终端 agent" /></SectionTitle>
 
@@ -145,7 +145,7 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
 
 <SectionTitle number="III"><T zh="把 Key 配进你已经在用的 agent" /></SectionTitle>
 
-<T zh="按「官方文档写得有多明白」排序。每个给最小可用配置, 注意事项跟在配置后面。" />
+<T zh="我按「官方文档写得有多明白」给它们排序, 每个附一份最小可用配置, 注意事项跟在配置后面。" />
 
 <H3 id="claude-code"><T zh="Claude Code(Anthropic 兼容, 官方有指南)" /></H3>
 
@@ -206,7 +206,7 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
 
 <H3 id="codex"><T zh="Codex CLI(直连不行, 要借一层协议转换)" /></H3>
 
-<T zh={<>先把墙说清楚: 当前版本的 Codex, 自定义供应商的 <C>wire_api</C> 只支持 <C>responses</C> 一档(官方文档原文: responses is the only supported value), 而 Kimi 开放平台提供的是 Chat Completions —— 协议对不上, <strong>直连不行</strong>。<Footnote n={8} />官方路径是借 CC-Switch 的本地路由做转换: 路由把 Codex 的 Responses 请求转成 Chat Completions 再发给 Kimi, Moonshot 官方的 Codex 接入指南就是照这条写的(配置在 CC-Switch 界面里完成, 不用手改 config.toml)。<Footnote n={9} />完整步骤见下一节 —— 对 Codex 用户来说, CC-Switch 不是可选项, 是目前唯一官方写明的桥。</>} />
+<T zh={<>我先把墙说清楚: 当前版本的 Codex, 自定义供应商的 <C>wire_api</C> 只支持 <C>responses</C> 一档(官方文档原文: responses is the only supported value), 而 Kimi 开放平台提供的是 Chat Completions —— 协议对不上, <strong>直连不行</strong>。<Footnote n={8} />官方路径是借 CC-Switch 的本地路由做转换: 路由把 Codex 的 Responses 请求转成 Chat Completions 再发给 Kimi, Moonshot 官方的 Codex 接入指南就是照这条写的(配置在 CC-Switch 界面里完成, 不用手改 config.toml)。<Footnote n={9} />完整步骤见下一节 —— 对 Codex 用户来说, CC-Switch 不是可选项, 是目前唯一官方写明的桥。</>} />
 
 <H3 id="pi"><T zh="Pi(终端 agent, 配置文件驱动)" /></H3>
 
@@ -250,11 +250,13 @@ aider --model openai/kimi-k3
 
 <H3 id="cursor"><T zh="Cursor(明说: 官方接不了)" /></H3>
 
-<T zh={<>Cursor 的自带 Key(BYOK)只支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家, 文档里没有任意第三方 OpenAI 兼容端点的入口; 自定义 Key 还只覆盖标准聊天模型, Tab 补全照样走 Cursor 内置模型。<Footnote n={15} />设置里那个 OpenAI base URL override 开关, 即便你的版本里还在, 也不受官方支持、随时可能移除, 别把 workflow 押在上面。要在 Cursor 里用 Kimi 模型, 目前诚实的答案是: 不能, 换上面任何一家 agent。</>} />
+<T zh={<>Cursor 的自带 Key(BYOK)只支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家, 文档里没有任意第三方 OpenAI 兼容端点的入口; 自定义 Key 还只覆盖标准聊天模型, Tab 补全照样走 Cursor 内置模型。<Footnote n={15} />设置里那个 OpenAI base URL override 开关, 即便你的版本里还在, 也不受官方支持、随时可能移除, 别把 workflow 押在上面。要在 Cursor 里用 Kimi 模型, 我能给的诚实答案是: 不能, 换上面任何一家 agent。</>} />
 
 <H3 id="webbridge"><T zh="顺带: 你的 agent 想动浏览器, 装 Kimi WebBridge" /></H3>
 
-<T zh={<>配置再全, 上面这些 agent 也只会读写文件和跑命令 —— 碰不了网页。要让它像真人一样点按钮、填表单、跨站取数, 装一个 Kimi WebBridge: Chrome / Edge 扩展, 跑在你自己的浏览器里、直接继承你的登录态, 本地优先、数据不出设备, 扩展本身免费。<Footnote n={17} />Kimi Code、Claude Code、Cursor、Codex 这些本地 agent 都能挂; 装法是给 agent 发一句安装命令, 它自己把本地守护程序和技能装好。它解决的不是「模型接入」, 是「给 agent 一把手」。</>} />
+<T zh={<>配置再全, 上面这些 agent 也只会读写文件和跑命令 —— 碰不了网页。要让它像真人一样点按钮、填表单、跨站取数, 装一个 Kimi WebBridge: Chrome / Edge 扩展, 跑在你自己的浏览器里、直接继承你的登录态, 本地优先、数据不出设备, 扩展本身不收钱。<Footnote n={17} />Kimi Code、Claude Code、Cursor、Codex 这些本地 agent 都能挂; 装法是给 agent 发一句安装命令, 它自己把本地守护程序和技能装好。它解决的不是「模型接入」, 是「给 agent 一把手」。</>} />
+
+<T zh={<>常有人问我: Kimi 配在哪个 agent 里表现最好? 我的排序是自己用出来的: 首推 <strong>Warp Agent</strong> —— 它支持自定义 API 服务商端点, 把第二节那个 OpenAI 兼容端点填进去就能用, 效果非常好; 其次是 <strong>Kimi Code</strong> 自己 —— 模型稳定性最好, 长跑几乎不中断。</>} />
 
 <Divider />
 
@@ -282,13 +284,13 @@ brew install --cask cc-switch
 
 <SectionTitle number="V"><T zh="终端循环不是给所有人的" /></SectionTitle>
 
-<T zh="它替你写, 替不了你审 —— 你看不懂它的 diff, 它的速度只会让你更快地把错误合进去。" />
+<T zh="它替我写, 替不了我审 —— 你看不懂它的 diff, 它的速度只会让你更快地把错误合进去。" />
 
-<T zh="划三条边界。完全不写代码 → 跳过这章, 用 Agent 模式做表、做站就够。会写、但只改一两行 → 对话框里贴代码更快, 不必请出终端。值得请出终端 agent: 多文件、长链条、要反复跑测试的改动 —— 投入越重, 终端循环越划算。" />
+<T zh="我划三条边界。完全不写代码 → 跳过这章, 用 Agent 模式做表、做站就够。会写、但只改一两行 → 对话框里贴代码更快, 不必请出终端。值得请出终端 agent: 多文件、长链条、要反复跑测试的改动 —— 投入越重, 终端循环越划算。" />
 
 <T zh={<>还有一类藏得更深的甜区: <strong>不像代码的文件工作</strong>。我自己前两天的一次: 给这本书做宣传物料 —— 我把需求说清, 它写了 HTML 海报母版、用 Playwright 逐张渲染成图, 又把两小时的直播回放按时间线剪成 59 秒的竖版短片（ffmpeg 切片、压字幕、拼首尾卡）。全程我没打开过设计软件或剪辑软件, 只做了两件事: 说清楚要什么, 和验收。海报、视频、批量处理素材 —— 产出是文件、过程可复算的活, 都归它。很多人用了半年, 都没想起来它能干这个。</>} />
 
-<T zh="一个值得请出它的真实场景: 给一个跨十几个文件的功能加开关。与其一句「加个 feature flag」就放手, 不如先把范围、测试和安全边界交代清楚, 让它先报方案再动手:" />
+<T zh="一个值得请出它的真实场景: 给一个跨十几个文件的功能加开关。我的用法是, 不一句「加个 feature flag」就放手, 先把范围、测试和安全边界交代清楚, 让它先报方案再动手:" />
 
 <PromptBox model="kimi-k2.7-code" text={<T zh={"任务: 给现有的导出功能加一个 feature flag「EXPORT_V2」。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】flag 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为新分支补至少两条(开 / 关各一)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} example={<T zh={"任务: 给现有的登录接口加一个限流中间件「RATE_LIMIT_LOGIN」, 每 IP 每分钟最多 10 次。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】用配置开关控制, 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为限流逻辑补至少两条(未超限放行 / 超限返回 429)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} />
 
@@ -305,4 +307,4 @@ brew install --cask cc-switch
 
 <References />
 
-<Kicker zh={"它替你写,\n替不了你审"} sig="Kimi · Zhaphar" />
+<Kicker zh={"它替我写,\n替不了我审"} sig="Kimi · Zhaphar" />
