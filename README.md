@@ -137,7 +137,7 @@ npm run build
 
 ## 部署
 
-生产部署文档在 **[docs/DEPLOYMENT_ALIYUN.md](./docs/DEPLOYMENT_ALIYUN.md)**:
+生产部署文档在 **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)**:
 GitHub Actions 构建 → rsync 不可变 release → PM2 切换 → 三层健康校验
 (运行时/release/构建 SHA、公网 canonical 与 cache-buster HTML)。
 分析数据库支持本地 SQLite(默认持久化)、本机 MySQL、Turso 三种后端。

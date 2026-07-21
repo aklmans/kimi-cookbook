@@ -155,17 +155,8 @@ server {
   assert.equal(result.status, 0, result.stderr);
 });
 
-test("repository nginx template passes the cache doctor", () => {
-  const result = spawnSync(
-    process.execPath,
-    [
-      SCRIPT,
-      "--input",
-      path.join(process.cwd(), "docs", "nginx-kimi.read.wiki.conf"),
-      "kimi.read.wiki",
-    ],
-    { encoding: "utf8" },
-  );
+test("the sanitized public vhost fixture passes the cache doctor", () => {
+  const result = runDoctor(safeVhost, "kimi.read.wiki");
 
   assert.equal(result.status, 0, result.stderr);
 });
