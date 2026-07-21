@@ -244,11 +244,16 @@ content(kimi): revise chapter 08 for the K2.7-Code rollout
 feat(pdf): force print-color-adjust + hide per-chapter byline
 ```
 
-Always trailer:
+Always trailer with the co-author identity of the agent that actually
+did the work — do NOT sign as another agent or vendor. This project
+was built with Moonshot's Kimi, so its history carries:
 
 ```
 Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.com>
 ```
+
+A different agent (Claude, Codex, etc.) writes its own truthful
+trailer instead.
 
 ---
 
