@@ -244,16 +244,14 @@ content(kimi): revise chapter 08 for the K2.7-Code rollout
 feat(pdf): force print-color-adjust + hide per-chapter byline
 ```
 
-Always trailer with the co-author identity of the agent that actually
-did the work — do NOT sign as another agent or vendor. This project
-was built with Moonshot's Kimi, so its history carries:
+Co-author trailers are optional, never mandatory: sign only when the
+contribution actually came from an agent, and only with that agent's
+own identity — no forced signatures, no vendor branding. This project
+was built with Moonshot's Kimi, so its history happens to carry:
 
 ```
 Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.com>
 ```
-
-A different agent (Claude, Codex, etc.) writes its own truthful
-trailer instead.
 
 ---
 
