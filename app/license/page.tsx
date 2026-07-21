@@ -48,7 +48,7 @@ export default function LicensePage() {
             — <T zh="书的内容" en="Book Content" />
           </p>
           <h2 className="section-head__title">
-            <T zh="CC BY-NC-ND 4.0" en="CC BY-NC-ND 4.0" />
+            <T zh="CC BY-NC-SA 4.0" en="CC BY-NC-SA 4.0" />
             <span className="stop">.</span>
           </h2>
         </header>
@@ -57,14 +57,14 @@ export default function LicensePage() {
           <p lang="zh">
             所有书的正文、章节 MDX、引用、配图, 以及
             <code>/books/&lt;slug&gt;/llms.md</code> 路由返回的 markdown,
-            遵循 <em>Creative Commons 署名 - 非商业性使用 - 禁止演绎 4.0
-              国际</em> 协议 (CC BY-NC-ND 4.0)。
+            遵循 <em>Creative Commons 署名 - 非商业性使用 - 相同方式共享 4.0
+              国际</em> 协议 (CC BY-NC-SA 4.0)。
           </p>
           <p lang="en">
             All book prose, chapter MDX, citations, and illustrations —
             plus the markdown served at <code>/books/&lt;slug&gt;/llms.md</code> —
             are licensed under <em>Creative Commons Attribution-NonCommercial-
-              NoDerivatives 4.0 International</em> (CC BY-NC-ND 4.0).
+              ShareAlike 4.0 International</em> (CC BY-NC-SA 4.0).
           </p>
           <p lang="zh">允许做的事:</p>
           <p lang="en">What you may do:</p>
@@ -93,8 +93,26 @@ export default function LicensePage() {
             <span className="v3-list__marker">—</span>
             <span className="v3-list__body">
               <T
+                zh="改进它: 纠错、更新、翻译、再混合 (欢迎来仓库提 PR)"
+                en="Improve it: corrections, updates, translations, remixes (pull requests welcome)"
+              />
+            </span>
+          </li>
+          <li className="v3-list__item">
+            <span className="v3-list__marker">—</span>
+            <span className="v3-list__body">
+              <T
                 zh="保留作者 (Zhaphar) 署名 + 原文 URL"
                 en="Retain the author's name (Zhaphar) and the canonical URL"
+              />
+            </span>
+          </li>
+          <li className="v3-list__item">
+            <span className="v3-list__marker">—</span>
+            <span className="v3-list__body">
+              <T
+                zh="衍生作品以同一协议 (CC BY-NC-SA 4.0) 共享"
+                en="Share derivatives under the same license (CC BY-NC-SA 4.0)"
               />
             </span>
           </li>
@@ -115,28 +133,19 @@ export default function LicensePage() {
               />
             </span>
           </li>
-          <li className="v3-list__item">
-            <span className="v3-list__marker">—</span>
-            <span className="v3-list__body">
-              <T
-                zh="改写衍生 (再翻译、改写洗稿、以他人名义重新发布、SEO 内容农场)"
-                en="Derivative works (re-translation, rewording, republishing under someone else's name, content-farm rewrites)"
-              />
-            </span>
-          </li>
         </ul>
 
         <div className="prose">
           <p lang="zh">
             协议全文:{" "}
-            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">
-              creativecommons.org/licenses/by-nc-nd/4.0/deed.zh
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">
+              creativecommons.org/licenses/by-nc-sa/4.0/deed.zh
             </a>
           </p>
           <p lang="en">
             Full license:{" "}
-            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-              creativecommons.org/licenses/by-nc-nd/4.0
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+              creativecommons.org/licenses/by-nc-sa/4.0
             </a>
           </p>
           <p lang="zh">

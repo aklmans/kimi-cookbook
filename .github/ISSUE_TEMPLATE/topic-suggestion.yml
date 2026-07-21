@@ -1,0 +1,18 @@
+name: 新话题建议
+description: 想看的新章节 / 新面 / 想深入的方向
+title: "[话题] <想看什么>"
+labels: ["content", "topic"]
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: 想看什么
+      description: 一句话说清话题,以及为什么它对「付费但用得浅」的人有用
+      placeholder: 例如 Kimi Work 桌面端实测:哪类活真的省时间
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景(可选)
+      description: 你自己卡在哪、现有内容哪里不够

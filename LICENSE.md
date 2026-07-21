@@ -11,26 +11,27 @@ Everything under `content/books/` (book metadata, chapter MDX,
 illustrations, code samples embedded in chapters) plus the `.md` files
 served at `/books/<slug>/llms.md` are licensed under
 
-**Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
-International** (CC BY-NC-ND 4.0)
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International** (CC BY-NC-SA 4.0)
 
 In plain language:
 
 - ✓ You may read, share, link, and quote the book, in any medium
 - ✓ AI agents may fetch `/books/<slug>/llms.md` for summarization,
   Q&A, note-making, study, or personal reference
-- ✓ You must give credit to the author (Zhapar) and link back to
+- ✓ **You may improve it** — corrections, updates, translations, and
+  remixes are welcome (the project accepts them via pull requests)
+- ✓ You must give credit to the author (Zhaphar) and link back to
   the canonical URL on `kimi.read.wiki`
+- ✓ Derivatives must carry the same license (CC BY-NC-SA 4.0)
 - ✗ **No commercial reuse** — no rehosting with ads, no paywalled
   republication, no repackaging into a paid product, no AI training
   datasets sold or licensed to third parties
-- ✗ **No derivatives** — no re-translation, no rewording, no content-
-  farming rewrites, no republishing under another author's name
 
-Canonical license: <https://creativecommons.org/licenses/by-nc-nd/4.0/>
+Canonical license: <https://creativecommons.org/licenses/by-nc-sa/4.0/>
 
 For reuse beyond these terms (anthologies, authorized translations,
-academic course packs, derived works), contact `hi@zhaphar.com`.
+academic course packs), contact `hi@zhaphar.com`.
 
 ---
 

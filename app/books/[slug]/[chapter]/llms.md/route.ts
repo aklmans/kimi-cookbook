@@ -59,7 +59,7 @@ export async function GET(
   if (next) lines.push(`**下一章** ${bookUrl}/${next.slug}/llms.md`);
   lines.push("");
   lines.push(
-    `> 本章由 ${book.author} 撰写, 于 kimi.read.wiki 完整免费阅读。允许 AI 摘读、引用、问答; 转载请保留作者署名与原文链接 (CC BY-NC-ND 4.0, ${absoluteUrl("/license")})。`,
+    `> 本章由 ${book.author} 撰写, 于 kimi.read.wiki 完整免费阅读。允许 AI 摘读、引用、问答; 转载请保留作者署名与原文链接 (CC BY-NC-SA 4.0, ${absoluteUrl("/license")})。`,
   );
   lines.push("");
   lines.push("---");
@@ -117,7 +117,7 @@ export async function GET(
   lines.push("---");
   lines.push("");
   lines.push(
-    `*${chapter.title} · ${book.title} · ${book.author} 著 · CC BY-NC-ND 4.0 · ${chapterUrl}*`,
+    `*${chapter.title} · ${book.title} · ${book.author} 著 · CC BY-NC-SA 4.0 · ${chapterUrl}*`,
   );
   lines.push("");
 

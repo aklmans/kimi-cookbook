@@ -1,0 +1,25 @@
+name: 数据过期 / 内容纠错
+description: 书里的数字(价格、额度、版本号)过时了或写错了
+title: "[数据] <哪条数字/哪处内容 + 简述>"
+labels: ["content", "data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢踢一脚。书里全是具体数字,它们会变 —— 靠你们保鲜。
+  - type: textarea
+    id: what
+    attributes:
+      label: 哪条内容有问题
+      description: 章节 + 小节 + 原文摘录
+      placeholder: 例如 03 挑模型 · 任务成本解剖台:K3 输入价写的是 ¥20/百万
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 正确值 + 证据链接
+      description: 官网/文档/公告链接(必须可公开访问),以及页面快照日期
+      placeholder: 例如 https://platform.kimi.com/docs/pricing/chat-k3 — 2026-07-20 显示输入价已改为 ¥X
+    validations:
+      required: true

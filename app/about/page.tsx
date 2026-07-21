@@ -129,7 +129,7 @@ export default function AboutPage() {
                   <T zh="授权" en="License" />
                 </dt>
                 <dd>
-                  <a href="/license">CC BY-NC-ND 4.0</a>
+                  <a href="/license">CC BY-NC-SA 4.0</a>
                 </dd>
               </div>
             </dl>

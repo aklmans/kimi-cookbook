@@ -65,8 +65,8 @@ export function GET() {
 
   lines.push("## 授权 / License");
   lines.push("");
-  lines.push("本书内容遵循 CC BY-NC-ND 4.0：允许免费阅读、AI 摘读、引用与转发，须保留作者署名 (Zhaphar) 与原文链接；禁止商业再发布与衍生改写。");
-  lines.push("The book's content is licensed under CC BY-NC-ND 4.0 — free to read, quote, and feed to AI; commercial reuse and derivative works are not permitted.");
+  lines.push("本书内容遵循 CC BY-NC-SA 4.0: 允许免费阅读、AI 摘读、引用与转发, 须保留作者署名 (Zhaphar) 与原文链接; 衍生作品须署名并同协议共享; 禁止商业再发布。");
+  lines.push("The book's content is licensed under CC BY-NC-SA 4.0 — free to read, quote, and feed to AI; derivatives must share alike with attribution; commercial reuse is not permitted.");
   lines.push(`License: ${absoluteUrl("/license")}`);
   lines.push("");
 

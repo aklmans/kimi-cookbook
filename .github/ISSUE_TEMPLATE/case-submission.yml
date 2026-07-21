@@ -1,0 +1,33 @@
+name: 案例投稿
+description: 分享你用 Kimi 的真实案例,合适的写进书里
+title: "[案例] <一句话说清你干了什么>"
+labels: ["content", "case"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        真实的案例比虚构的值钱。什么活、用什么面、花了多少、值不值,讲清楚就行。
+  - type: textarea
+    id: task
+    attributes:
+      label: 你干了什么活
+      placeholder: 例如 用 Deep Research 给 30 家店做选型调研
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: 怎么做的(用了哪一面 / 哪个模型 / 哪个模式)
+      placeholder: 例如 Deep Research,一次约 20 分钟,报告里 80% 出处可用
+    validations:
+      required: true
+  - type: textarea
+    id: verdict
+    attributes:
+      label: 值不值 + 花了多少(时间/额度/钱,能量化就量化)
+      placeholder: 例如 比我自己查省一下午;但信源里有 2 条是营销稿,得人工剔除
+  - type: input
+    id: credit
+    attributes:
+      label: 署名方式(可选)
+      placeholder: 匿名 / 你的 ID / 链接

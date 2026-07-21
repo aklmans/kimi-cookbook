@@ -247,7 +247,7 @@ feat(pdf): force print-color-adjust + hide per-chapter byline
 Always trailer:
 
 ```
-Co-Authored-By: Kimi Code <noreply@moonshot.ai>
+Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.com>
 ```
 
 ---
