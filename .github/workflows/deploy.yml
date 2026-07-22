@@ -232,6 +232,8 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
+          WECHAT_MP_APPID: ${{ secrets.WECHAT_MP_APPID }}
+          WECHAT_MP_SECRET: ${{ secrets.WECHAT_MP_SECRET }}
           ANALYTICS_RETENTION_DAYS: ${{ vars.ANALYTICS_RETENTION_DAYS || '90' }}
           RUNTIME_PATH: ${{ vars.RUNTIME_PATH }}
         run: |
@@ -377,6 +379,13 @@ jobs:
             fi
             if [[ -n "$DATABASE_AUTH_TOKEN" ]]; then
               printf 'DATABASE_AUTH_TOKEN=%q\n' "$DATABASE_AUTH_TOKEN"
+            fi
+            # Optional Mini Program credentials — both-or-neither. Without
+            # them /api/mp/v1/qrcode answers 503 and the MP falls back to
+            # its bundled official code.
+            if [[ -n "$WECHAT_MP_APPID" && -n "$WECHAT_MP_SECRET" ]]; then
+              printf 'WECHAT_MP_APPID=%q\n' "$WECHAT_MP_APPID"
+              printf 'WECHAT_MP_SECRET=%q\n' "$WECHAT_MP_SECRET"
             fi
           } | ssh \
             -i "$HOME/.ssh/deploy_key" \
