@@ -51,8 +51,17 @@ function displayWidthEm(text: string): number {
   return width;
 }
 
+/* Rough wrapped-line guess — ONLY used to pad the canvas height H, never
+   for positioning (the text stack flows in a flex column, so blocks can
+   no longer overlap the way they did when every block was absolutely
+   positioned off this estimate — the 01-intro lede once painted its 4th
+   line under the summary). A 0.85 safety biases the guess upward; any
+   remaining slack lands as air above the footer band. */
 function estLines(text: string, perLineEm: number, cap: number): number {
-  return Math.max(1, Math.min(cap, Math.ceil(displayWidthEm(text) / perLineEm)));
+  return Math.max(
+    1,
+    Math.min(cap, Math.ceil(displayWidthEm(text) / (perLineEm * 0.92))),
+  );
 }
 
 /* Title fits on ONE line (size down until the estimate fits the content
@@ -117,22 +126,24 @@ export async function GET(
   const summary = ogText(ch.posterSummary);
   const kicker = ogText(extractKicker(book.slug, ch.slug));
 
-  /* Layout — mirrors the MP poster's coordinate grammar. */
+  /* Layout — mirrors the MP poster's coordinate grammar. The text stack
+     (kicker → lede → summary → footer) FLOWS in a flex column, so its
+     blocks can never overlap; H is the only estimate and is deliberately
+     generous — slack lands above the footer band (marginTop: "auto").
+     estLines is used for H padding only, never for positioning. */
   const size = titleSize(chapterTitle);
   const titleEndY = 300 + size * 1.23;
-  const kickerLines = kicker ? estLines(kicker, 674 / 30, 2) : 0;
-  const kickerTop = titleEndY + 78;
-  const kickerEndY = kickerLines ? kickerTop + (kickerLines - 1) * 46 : titleEndY;
-  const ledeLines = lede ? estLines(lede, CONTENT_W / 26, 3) : 0;
-  const ledeTop = (kickerLines ? kickerEndY : titleEndY) + 56;
-  const ledeEndY = ledeLines ? ledeTop + (ledeLines - 1) * 40 : kickerEndY;
-  const summaryLines = summary ? estLines(summary, CONTENT_W / 24, 3) : 0;
-  const summaryTop = (ledeLines ? ledeEndY : kickerEndY) + (summaryLines ? 36 : 0);
-  const summaryEndY = summaryLines ? summaryTop + (summaryLines - 1) * 40 : ledeEndY;
-  const contentBottom =
-    (summaryLines ? summaryEndY : ledeLines ? ledeEndY : kickerEndY) + 8;
-  const footerY = contentBottom + 46;
-  const H = Math.max(765, Math.round(footerY + FOOTER));
+  const kickerLines = kicker ? estLines(kicker, 674 / 30, 4) : 0;
+  const ledeLines = lede ? estLines(lede, CONTENT_W / 26, 6) : 0;
+  const summaryLines = summary ? estLines(summary, CONTENT_W / 24, 6) : 0;
+  const flowEstimate =
+    (kickerLines ? 78 + kickerLines * 46 : 0) +
+    (ledeLines ? 56 + ledeLines * 40 : 0) +
+    (summaryLines ? 36 + summaryLines * 40 : 0);
+  const H = Math.max(
+    765,
+    Math.round(titleEndY + flowEstimate + 46 + FOOTER + 64),
+  );
 
   const titleWidthPx = displayWidthEm(chapterTitle) * size;
   const titleClosed = /[。!?…；，、：:;,.!?…]$/.test(chapterTitle.trim());
@@ -264,131 +275,138 @@ export async function GET(
         />
       ) : null}
 
-      {/* the Kicker manifesto — vertical hairline, the protagonist */}
-      {kicker ? (
-        <div
-          style={{
-            position: "absolute",
-            left: MARGIN,
-            top: kickerTop - 24,
-            display: "flex",
-          }}
-        >
+      {/* text stack + footer — one flex column flowing from the title;
+          real Satori line breaks, zero per-block estimates (see above) */}
+      <div
+        style={{
+          position: "absolute",
+          left: MARGIN,
+          top: titleEndY,
+          width: CONTENT_W,
+          bottom: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* the Kicker manifesto — vertical hairline, the protagonist */}
+        {kicker ? (
+          <div style={{ display: "flex", marginTop: 78 }}>
+            <div
+              style={{
+                width: 1,
+                background: RULE,
+                marginRight: 33,
+                flexShrink: 0,
+              }}
+            />
+            <div
+              style={{
+                fontSize: 30,
+                fontWeight: 600,
+                lineHeight: 46 / 30,
+                maxWidth: CONTENT_W - 34,
+              }}
+            >
+              {kicker}
+            </div>
+          </div>
+        ) : null}
+
+        {/* lede — short, muted */}
+        {lede ? (
           <div
             style={{
-              width: 1,
-              background: RULE,
-              marginRight: 33,
-              flexShrink: 0,
-            }}
-          />
-          <div
-            style={{
-              fontSize: 30,
-              fontWeight: 600,
-              lineHeight: 46 / 30,
-              maxWidth: CONTENT_W - 34,
+              marginTop: 56,
+              fontSize: 26,
+              fontWeight: 400,
+              fontFamily: "TsangerJinKai",
+              lineHeight: 40 / 26,
+              maxWidth: CONTENT_W,
+              color: INK_2,
             }}
           >
-            {kicker}
+            {lede}
+          </div>
+        ) : null}
+
+        {/* poster summary — the middle-band companion (meta.posterSummary) */}
+        {summary ? (
+          <div
+            style={{
+              marginTop: 36,
+              fontSize: 24,
+              fontWeight: 400,
+              lineHeight: 40 / 24,
+              maxWidth: CONTENT_W,
+              color: INK_2,
+            }}
+          >
+            {summary}
+          </div>
+        ) : null}
+
+        {/* footer band — pinned to the canvas bottom: hairline, brand +
+            site left, QR right */}
+        <div
+          style={{
+            marginTop: "auto",
+            paddingTop: 46,
+            height: FOOTER + 46,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ width: "100%", height: 1, background: RULE }} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginTop: 40,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ marginTop: 37, fontSize: 20, fontWeight: 600 }}>
+                {bookTitle}
+              </div>
+              <div
+                style={{
+                  marginTop: 18,
+                  fontFamily: "JetBrains Mono",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  letterSpacing: 2,
+                  color: INK_3,
+                }}
+              >
+                kimi.read.wiki
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: 132,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrDataUrl} width={132} height={132} alt="" />
+              <div
+                style={{
+                  marginTop: 12,
+                  width: 132,
+                  textAlign: "center",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: INK_3,
+                }}
+              >
+                扫码读全文
+              </div>
+            </div>
           </div>
         </div>
-      ) : null}
-
-      {/* lede — short, muted */}
-      {lede ? (
-        <div
-          style={{
-            position: "absolute",
-            left: MARGIN,
-            top: ledeTop,
-            fontSize: 26,
-            fontWeight: 400,
-            fontFamily: "TsangerJinKai",
-            lineHeight: 40 / 26,
-            maxWidth: CONTENT_W,
-            color: INK_2,
-          }}
-        >
-          {lede}
-        </div>
-      ) : null}
-
-      {/* poster summary — the middle-band companion (meta.posterSummary) */}
-      {summary ? (
-        <div
-          style={{
-            position: "absolute",
-            left: MARGIN,
-            top: summaryTop,
-            fontSize: 24,
-            fontWeight: 400,
-            lineHeight: 40 / 24,
-            maxWidth: CONTENT_W,
-            color: INK_2,
-          }}
-        >
-          {summary}
-        </div>
-      ) : null}
-
-      {/* footer band — hairline, brand + site left, QR right */}
-      <div
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: footerY,
-          width: CONTENT_W,
-          height: 1,
-          background: RULE,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: footerY + 78,
-          fontSize: 20,
-          fontWeight: 600,
-        }}
-      >
-        {bookTitle}
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: MARGIN,
-          top: footerY + 116,
-          fontFamily: "JetBrains Mono",
-          fontSize: 13,
-          fontWeight: 600,
-          letterSpacing: 2,
-          color: INK_3,
-        }}
-      >
-        kimi.read.wiki
-      </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={qrDataUrl}
-        width={132}
-        height={132}
-        alt=""
-        style={{ position: "absolute", right: W - RIGHT, top: footerY + 41 }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          right: W - RIGHT,
-          top: footerY + 185,
-          width: 132,
-          textAlign: "center",
-          fontSize: 15,
-          fontWeight: 500,
-          color: INK_3,
-        }}
-      >
-        扫码读全文
       </div>
     </div>,
     {
