@@ -50,11 +50,11 @@ function cacheDir(): string {
 }
 
 function cacheKey(page: string, scene: string): string {
-  // Render parameters (width, is_hyaline) are part of the identity:
-  // bump the trailing tag when they change so stale disk entries are
+  // The key mirrors the render parameters exactly: if width / is_hyaline
+  // or friends ever change, tag the key so stale disk entries are
   // orphaned instead of served.
   return createHash("sha256")
-    .update(`${page} ${scene} hyaline`)
+    .update(`${page} ${scene}`)
     .digest("hex")
     .slice(0, 24);
 }
@@ -156,9 +156,6 @@ export async function getMpQrcode(
     width: 280,
     env_version: "release",
     check_path: false,
-    // Transparent background — the MP draws the code onto its cream
-    // posters, and WeChat's default white square reads as a patch.
-    is_hyaline: true,
     // scene is REQUIRED by getUnlimited: omitting it trips errcode 40169
     // (invalid length for scene) and an empty string fails the same way
     // (see the WeChat community thread on parameter-less codes). The

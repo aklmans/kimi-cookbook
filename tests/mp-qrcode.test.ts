@@ -112,7 +112,8 @@ test("no slug returns the immutable home-page code", async () => {
   assert.equal(codeCall.body?.width, 280);
   assert.equal(codeCall.body?.env_version, "release");
   assert.equal(codeCall.body?.check_path, false);
-  assert.equal(codeCall.body?.is_hyaline, true);
+  // WeChat's original white-background image — no is_hyaline.
+  assert.ok(!("is_hyaline" in codeCall.body!));
   // getUnlimited rejects a missing/empty scene — the home code carries
   // the "home" sentinel instead.
   assert.equal(codeCall.body?.scene, "home");
