@@ -1,6 +1,7 @@
 import {
   Children,
   isValidElement,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -27,12 +28,14 @@ import type { Reference } from "@/components/mdx";
    The web reader renders the full v3 vocabulary as React components;
    a Mini Program has no DOM, so this parallel component map degrades
    every v3 component to simple, flat HTML (h1-h4 / p / blockquote /
-   figure / table / dl / ol / ul / pre / code / span / sup / a). The
-   Mini Program styles structure via mp-html's `tag-style` map, so the
-   markup here stays class-light; the few accent moments (section
-   number, stop period, footnote, code title) carry the Kimi blue as
-   inline styles because component-isolated WXSS can't reach inside
-   mp-html and CSS vars don't exist there.
+   figure / table / dl / ol / ul / pre / code / span / sup / a). Base
+   typography comes from mp-html's `tag-style` map; the richer blocks
+   (prompt box, steps, code caption, link card) carry their panel
+   styling INLINE because component-isolated WXSS can't reach inside
+   mp-html and tag-style can't tell these blocks apart from plain
+   figures and lists. Their theme colors ride CSS vars — the read
+   page injects the app.wxss tokens into mp-html's containerStyle —
+   so the blocks follow light/dark like the baked tag styles.
 
    The rehype chain mirrors the web chapter route (pretty-code with
    the cool Kimi palette, code titles, heading ids) minus the
@@ -40,6 +43,136 @@ import type { Reference } from "@/components/mdx";
    ──────────────────────────────────────────────────────────────────── */
 
 const ACCENT = "#1783FF";
+const MP_MONO = '"SF Mono",Menlo,Consolas,monospace';
+
+/* Inline block styles for the Mini Program reader (see the header
+   comment). Element inline styles win over mp-html's baked tag-style
+   (parser concatenates tag-style first), so these fully own each
+   block's look. Colors use the CSS vars the read page injects into
+   mp-html's containerStyle — --accent / --code-bg / --ink / --ink-2 /
+   --ink-3 / --border, mirroring the app.wxss theme tokens. */
+
+/** PromptBox — the web v3 panel: accent rail + code tint + header row. */
+const mpPromptPanel: CSSProperties = {
+  margin: "28px 0",
+  padding: "14px 18px",
+  borderLeft: "1.5px solid var(--accent)",
+  background: "var(--code-bg)",
+};
+const mpPromptHead: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: 10,
+};
+const mpPromptLabel: CSSProperties = {
+  fontFamily: MP_MONO,
+  fontSize: "0.72em",
+  fontWeight: 600,
+  letterSpacing: 2,
+  color: "var(--accent)",
+};
+const mpPromptRight: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+};
+const mpPromptModel: CSSProperties = {
+  fontFamily: MP_MONO,
+  fontSize: "0.72em",
+  color: "var(--ink-3)",
+  border: "1px solid var(--border)",
+  padding: "1px 8px",
+};
+const mpPromptTab: CSSProperties = {
+  fontFamily: MP_MONO,
+  fontSize: "0.72em",
+  color: "var(--ink-3)",
+  margin: "10px 0 4px",
+};
+const mpPromptDivider: CSSProperties = {
+  borderTop: "1px solid var(--border)",
+  marginTop: 14,
+};
+const mpPromptPre: CSSProperties = {
+  margin: 0,
+  padding: 0,
+  background: "transparent",
+  border: "none",
+  fontFamily: MP_MONO,
+  fontSize: "0.8em",
+  lineHeight: 1.9,
+  whiteSpace: "pre-wrap",
+  overflowWrap: "break-word",
+  color: "var(--ink)",
+};
+
+/** Steps — circled mono numbers + dashed connector (web v3-steps). */
+const mpStepsWrap: CSSProperties = { margin: "28px 0" };
+const mpStepItem: CSSProperties = { display: "flex", paddingBottom: 24 };
+const mpStepRail: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  width: 44,
+  flexShrink: 0,
+};
+const mpStepNum: CSSProperties = {
+  width: 30,
+  height: 30,
+  boxSizing: "border-box",
+  border: "1px solid var(--accent)",
+  borderRadius: "50%",
+  textAlign: "center",
+  lineHeight: "28px",
+  fontFamily: MP_MONO,
+  fontSize: 11,
+  fontWeight: 600,
+  color: "var(--accent)",
+};
+const mpStepLine: CSSProperties = {
+  flex: 1,
+  width: 0,
+  borderLeft: "1px dashed var(--border)",
+  marginTop: 4,
+};
+const mpStepBody: CSSProperties = { flex: 1, paddingTop: 3, minWidth: 0 };
+const mpStepTitle: CSSProperties = {
+  margin: "0 0 6px",
+  fontSize: "1.02em",
+  lineHeight: 1.5,
+};
+const mpStepDesc: CSSProperties = {
+  color: "var(--ink-2)",
+  fontSize: "0.92em",
+  lineHeight: 1.75,
+};
+
+/** CodeBlock companions — filename strip above, caption below. */
+const mpCodeTitle: CSSProperties = {
+  fontFamily: MP_MONO,
+  fontSize: "0.72em",
+  color: "var(--ink-3)",
+  margin: "24px 0 8px",
+};
+const mpCodeCaption: CSSProperties = {
+  fontSize: "0.78em",
+  color: "var(--ink-3)",
+  textAlign: "center",
+  margin: "10px 0 24px",
+};
+
+/** LinkCard — hairline card around the arrow link (web v3-linkcard). */
+const mpLinkCardBox: CSSProperties = {
+  margin: "16px 0",
+  padding: "12px 16px",
+  border: "1px solid var(--border)",
+};
+const mpLinkCardDesc: CSSProperties = {
+  fontSize: "0.78em",
+  color: "var(--ink-3)",
+  marginTop: 2,
+};
 
 /** Flatten a ReactNode to visible text (zh side preferred for <T>). */
 function textOf(node: ReactNode): string {
@@ -199,36 +332,20 @@ function MpCodeBlock({
   language?: string;
   children: ReactNode;
 }) {
-  const title = filename ? (
-    <p>
-      <small>
-        <strong>{filename}</strong>
-      </small>
-    </p>
-  ) : null;
-  const cap = caption ? (
-    <p>
-      <small>{caption}</small>
-    </p>
-  ) : null;
   const wrapsFence = Children.toArray(children).some(isValidElement);
-  if (wrapsFence) {
-    // The fence child already carries Shiki highlighting via rehype-pretty-code.
-    return (
-      <div>
-        {title}
-        {children}
-        {cap}
-      </div>
-    );
-  }
   return (
     <div>
-      {title}
-      <pre>
-        <code data-language={language}>{children}</code>
-      </pre>
-      {cap}
+      {filename ? <div style={mpCodeTitle}>{filename}</div> : null}
+      {wrapsFence ? (
+        // The fence child already carries Shiki highlighting via
+        // rehype-pretty-code.
+        children
+      ) : (
+        <pre>
+          <code data-language={language}>{children}</code>
+        </pre>
+      )}
+      {caption ? <div style={mpCodeCaption}>{caption}</div> : null}
     </div>
   );
 }
@@ -582,16 +699,25 @@ function MpStep(props: MpStepProps): null {
 function MpSteps({ children }: { children: ReactNode }) {
   const steps = childElements<MpStepProps>(children);
   return (
-    <ol>
-      {steps.map((s, i) => (
-        <li key={i}>
-          <p>
-            <strong>{s.props.title}</strong>
-          </p>
-          {s.props.children}
-        </li>
-      ))}
-    </ol>
+    <div style={mpStepsWrap}>
+      {steps.map((s, i) => {
+        const last = i === steps.length - 1;
+        return (
+          <div key={i} style={{ ...mpStepItem, paddingBottom: last ? 0 : 24 }}>
+            <div style={mpStepRail}>
+              <div style={mpStepNum}>{String(i + 1).padStart(2, "0")}</div>
+              <div style={{ ...mpStepLine, display: last ? "none" : "block" }} />
+            </div>
+            <div style={mpStepBody}>
+              <p style={mpStepTitle}>
+                <strong>{s.props.title}</strong>
+              </p>
+              <div style={mpStepDesc}>{s.props.children}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -746,19 +872,25 @@ function MpLinkCard({
   desc?: ReactNode;
 }) {
   return (
-    <p>
-      <a href={href}>{title}</a>
-      {desc ? <small> — {desc}</small> : null}
-    </p>
+    <div style={mpLinkCardBox}>
+      <a href={href}>{title} →</a>
+      {desc ? <div style={mpLinkCardDesc}>{desc}</div> : null}
+    </div>
   );
 }
 
 /** Wrap <…> placeholders in the prompt template as accent slots. */
-function MpPromptText({ node }: { node: ReactNode }) {
+function MpPromptText({
+  node,
+  style,
+}: {
+  node: ReactNode;
+  style?: CSSProperties;
+}) {
   const raw = textOf(node);
   const parts = raw.split(/(<[^>]+>)/g).filter(Boolean);
   return (
-    <pre>
+    <pre style={style}>
       {parts.map((part, i) =>
         /^<[^>]+>$/.test(part) ? (
           <span key={i} style={{ color: ACCENT }}>
@@ -787,31 +919,28 @@ function MpPromptBox({
   promptId?: number;
 }) {
   return (
-    <figure>
-      <figcaption>
-        <small>
-          <strong>提示词</strong>
-          {model ? ` · ${textOf(model)}` : ""}
+    <div style={mpPromptPanel}>
+      <div style={mpPromptHead}>
+        <div style={mpPromptLabel}>提示词</div>
+        <div style={mpPromptRight}>
+          {model ? <div style={mpPromptModel}>{textOf(model)}</div> : null}
           {promptId !== undefined ? (
-            <>
-              {" · "}
-              <a href={`#kc-prompt-${promptId}`}>复制</a>
-            </>
+            <a href={`#kc-prompt-${promptId}`} style={{ fontSize: "0.82em" }}>
+              复制
+            </a>
           ) : null}
-        </small>
-      </figcaption>
-      <MpPromptText node={text ?? children} />
-      {example ? (
-        <div>
-          <p>
-            <small>
-              <strong>示例</strong>
-            </small>
-          </p>
-          <MpPromptText node={example} />
         </div>
+      </div>
+      {example ? <div style={mpPromptTab}>模板</div> : null}
+      <MpPromptText node={text ?? children} style={mpPromptPre} />
+      {example ? (
+        <>
+          <div style={mpPromptDivider} />
+          <div style={mpPromptTab}>示例</div>
+          <MpPromptText node={example} style={mpPromptPre} />
+        </>
       ) : null}
-    </figure>
+    </div>
   );
 }
 
