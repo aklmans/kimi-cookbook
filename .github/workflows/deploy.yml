@@ -297,37 +297,72 @@ jobs:
             '
             echo "Database credential preflight passed."
           elif [[ "$DATABASE_URL" =~ ^mysqls?:// ]]; then
-            # A private MySQL lives on the deploy host's loopback — the runner
-            # can't reach it (its 127.0.0.1 is itself, ECONNREFUSED). Tunnel
-            # through the deploy SSH connection and preflight through it: a
-            # real credential check against the production MySQL, before
-            # production config is touched.
-            tunnel_pid=""
-            cleanup_tunnel() {
-              [[ -n "$tunnel_pid" ]] && kill "$tunnel_pid" 2>/dev/null || true
-            }
-            trap cleanup_tunnel EXIT
-            ssh \
-              -i "$HOME/.ssh/deploy_key" \
-              -p "$DEPLOY_SSH_PORT" \
-              -o BatchMode=yes \
-              -o IdentitiesOnly=yes \
-              -o StrictHostKeyChecking=yes \
-              -o ExitOnForwardFailure=yes \
-              -N -L 3307:127.0.0.1:3306 \
-              "$DEPLOY_USER@$DEPLOY_HOST" &
-            tunnel_pid=$!
-            sleep 3
-            node --input-type=module -e '
-              import mysql from "mysql2/promise";
-              const url = new URL(process.env.DATABASE_URL);
-              url.port = "3307"; // through the SSH tunnel to the deploy host
-              const pool = mysql.createPool(url.toString());
-              try { await pool.query("SELECT 1"); } finally { await pool.end(); }
-            '
-            cleanup_tunnel
-            trap - EXIT
-            echo "MySQL credential preflight passed (via SSH tunnel)."
+            db_host="$(node --input-type=module -e '
+              console.log(new URL(process.env.DATABASE_URL).hostname)
+            ')"
+            if [[ "$db_host" == "127.0.0.1" || "$db_host" == "localhost" ]]; then
+              # Loopback MySQL on the deploy host — the runner can't reach it
+              # (its 127.0.0.1 is itself). Tunnel through the deploy SSH
+              # connection and preflight through it.
+              tunnel_pid=""
+              cleanup_tunnel() {
+                [[ -n "$tunnel_pid" ]] && kill "$tunnel_pid" 2>/dev/null || true
+              }
+              trap cleanup_tunnel EXIT
+              ssh \
+                -i "$HOME/.ssh/deploy_key" \
+                -p "$DEPLOY_SSH_PORT" \
+                -o BatchMode=yes \
+                -o IdentitiesOnly=yes \
+                -o StrictHostKeyChecking=yes \
+                -o ExitOnForwardFailure=yes \
+                -N -L 3307:127.0.0.1:3306 \
+                "$DEPLOY_USER@$DEPLOY_HOST" &
+              tunnel_pid=$!
+              sleep 3
+              node --input-type=module -e '
+                import mysql from "mysql2/promise";
+                const url = new URL(process.env.DATABASE_URL);
+                url.port = "3307"; // through the SSH tunnel to the deploy host
+                const pool = mysql.createPool(url.toString());
+                try { await pool.query("SELECT 1"); } finally { await pool.end(); }
+              '
+              cleanup_tunnel
+              trap - EXIT
+              echo "MySQL credential preflight passed (via SSH tunnel)."
+            else
+              # Remote MySQL (e.g., Aliyun RDS): the runner can't be whitelisted
+              # reliably, so preflight FROM the deploy host — it is the network
+              # the app will actually use. URL parts are base64-encoded on the
+              # runner (immune to shell-special characters in the password)
+              # and decoded on the box; MYSQL_PWD keeps the password out of
+              # the process list.
+              node --input-type=module -e '
+                const u = new URL(process.env.DATABASE_URL);
+                const b64 = (s) => Buffer.from(s).toString("base64");
+                console.log(`RDS_HOST_B64=${b64(u.hostname)}`);
+                console.log(`RDS_PORT_B64=${b64(u.port || "3306")}`);
+                console.log(`RDS_USER_B64=${b64(decodeURIComponent(u.username))}`);
+                console.log(`RDS_PASS_B64=${b64(decodeURIComponent(u.password))}`);
+                console.log(`RDS_DB_B64=${b64(u.pathname.replace(/^\//, ""))}`);
+              ' | ssh \
+                -i "$HOME/.ssh/deploy_key" \
+                -p "$DEPLOY_SSH_PORT" \
+                -o BatchMode=yes \
+                -o IdentitiesOnly=yes \
+                -o StrictHostKeyChecking=yes \
+                "$DEPLOY_USER@$DEPLOY_HOST" \
+                "set -Eeuo pipefail; \
+                 eval \"\$(cat)\"; \
+                 RDS_HOST=\"\$(printf %s \"\$RDS_HOST_B64\" | base64 -d)\"; \
+                 RDS_PORT=\"\$(printf %s \"\$RDS_PORT_B64\" | base64 -d)\"; \
+                 RDS_USER=\"\$(printf %s \"\$RDS_USER_B64\" | base64 -d)\"; \
+                 RDS_PASS=\"\$(printf %s \"\$RDS_PASS_B64\" | base64 -d)\"; \
+                 RDS_DB=\"\$(printf %s \"\$RDS_DB_B64\" | base64 -d)\"; \
+                 MYSQL_PWD=\"\$RDS_PASS\" mysql -h \"\$RDS_HOST\" -P \"\$RDS_PORT\" \
+                   -u \"\$RDS_USER\" \"\$RDS_DB\" -e 'SELECT 1'"
+              echo "MySQL credential preflight passed (from deploy host)."
+            fi
           fi
 
           {

@@ -55,13 +55,17 @@ remote analytics backend. Repository **variables**: `DEPLOY_HOST`,
 `DATABASE_URL` picks one of three backends (unset = local SQLite persisted
 under `shared/data`):
 
-- `mysql://user:password@127.0.0.1:3306/dbname` — MySQL / MariaDB
-  (credentials in the URL; `DATABASE_AUTH_TOKEN` must NOT be set);
+- `mysql://user:password@host:3306/dbname` — MySQL / MariaDB, loopback
+  (the deploy host itself) **or remote** (e.g., Aliyun RDS). Credentials
+  live in the URL; `DATABASE_AUTH_TOKEN` must NOT be set;
 - `libsql://your-db.turso.io` + `DATABASE_AUTH_TOKEN` — Turso (both
   required together).
 
-The deploy preflights credentials before touching production (libsql from
-the runner; private MySQL through an SSH local-forward).
+The deploy preflights credentials before touching production: libsql from
+the runner; loopback MySQL through an SSH local-forward; remote MySQL
+(RDS) from the deploy host itself over SSH, since that is the network the
+app will actually use (the remote host must whitelist the deploy server —
+use the VPC-internal endpoint when they share a VPC).
 
 ## Reverse proxy requirements
 
