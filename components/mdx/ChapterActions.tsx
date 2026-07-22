@@ -55,6 +55,7 @@ export function ChapterActions({
   chapterSlug,
   chapterTitle,
   lede,
+  posterVersion,
 }: {
   bookSlug: string;
   bookTitle: string;
@@ -62,6 +63,10 @@ export function ChapterActions({
   chapterSlug: string;
   chapterTitle: string;
   lede?: string;
+  /** Chapter modified date — cache-buster on the poster URL, which serves
+      an immutable prerendered PNG (content updates must still reach
+      readers who cached an older deploy's poster). */
+  posterVersion?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
   const [qrOpen, setQrOpen] = useState(false);
@@ -211,8 +216,9 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
       </a>
       <a
         className="ch-actions__action"
-        href={`/books/${bookSlug}/${chapterSlug}/poster.png`}
+        href={`/books/${bookSlug}/${chapterSlug}/poster.png${posterVersion ? `?v=${posterVersion}` : ""}`}
         download={`${bookSlug}-${chapterSlug}-poster.png`}
+        onClick={() => track({ type: "poster_download", bookSlug, chapterSlug })}
       >
         {ICON_POSTER}
         <span>

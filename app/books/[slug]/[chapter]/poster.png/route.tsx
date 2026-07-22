@@ -6,7 +6,6 @@ import { getAllBooks, getBook, getChapter, chapterNumber } from "@/lib/books";
 import { loadGoogleFont } from "@/lib/og-fonts";
 import { ogText } from "@/lib/og-text";
 import { absoluteUrl } from "@/lib/site";
-import { trackPosterDownload } from "@/lib/analytics-server";
 
 /* Share poster for a chapter — THE SAME poster the Mini Program draws
    (miniapp utils/poster.js, "Zhaphar poster grammar"), re-implemented
@@ -17,11 +16,16 @@ import { trackPosterDownload } from "@/lib/analytics-server";
    <Kicker> manifesto as the protagonist quote (vertical hairline), a
    muted lede + posterSummary, and the fixed 214px footer band with a
    frame-less QR on the right. Kimi blue appears exactly twice: the
-   masthead dash and the stop-dot. Dynamic (not prerendered) so every
-   download is tracked (poster_download); Satori re-renders per hit,
-   which is fine at download-action volumes. */
+   masthead dash and the stop-dot.
+   PRERENDERED AT BUILD (force-static + generateStaticParams): the
+   poster only changes when the book does, so every chapter's PNG is
+   baked once per deploy and served as a static file — no per-request
+   Satori render or font IO (matters on the 1-core ECS). Download
+   tracking (poster_download) moved to a client beacon on the
+   ChapterActions download link; the response is immutable, and the
+   link carries ?v=<modified> so content updates still bust caches. */
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 export const dynamicParams = false;
 
 const W = 900;
@@ -114,12 +118,11 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<Params> },
 ) {
+  void req; // prerendered at build — nothing per-request left to read
   const { slug, chapter: chSlug } = await params;
   const book = getBook(slug);
   const found = book ? getChapter(book, chSlug) : undefined;
   if (!book || !found) return new Response("not found", { status: 404 });
-
-  trackPosterDownload(book.slug, chSlug, req.headers.get("user-agent"));
 
   const { chapter: ch, index } = found;
   const serial = chapterNumber(index);
@@ -415,7 +418,7 @@ export async function GET(
     {
       width: W,
       height: H,
-      headers: { "Cache-Control": "public, max-age=3600" },
+      headers: { "Cache-Control": "public, max-age=31536000, immutable" },
       fonts: [
         { name: "TsangerJinKai", data: serif600, style: "normal", weight: 600 },
         { name: "TsangerJinKai", data: serif400, style: "normal", weight: 400 },

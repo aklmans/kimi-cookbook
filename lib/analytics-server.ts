@@ -57,30 +57,6 @@ export function trackMpRead(
   }).catch(() => {});
 }
 
-/** Share poster download (poster.png is dynamic so every hit runs here). */
-export function trackPosterDownload(
-  bookSlug: string,
-  chapterSlug: string,
-  userAgent: string | null,
-): void {
-  const visitor = classifyUserAgent(userAgent);
-
-  insertEvent({
-    type: "poster_download",
-    book_slug: bookSlug,
-    chapter_slug: chapterSlug,
-    session_id: null,
-    agent: userAgent?.slice(0, 200) ?? null,
-    visitor_id: null,
-    visitor_kind: visitor.visitor_kind,
-    country: null,
-    region: null,
-    device: visitor.device,
-    browser: visitor.browser,
-    os: visitor.os,
-  }).catch(() => {});
-}
-
 export function trackFeedRead(userAgent: string | null): void {
   const visitor = classifyUserAgent(userAgent, { fallbackKind: "feed_reader" });
 

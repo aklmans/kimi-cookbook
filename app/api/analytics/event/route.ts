@@ -25,6 +25,7 @@ const VALID_TYPES = new Set([
   "outbound_click",
   "search_query",
   "not_found",
+  "poster_download",
   "qr_open",
   "agent_prompt_copy",
 ]);
@@ -38,6 +39,7 @@ const CHAPTER_TYPES = new Set([
   "chapter_view",
   "chapter_complete",
   "reading_heartbeat",
+  "poster_download",
   "qr_open",
   "agent_prompt_copy",
 ]);

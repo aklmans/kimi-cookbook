@@ -18,9 +18,8 @@ export const READING_ANALYTICS_EVENTS = ["reading_heartbeat"] as const;
    no client JS ever runs there). */
 export const MP_ANALYTICS_EVENTS = ["mp_book_open", "mp_chapter_read"] as const;
 
-/* Share-intent actions: poster downloads (server) plus the two high-intent
-   client actions on the chapter bar — QR popover opens and Feed-to-AI
-   copies. */
+/* Share-intent actions on the chapter bar: poster downloads plus the two
+   high-intent client actions — QR popover opens and Feed-to-AI copies. */
 export const SHARE_ANALYTICS_EVENTS = [
   "poster_download",
   "qr_open",
@@ -58,6 +57,7 @@ export type ClientAnalyticsEvent =
   | ReadingAnalyticsEvent
   | "page_view"
   | SignalAnalyticsEvent
+  | "poster_download"
   | "qr_open"
   | "agent_prompt_copy";
 

@@ -1,5 +1,6 @@
 import type { BookMeta, Chapter } from "@/lib/types";
 import { formatByline } from "@/lib/format";
+import { chapterModifiedAt } from "@/lib/book-dates";
 import { T } from "@/components/T";
 import { StopPunct } from "./StopPunct";
 import { ChapterActions } from "./ChapterActions";
@@ -60,6 +61,7 @@ export function Cover({
         chapterSlug={chapter.slug}
         chapterTitle={chapter.title}
         lede={chapter.lede}
+        posterVersion={chapterModifiedAt(book, chapter)}
       />
       <hr className="v3-cover__rule" />
     </section>
