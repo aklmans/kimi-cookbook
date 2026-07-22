@@ -84,12 +84,18 @@ const mpPromptModel: CSSProperties = {
   border: "1px solid var(--border)",
   padding: "1px 8px",
 };
+const mpPromptTabRow: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  margin: "10px 0 4px",
+};
 const mpPromptTab: CSSProperties = {
   fontFamily: MP_MONO,
   fontSize: "0.72em",
   color: "var(--ink-3)",
-  margin: "10px 0 4px",
 };
+const mpPromptCopy: CSSProperties = { fontSize: "0.82em" };
 const mpPromptDivider: CSSProperties = {
   borderTop: "1px solid var(--border)",
   marginTop: 14,
@@ -107,9 +113,12 @@ const mpPromptPre: CSSProperties = {
   color: "var(--ink)",
 };
 
-/** Steps — circled mono numbers + dashed connector (web v3-steps). */
+/** Steps — circled mono numbers + dashed connector (web v3-steps). The
+   inter-step spacing lives on the BODY's padding, not the item's: the
+   rail stretches to the item's content height, so the connector reaches
+   the next circle instead of stopping short of the padding. */
 const mpStepsWrap: CSSProperties = { margin: "28px 0" };
-const mpStepItem: CSSProperties = { display: "flex", paddingBottom: 24 };
+const mpStepItem: CSSProperties = { display: "flex" };
 const mpStepRail: CSSProperties = {
   display: "flex",
   flexDirection: "column",
@@ -134,9 +143,14 @@ const mpStepLine: CSSProperties = {
   flex: 1,
   width: 0,
   borderLeft: "1px dashed var(--border)",
-  marginTop: 4,
+  marginTop: -1,
 };
-const mpStepBody: CSSProperties = { flex: 1, paddingTop: 3, minWidth: 0 };
+const mpStepBody: CSSProperties = {
+  flex: 1,
+  paddingTop: 3,
+  paddingBottom: 24,
+  minWidth: 0,
+};
 const mpStepTitle: CSSProperties = {
   margin: "0 0 6px",
   fontSize: "1.02em",
@@ -703,12 +717,12 @@ function MpSteps({ children }: { children: ReactNode }) {
       {steps.map((s, i) => {
         const last = i === steps.length - 1;
         return (
-          <div key={i} style={{ ...mpStepItem, paddingBottom: last ? 0 : 24 }}>
+          <div key={i} style={mpStepItem}>
             <div style={mpStepRail}>
               <div style={mpStepNum}>{String(i + 1).padStart(2, "0")}</div>
               <div style={{ ...mpStepLine, display: last ? "none" : "block" }} />
             </div>
-            <div style={mpStepBody}>
+            <div style={{ ...mpStepBody, paddingBottom: last ? 0 : 24 }}>
               <p style={mpStepTitle}>
                 <strong>{s.props.title}</strong>
               </p>
@@ -924,19 +938,35 @@ function MpPromptBox({
         <div style={mpPromptLabel}>提示词</div>
         <div style={mpPromptRight}>
           {model ? <div style={mpPromptModel}>{textOf(model)}</div> : null}
-          {promptId !== undefined ? (
-            <a href={`#kc-prompt-${promptId}`} style={{ fontSize: "0.82em" }}>
+          {promptId !== undefined && !example ? (
+            <a href={`#kc-prompt-${promptId}`} style={mpPromptCopy}>
               复制
             </a>
           ) : null}
         </div>
       </div>
-      {example ? <div style={mpPromptTab}>模板</div> : null}
+      {example ? (
+        <div style={mpPromptTabRow}>
+          <div style={mpPromptTab}>模板</div>
+          {promptId !== undefined ? (
+            <a href={`#kc-prompt-${promptId}`} style={mpPromptCopy}>
+              复制
+            </a>
+          ) : null}
+        </div>
+      ) : null}
       <MpPromptText node={text ?? children} style={mpPromptPre} />
       {example ? (
         <>
           <div style={mpPromptDivider} />
-          <div style={mpPromptTab}>示例</div>
+          <div style={mpPromptTabRow}>
+            <div style={mpPromptTab}>示例</div>
+            {promptId !== undefined ? (
+              <a href={`#kc-prompt-${promptId}-example`} style={mpPromptCopy}>
+                复制
+              </a>
+            ) : null}
+          </div>
           <MpPromptText node={example} style={mpPromptPre} />
         </>
       ) : null}
