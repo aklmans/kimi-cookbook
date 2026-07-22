@@ -15,9 +15,9 @@ function dot(date: string): string {
 
 /**
  * Chapter cover byline. README.md §数据层:
- *   revisions[0] is the first draft, the last item is the current version.
- * Renders e.g. "6 分钟 · 初稿 2026.03 · v2 2026.05"
- *            /  "6 Min · Drafted 2026.03 · v2 2026.05"
+ *   revisions[0] is the release, the last item is the latest update.
+ * Renders e.g. "6 分钟 · 发布 2026.03 · 更新 2026.05"
+ *            /  "6 Min · Released 2026.03 · Updated 2026.05"
  */
 export function formatByline(
   readTime: string,
@@ -30,11 +30,17 @@ export function formatByline(
     const [first, ...rest] = revisions;
     parts.push(
       lang === "zh"
-        ? `初稿 ${dot(first.date)}`
-        : `Drafted ${dot(first.date)}`,
+        ? `发布 ${dot(first.date)}`
+        : `Released ${dot(first.date)}`,
     );
     const latest = rest[rest.length - 1];
-    if (latest) parts.push(`v${latest.v} ${dot(latest.date)}`);
+    if (latest) {
+      parts.push(
+        lang === "zh"
+          ? `更新 ${dot(latest.date)}`
+          : `Updated ${dot(latest.date)}`,
+      );
+    }
   }
   return parts.join(" · ");
 }

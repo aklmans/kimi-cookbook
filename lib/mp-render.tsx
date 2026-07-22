@@ -252,9 +252,9 @@ function MpCover({
       </p> : null}
       <p>
         <small>
-          {chapter.readTime} · 初稿 {published.slice(0, 7).replace("-", ".")}
+          {chapter.readTime} · 发布 {published.slice(0, 7).replace("-", ".")}
           {modified !== published
-            ? ` · 修订 ${modified.slice(0, 7).replace("-", ".")}`
+            ? ` · 更新 ${modified.slice(0, 7).replace("-", ".")}`
             : ""}
         </small>
       </p>
