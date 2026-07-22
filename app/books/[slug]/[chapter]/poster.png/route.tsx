@@ -64,10 +64,13 @@ function estLines(text: string, perLineEm: number, cap: number): number {
   );
 }
 
-/* Title fits on ONE line (size down until the estimate fits the content
-   width, floor 30) — the MP poster applies the same rule. */
-function titleSize(title: string): number {
-  return Math.max(30, Math.min(66, Math.floor(CONTENT_W / displayWidthEm(title))));
+/* Title fits on ONE line (size down until the estimate fits, floor 30) —
+   the MP poster applies the same rule. When the accent stop-dot will be
+   drawn (title not self-closed), its room is reserved up front so a
+   near-full-width title never swallows the dot. */
+function titleSize(title: string, reserveDot: boolean): number {
+  const fitW = CONTENT_W - (reserveDot ? 40 : 0);
+  return Math.max(30, Math.min(66, Math.floor(fitW / displayWidthEm(title))));
 }
 
 /* The protagonist quote is the chapter's closing <Kicker zh="…" />
@@ -131,7 +134,8 @@ export async function GET(
      blocks can never overlap; H is the only estimate and is deliberately
      generous — slack lands above the footer band (marginTop: "auto").
      estLines is used for H padding only, never for positioning. */
-  const size = titleSize(chapterTitle);
+  const titleClosed = /[。!?…；，、：:;,.!?…]$/.test(chapterTitle.trim());
+  const size = titleSize(chapterTitle, !titleClosed);
   const titleEndY = 300 + size * 1.23;
   const kickerLines = kicker ? estLines(kicker, 674 / 30, 4) : 0;
   const ledeLines = lede ? estLines(lede, CONTENT_W / 26, 6) : 0;
@@ -146,7 +150,6 @@ export async function GET(
   );
 
   const titleWidthPx = displayWidthEm(chapterTitle) * size;
-  const titleClosed = /[。!?…；，、：:;,.!?…]$/.test(chapterTitle.trim());
 
   const qrDataUrl = await QRCode.toDataURL(
     absoluteUrl(`/books/${book.slug}/${ch.slug}`),
@@ -265,7 +268,7 @@ export async function GET(
         <div
           style={{
             position: "absolute",
-            left: Math.min(RIGHT - 16, MARGIN + titleWidthPx + 20),
+            left: Math.min(RIGHT - 14, MARGIN + titleWidthPx + 20),
             top: 300 + size * 0.45,
             width: 14,
             height: 14,
