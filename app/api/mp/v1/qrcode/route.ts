@@ -14,13 +14,16 @@ export const dynamic = "force-dynamic";
 
 const HOME_PAGE = "pages/book/book";
 const CHAPTER_PAGE = "pages/read/read";
+// getUnlimited rejects a missing OR empty scene (errcode 40169), so the
+// home code carries this sentinel; pages/book/book ignores options.scene.
+const HOME_SCENE = "home";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get("slug");
 
   let page = HOME_PAGE;
-  let scene: string | undefined;
+  let scene = HOME_SCENE;
   if (slug) {
     const book = getAllBooks()[0];
     if (!book || !getChapter(book, slug)) {

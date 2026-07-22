@@ -49,9 +49,9 @@ function cacheDir(): string {
   );
 }
 
-function cacheKey(page: string, scene: string | undefined): string {
+function cacheKey(page: string, scene: string): string {
   return createHash("sha256")
-    .update(`${page} ${scene ?? ""}`)
+    .update(`${page} ${scene}`)
     .digest("hex")
     .slice(0, 24);
 }
@@ -134,7 +134,7 @@ async function postCode(
 
 export async function getMpQrcode(
   page: string,
-  scene?: string,
+  scene: string,
 ): Promise<Buffer> {
   const key = cacheKey(page, scene);
   const hit = imageCache.get(key);
@@ -153,8 +153,13 @@ export async function getMpQrcode(
     width: 280,
     env_version: "release",
     check_path: false,
+    // scene is REQUIRED by getUnlimited: omitting it trips errcode 40169
+    // (invalid length for scene) and an empty string fails the same way
+    // (see the WeChat community thread on parameter-less codes). The
+    // caller passes the "home" sentinel for the home-page code; the
+    // MP's home page ignores options.scene.
+    scene,
   };
-  if (scene) payload.scene = scene;
 
   let result = await postCode(await fetchAccessToken(false), payload);
   if (result.errcode === 40001) {

@@ -112,7 +112,9 @@ test("no slug returns the immutable home-page code", async () => {
   assert.equal(codeCall.body?.width, 280);
   assert.equal(codeCall.body?.env_version, "release");
   assert.equal(codeCall.body?.check_path, false);
-  assert.ok(!("scene" in codeCall.body!), "home code must not send a scene");
+  // getUnlimited rejects a missing/empty scene — the home code carries
+  // the "home" sentinel instead.
+  assert.equal(codeCall.body?.scene, "home");
 });
 
 test("a manifest chapter slug returns the chapter direct code", async () => {
