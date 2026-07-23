@@ -809,6 +809,21 @@ assertIncludes(
 );
 assertIncludes(
   "components/GlobalUI.tsx",
+  "v3-search__item-snippet",
+  "Search results should carry a context snippet line under the meta row.",
+);
+assertIncludes(
+  "components/GlobalUI.tsx",
+  "snippetFor",
+  "Search snippets should be cut around the query's first occurrence.",
+);
+assertIncludes(
+  "app/globals.css",
+  ".v3-search__item-snippet mark",
+  "Search snippet keywords should highlight in accent.",
+);
+assertIncludes(
+  "components/GlobalUI.tsx",
   "debouncedQuery",
   "Global search should debounce query input before running Fuse search.",
 );

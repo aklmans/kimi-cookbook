@@ -10983,3 +10983,26 @@ html {
   text-transform: uppercase;
   color: var(--ink-3);
 }
+
+/* ============================================================
+   Round-107 · Search result snippets (GlobalUI) — 1–2 context lines
+   under the meta row, cut around the query's first occurrence, with
+   the keyword <mark> in accent. Muted body text so the title/meta
+   hierarchy stays in charge; clamped to two lines.
+   ============================================================ */
+.v3-search__item-snippet {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 5px;
+  font-family: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.v3-search__item-snippet mark {
+  background: none;
+  color: var(--accent);
+  font-weight: 600;
+}

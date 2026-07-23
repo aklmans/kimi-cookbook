@@ -34,6 +34,39 @@ const GROUP_LABEL: Record<SearchItem["type"], { zh: string; en: string }> = {
 };
 const GROUP_ORDER: SearchItem["type"][] = ["book", "chapter", "page"];
 const SEARCH_DEBOUNCE_MS = 120;
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** 1–2 line context snippet for a search hit: a window around the
+    query's first occurrence in the curated shortText, then the prose
+    bodyText; falls back to the shortText head when the hit was
+    fuzzy-only (nothing verbatim to anchor on). */
+function snippetFor(item: SearchItem, q: string): string {
+  const ql = q.toLowerCase();
+  for (const field of [item.shortText, item.bodyText]) {
+    if (!field) continue;
+    const pos = field.toLowerCase().indexOf(ql);
+    if (pos < 0) continue;
+    const start = Math.max(0, pos - 34);
+    const end = Math.min(field.length, pos + q.length + 56);
+    return `${start > 0 ? "…" : ""}${field.slice(start, end)}${end < field.length ? "…" : ""}`;
+  }
+  return item.shortText
+    ? `${item.shortText.slice(0, 88)}${item.shortText.length > 88 ? "…" : ""}`
+    : "";
+}
+
+/** Keyword highlight inside a snippet — query matches become <mark>. */
+function Highlight({ text, q }: { text: string; q: string }) {
+  const parts = text.split(new RegExp(`(${escapeRegExp(q)})`, "gi"));
+  return (
+    <>
+      {parts.map((part, i) => (i % 2 === 1 ? <mark key={i}>{part}</mark> : part))}
+    </>
+  );
+}
 // Longer than the results debounce: we only want the query the reader settled
 // on, not each prefix they typed on the way there.
 const SEARCH_TRACK_DEBOUNCE_MS = 1200;
@@ -1366,20 +1399,29 @@ export function GlobalUI() {
     search !== "closed" && lang === "en"
       ? "Search books, chapters, keywords …"
       : "搜索作品、章节、关键词 …";
-  const renderSearchItem = (item: SearchItem, idx: number) => (
-    <Link
-      key={item.href + idx}
-      href={item.href}
-      className={`v3-search__item${idx === activeIdx ? " is-active" : ""}`}
-      onMouseEnter={() => setActiveIdx(idx)}
-      onClick={closeSearch}
-    >
-      <span className="v3-search__item-title">
-        <T zh={item.titleZh} en={item.titleEn} />
-      </span>
-      <span className="v3-search__item-meta">{item.meta}</span>
-    </Link>
-  );
+  const renderSearchItem = (item: SearchItem, idx: number) => {
+    const q = debouncedQuery.trim();
+    const snippet = q ? snippetFor(item, q) : "";
+    return (
+      <Link
+        key={item.href + idx}
+        href={item.href}
+        className={`v3-search__item${idx === activeIdx ? " is-active" : ""}`}
+        onMouseEnter={() => setActiveIdx(idx)}
+        onClick={closeSearch}
+      >
+        <span className="v3-search__item-title">
+          <T zh={item.titleZh} en={item.titleEn} />
+        </span>
+        <span className="v3-search__item-meta">{item.meta}</span>
+        {snippet ? (
+          <span className="v3-search__item-snippet">
+            <Highlight text={snippet} q={q} />
+          </span>
+        ) : null}
+      </Link>
+    );
+  };
 
   return (
     <>
