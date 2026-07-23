@@ -779,8 +779,13 @@ assertIncludes(
 );
 assertIncludes(
   "lib/searchIndex.ts",
-  "searchText",
-  "Search items should keep long searchable prose in searchText instead of display meta.",
+  "shortText",
+  "Search items should split curated keywords (shortText) from the prose haystack.",
+);
+assertIncludes(
+  "lib/searchIndex.ts",
+  "bodyText",
+  "Search items should keep long searchable prose in bodyText, not in display meta.",
 );
 assertNotIncludes(
   "app/layout.tsx",
@@ -794,8 +799,13 @@ assertIncludes(
 );
 assertIncludes(
   "components/GlobalUI.tsx",
-  "if (q) return fuse.search(q).map((r) => r.item);",
-  "Search queries should render Fuse relevance order instead of regrouping matches.",
+  "(has(it.titleZh) || has(it.titleEn) ? 100 : 0)",
+  "Search should rank verbatim title hits above fuzzy noise (the CJK relevance fix).",
+);
+assertIncludes(
+  "components/GlobalUI.tsx",
+  ".filter((r) => r.rank > 0 || r.score <= 0.5)",
+  "Search should drop the fuzzy noise floor instead of showing near-everything.",
 );
 assertIncludes(
   "components/GlobalUI.tsx",

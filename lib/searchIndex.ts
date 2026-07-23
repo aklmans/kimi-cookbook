@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import matter from "gray-matter";
 import { getAllBooks, bookDateShort, chapterNumber } from "./books";
 
 /* Build-time data collection for the ⌘K palette. */
@@ -10,7 +11,11 @@ export type SearchItem = {
   titleEn: string;
   href: string;
   meta: string;
-  searchText: string;
+  /** Curated keywords — title / titleShort / lede / posterSummary / H3s /
+      reference bodies. Verbatim hits here outrank everything else. */
+  shortText: string;
+  /** Long prose haystack — tie-breaker signal only. */
+  bodyText: string;
 };
 
 function normalizeText(text: string): string {
@@ -87,16 +92,13 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       titleEn: b.titleEn,
       href: `/books/${b.slug}`,
       meta: `${b.category} · ${b.chapters.length} Ch · ${bookDateShort(b.date)}`,
-      searchText: [
-        b.title,
-        b.titleEn,
-        b.subtitle,
-        b.subtitleEn,
-        b.description,
-        b.descriptionEn,
-        b.category,
-        ...b.tags,
-      ]
+      // The book item exists for "kimi / 书" lookups — subtitle and
+      // description would fuzzy-match nearly every concept query and
+      // float the generic book page above the specific chapter.
+      shortText: [b.title, b.titleEn, b.category, ...b.tags]
+        .filter(Boolean)
+        .join(" · "),
+      bodyText: [b.subtitle, b.subtitleEn, b.description, b.descriptionEn]
         .filter(Boolean)
         .join(" · "),
     });
@@ -105,25 +107,35 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       // progress" placeholder is a bad result. (Draft books are
       // already filtered upstream by getAllBooks.)
       if (c.draft) continue;
-      // Read chapter MDX to enrich the hidden search field with H3s + prose.
-      const searchParts = [
+      const shortParts = [
         b.title,
         b.titleEn,
         c.title,
         c.titleEn,
+        c.titleShort,
         c.lede,
         c.ledeEn,
+        c.posterSummary,
       ];
+      let bodyText = "";
       try {
         const raw = fs.readFileSync(
           path.join(root, "content", "books", b.slug, "chapters", `${c.slug}.mdx`),
           "utf-8",
         );
-        const body = raw.replace(/^---[\s\S]*?---/, "");
-        const h3s = extractH3s(body);
-        if (h3s.length) searchParts.push(h3s.join(" · "));
-        const componentText = extractComponentText(body);
-        if (componentText) searchParts.push(componentText);
+        // Frontmatter reference bodies are prime search anchors ("会员套餐
+        // 价格", product names) — parse them out instead of stripping.
+        const { data: frontmatter, content } = matter(raw);
+        const refs = (frontmatter as { references?: { body?: string; bodyEn?: string }[] })
+          .references;
+        if (refs?.length) {
+          shortParts.push(
+            refs.map((r) => [r.body, r.bodyEn].filter(Boolean).join(" ")).join(" · "),
+          );
+        }
+        const h3s = extractH3s(content);
+        if (h3s.length) shortParts.push(h3s.join(" · "));
+        bodyText = extractComponentText(content);
       } catch {
         /* chapter file missing — use meta-only fallback */
       }
@@ -133,7 +145,8 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
         titleEn: c.titleEn,
         href: `/books/${b.slug}/${c.slug}`,
         meta: `${b.titleEn || b.title} · ${chapterNumber(i)} · ${c.readTime}`,
-        searchText: searchParts.filter(Boolean).join(" · "),
+        shortText: shortParts.filter(Boolean).join(" · "),
+        bodyText,
       });
     }
   }
@@ -145,7 +158,8 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       titleEn: "About the Author",
       href: "/about",
       meta: "Zhaphar · Writer · Engineer",
-      searchText: "关于作者 About Author Zhaphar Writer Engineer",
+      shortText: "关于作者 About Author Zhaphar Writer Engineer",
+      bodyText: "",
     },
     {
       type: "page",
@@ -153,7 +167,8 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       titleEn: "RSS Feed",
       href: "/feed.xml",
       meta: "feed.xml · Updates",
-      searchText: "RSS 订阅 Feed feed.xml Updates",
+      shortText: "RSS 订阅 Feed feed.xml Updates",
+      bodyText: "",
     },
   );
 

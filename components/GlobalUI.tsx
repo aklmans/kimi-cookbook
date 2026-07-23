@@ -518,26 +518,51 @@ export function GlobalUI() {
     return searchIndexPromiseRef.current;
   }, [searchLoadState]);
 
-  /* ---- search results (fuse.js) ---- */
+  /* ---- search results (fuse.js fuzzy floor + verbatim hybrid rank) ----
+     Fuse alone ranked badly for CJK concept queries: with ignoreLocation
+     its fuzzy score mostly measures haystack length, so the generic book
+     item (shortest text) outranked the specific chapter, and every query
+     returned roughly the same list. The ranking that actually matches
+     reader intent is a verbatim ladder — title hit > curated keywords
+     (shortText: titleShort / lede / posterSummary / H3s / references) >
+     prose (bodyText) — with Fuse kept only as a typo-tolerant floor and
+     a within-rank tie-breaker. */
   const fuse = useMemo(
     () =>
       new Fuse<SearchItem>(index, {
         keys: [
           { name: "titleZh", weight: 0.42 },
-          { name: "titleEn", weight: 0.42 },
-          { name: "href", weight: 0.28 },
-          { name: "meta", weight: 0.18 },
-          { name: "searchText", weight: 0.22 },
+          { name: "titleEn", weight: 0.2 },
+          { name: "shortText", weight: 0.3 },
+          { name: "bodyText", weight: 0.12 },
+          { name: "meta", weight: 0.08 },
         ],
-        threshold: 0.4,
+        threshold: 0.35,
         ignoreLocation: true,
+        minMatchCharLength: 2,
+        includeScore: true,
       }),
     [index],
   );
   const ordered = useMemo(() => {
     const q = debouncedQuery.trim();
-    if (q) return fuse.search(q).map((r) => r.item);
-    return GROUP_ORDER.flatMap((t) => index.filter((m) => m.type === t));
+    if (!q) return GROUP_ORDER.flatMap((t) => index.filter((m) => m.type === t));
+    const ql = q.toLowerCase();
+    const has = (s: string | undefined) =>
+      !!s && s.toLowerCase().includes(ql);
+    return fuse
+      .search(q)
+      .map((r) => {
+        const it = r.item;
+        const rank =
+          (has(it.titleZh) || has(it.titleEn) ? 100 : 0) +
+          (has(it.shortText) ? 50 : 0) +
+          (has(it.bodyText) ? 10 : 0);
+        return { it, rank, score: r.score ?? 1 };
+      })
+      .filter((r) => r.rank > 0 || r.score <= 0.5)
+      .sort((a, b) => b.rank - a.rank || a.score - b.score)
+      .map((r) => r.it);
   }, [debouncedQuery, fuse, index]);
 
   useEffect(() => {
