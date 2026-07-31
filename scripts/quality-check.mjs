@@ -2167,6 +2167,44 @@ assertFileIncludes(
   "扫码读全文",
   "The chapter share poster should carry the scan-to-read caption (same as the Mini Program poster).",
 );
+assertFileIncludes(
+  "app/books/[slug]/[chapter]/poster.png/route.tsx",
+  "chineseNum",
+  "The poster chapter ordinal must go through the shared chineseNum — the old 10-entry lookup rendered 「第章」 from chapter 11 on.",
+);
+assertNotIncludes(
+  "app/books/[slug]/[chapter]/poster.png/route.tsx",
+  "loadGoogleFont",
+  "The poster prerenders ~75 PNGs per build — its fonts must all be local subset TTFs, not a build-time Google fetch.",
+);
+assertExists(
+  "app/books/[slug]/poster.png/route.tsx",
+  "The book-level share poster route must exist.",
+);
+assertExists(
+  "app/books/[slug]/poster.dark.png/route.tsx",
+  "The dark-variant book poster route must exist (the hero link picks per reader theme).",
+);
+assertFileIncludes(
+  "lib/book-poster.tsx",
+  "扫码读全书",
+  "The book share poster should carry the scan-to-read caption.",
+);
+assertNotIncludes(
+  "lib/book-poster.tsx",
+  "loadGoogleFont",
+  "The book poster prerenders at build — its fonts must all be local subset TTFs, not a build-time Google fetch.",
+);
+assertIncludes(
+  "app/books/[slug]/page.tsx",
+  "BookPosterLink",
+  "The book detail hero should mount the share-poster download.",
+);
+assertIncludes(
+  "app/books/[slug]/BookPosterLink.tsx",
+  "poster.png?v=",
+  "The hero poster link should carry the ?v= cache-buster on the immutable PNG.",
+);
 {
   const summaries = (
     read("content/books/kimi/meta.ts").match(/posterSummary:/g) || []
@@ -2858,8 +2896,13 @@ assertExists(
 );
 assertIncludes(
   "app/api/mp/qr.png/route.ts",
-  'target.host !== ALLOWED_HOST',
-  "Poster QR route must pin the url param to this site's own host.",
+  "target.origin !== SITE_ORIGIN",
+  "Poster QR route must pin the url param to this site's own origin.",
+);
+assertIncludes(
+  "app/api/mp/qr.png/route.ts",
+  "ALLOWED_PATHS",
+  "Poster QR route must whitelist canonical book/chapter paths — every unique ?url= is otherwise a day-long cache miss plus a fresh PNG render.",
 );
 assertExists(
   "lib/mp-render.tsx",

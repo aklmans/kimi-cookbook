@@ -282,7 +282,10 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
 - **chapter outline state**: Round-73 mirrors the website TOC behavior for
   ebooks without moving it left: right-side marker rail by default, temporary
   hover / focus / `O` panel, and a persisted pin state via
-  `kimi:chapter-outline=pinned`.
+  `kimi:chapter-outline=pinned`. Chrome toggles (e.g. the ChapterActions 目录
+  button) go through GlobalUI's delegated `data-outline-toggle` click
+  handler — never a synthetic KeyboardEvent, which silently breaks the day
+  the key handler grows an isTrusted guard or the shortcut gets rebound.
 - **print book cover is upright**: the print cover title is now
   `.cover-art__title`, which is upright by default (`font-style: normal`).
   Round-78 (which uprighted the old `.print-cover__title` meta column) is
@@ -408,14 +411,45 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   carries 二维码 (QR popover — reuses `/api/mp/qr.png`, encodes the
   CANONICAL chapter URL from `lib/site`, never the preview origin) and
   海报 (`/books/<slug>/<chapter>/poster.png`, an `ImageResponse` route
-  prerendered at build like the OG images). The poster serif is the
-  LOCAL Tsanger subset TTF — next/og rejects WOFF2 and Google-hosted
-  CJK families arrive as unicode-range shards, so `npm run gen:font`
-  also emits `assets/fonts/*.poster.ttf` (sfnt) alongside the woff2
-  subsets; regenerate after content edits. Satori quirks: multi-child
-  divs need explicit `display:flex`, and an accent stop-dot must be
-  glued to the title's last char with `whiteSpace:nowrap` or it wraps
-  onto a line of its own.
+  prerendered at build like the OG images). `/api/mp/qr.png` whitelists
+  canonical book/chapter paths (origin pinned via `SITE_URL`, no
+  query/hash) — every unique `?url=` would otherwise bust the day-long
+  cache into a fresh PNG render. Poster fonts are ALL local subset TTFs
+  (next/og rejects WOFF2): the Tsanger serif from the content glyph
+  scan plus JetBrains Mono from a fixed ASCII list — `npm run gen:font`
+  emits `assets/fonts/*.poster.ttf` (sfnt) alongside the woff2 subsets;
+  regenerate after content edits. The chapter ordinal goes through the
+  shared `chineseNum` (`lib/format.ts`, good to 九十九), and the poster
+  Kicker extraction takes the LAST `<Kicker>` match in the MDX (a
+  literal one can appear inside a code sample). Satori quirks:
+  multi-child divs need explicit `display:flex`, and an accent stop-dot
+  must be glued to the title's last char with `whiteSpace:nowrap` or it
+  wraps onto a line of its own; a title that doesn't fit even at the
+  30px floor is truncated with an ellipsis, never painted past the
+  margin.
+- **book share poster (Round-105)**: `/books/<slug>/poster.png` (light) +
+  `/books/<slug>/poster.dark.png` (dark) — mirrors the Mini Program's
+  `drawBookPoster` grammar block-for-block (shared renderer
+  `lib/book-poster.tsx`): masthead → rounded cover card (the 月之暗面
+  MoonScene slice-cropped landscape + the "Think clearly. Build with
+  Kimi." tagline, theme-stable dark in both palettes) → mono eyebrow →
+  serif title (56→48→42 ladder, ≤2 lines, stop-dot only on a one-liner)
+  → muted lede (≤3 lines, hard-capped box) → 3-column stats with
+  vertical separators → footer (full title + host + build date + QR).
+  The QR is a URL code to the book page (the MP draws the home 小程序码,
+  but that endpoint needs WeChat credentials absent at build). Both
+  variants prerender at build, immutable; the hero 分享海报 button
+  (`BookPosterLink`) picks the file per the reader's theme (rAF swap
+  after mount, SSR stays light) and carries `?v=<bookModifiedAt>`.
+  `moonDataUri()` inlines the MoonScene palette — keep it in sync with
+  `CoverVisual`. The hero foot fills the lede measure at ≥761px
+  (Round-105 in globals.css): stats split into three even columns with
+  vertical separators (the poster's own colophon), actions form a 2×2
+  grid stretched to the same width. Tracked as a
+  **book-level** `poster_download` with no chapterSlug — the event
+  route accepts `poster_download` at both surfaces, and
+  `shareTopChaptersSql` filters `chapter_slug != ''` so book downloads
+  never pollute the chapter ranking.
 
 ---
 

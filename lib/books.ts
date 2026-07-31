@@ -1,5 +1,5 @@
 import type { BookMeta, Chapter, CommentsMode } from "./types";
-export { chapterModifiedAt, chapterPublishedAt } from "./book-dates";
+export { chapterModifiedAt, chapterPublishedAt, bookModifiedAt } from "./book-dates";
 import { meta as kimi } from "@/content/books/kimi/meta";
 
 /* README.md §数据层 — every reading surface (routes, home, RSS, sitemap,

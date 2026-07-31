@@ -8,12 +8,18 @@ import { track } from "@/lib/analytics-client";
 
 /* Chapter-level reading-aids bar, mounted at the foot of the chapter
    <Cover /> (after the byline, before the rule) — the tools a reader
-   should see BEFORE reading, not after: in-chapter contents (reuses the
-   ChapterOutline rail via GlobalUI's delegated `o` handler), the
-   chapter's llms.md, the chapter-scoped AI prompt (copies to
-   clipboard), a QR popover for moving the chapter to a phone, and the
-   share poster. Shape follows the sister project's article assistant:
-   frame-less mono uppercase actions with accent hairline icons. */
+   should see BEFORE reading, not after: in-chapter contents (toggles
+   the ChapterOutline rail through GlobalUI's delegated
+   `data-outline-toggle` click handler), the chapter's llms.md, the
+   chapter-scoped AI prompt (copies to clipboard), a QR popover for
+   moving the chapter to a phone, and the share poster. Shape follows
+   the sister project's article assistant: frame-less mono uppercase
+   actions with accent hairline icons. */
+
+/* Dwell before an open QR popover counts as `qr_open` — a pointer
+   grazing the bar on its way elsewhere is not share intent and must
+   not inflate the metric. */
+const QR_TRACK_DWELL_MS = 400;
 
 const ICON_TOC = (
   <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
@@ -73,10 +79,17 @@ export function ChapterActions({
   const qrWrapRef = useRef<HTMLDivElement>(null);
   const { lang } = useLang();
 
-  /* Track the QR popover opening (hover or click). track() dedups per
-     page session, so repeated hovers count once. */
+  /* Track qr_open only once the popover has STAYED open for a beat (see
+     QR_TRACK_DWELL_MS). The timeout's cleanup runs on every close path
+     — pointer-leave, outside pointer-down, Escape — so a passing hover
+     never reaches track(). track() itself dedups per page session, so
+     a settled reader still counts exactly once. */
   useEffect(() => {
-    if (qrOpen) track({ type: "qr_open", bookSlug, chapterSlug });
+    if (!qrOpen) return;
+    const timer = window.setTimeout(() => {
+      track({ type: "qr_open", bookSlug, chapterSlug });
+    }, QR_TRACK_DWELL_MS);
+    return () => window.clearTimeout(timer);
   }, [qrOpen, bookSlug, chapterSlug]);
 
   /* Close the QR popover on outside pointer-down or Escape. Registered
@@ -98,18 +111,6 @@ export function ChapterActions({
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [qrOpen]);
-
-  /* The outline rail + its toggle live in GlobalUI's delegated keyboard
-     handler (`o`, registered on document). Dispatching the same key event
-     keeps one owner of the panel state instead of duplicating the toggle
-     logic here. Dispatched on document.body (a real element — document
-     itself has no .closest()) and WITH bubbles:true so it actually
-     reaches the document-level listener. */
-  const toggleOutline = () => {
-    document.body.dispatchEvent(
-      new KeyboardEvent("keydown", { key: "o", bubbles: true }),
-    );
-  };
 
   const copyPrompt = async () => {
     const origin =
@@ -149,16 +150,28 @@ Then summarize, answer questions, or make notes. If you need more context, ask a
   /* The QR encodes the CANONICAL chapter URL (a phone scanning it lands
      on the public site), so it comes from lib/site rather than
      window.location.origin — localhost previews would 400 against the
-     qr.png route's site-host pin anyway. */
+     qr.png route's site-origin pin anyway. */
   const chapterPageUrl = absoluteUrl(`/books/${bookSlug}/${chapterSlug}`);
   const qrImgUrl = `/api/mp/qr.png?url=${encodeURIComponent(chapterPageUrl)}`;
 
   return (
-    <div className="ch-actions" ref={qrWrapRef} aria-label="阅读辅助 / Reading aids">
+    <div
+      className="ch-actions"
+      ref={qrWrapRef}
+      role="group"
+      aria-label="阅读辅助 / Reading aids"
+    >
+      {/* The outline rail + its toggle state live in GlobalUI. Its
+          document-level delegated click handler owns the
+          `data-outline-toggle` contract (same one the rail's own
+          buttons use), so this button is a plain declarative trigger —
+          no synthetic keyboard events, which would silently break the
+          day the key handler grows an isTrusted guard or the shortcut
+          gets rebound. The `o` keyboard shortcut itself still works. */}
       <button
         className="ch-actions__action"
         type="button"
-        onClick={toggleOutline}
+        data-outline-toggle
         aria-keyshortcuts="o"
       >
         {ICON_TOC}

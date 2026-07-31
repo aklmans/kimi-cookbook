@@ -87,3 +87,26 @@ test("event route rejects share actions without a chapter", async () => {
   );
   assert.equal(res.status, 400);
 });
+
+test("event route accepts a book-level poster_download without a chapter", async () => {
+  __resetIngestRateLimit();
+  const res = await POST(
+    eventRequest({
+      type: "poster_download",
+      bookSlug: "kimi",
+      sessionId: "sess-book-poster",
+    }),
+  );
+  assert.equal(res.status, 204);
+});
+
+test("poster top chapters excludes book-level (chapterless) downloads", async () => {
+  // The book-level download from the previous test must not surface in
+  // the chapter ranking (its chapter_slug is NULL).
+  const ov = await overview(30);
+  assert.ok(
+    ov.share.topChapters.every((row) => row.chapter_slug),
+    "topChapters must not include NULL/empty chapter_slug rows",
+  );
+  assert.equal(ov.share.topChapters[0]?.chapter_slug, "01-intro");
+});

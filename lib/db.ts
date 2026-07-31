@@ -12,10 +12,10 @@
  *
  * Portability rules (all three dialects share the query SQL below):
  * string concat is CONCAT(), day bucketing is SUBSTR(ts,1,10) (ts is
- * always an ISO-UTC string), and the daily_stats count column and
- * count aliases stay backticked (MySQL reserves COUNT; SQLite accepts
- * backticks too). Dialect-specific SQL (schema, upserts, REPLACE) is
- * branched on `activeDialect`.
+ * always an ISO-UTC string). The daily_stats count column and aliases
+ * are spelled bare — COUNT is an aggregate function, not a reserved
+ * word, in MySQL, MariaDB and SQLite alike. Dialect-specific SQL
+ * (schema, upserts, REPLACE) is branched on `activeDialect`.
  */
 
 /* eslint-disable @typescript-eslint/no-require-imports */
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS daily_stats (
   book_slug    TEXT NOT NULL,
   chapter_slug TEXT NOT NULL DEFAULT '',
   type         TEXT NOT NULL,
-  \`count\`    INTEGER NOT NULL DEFAULT 0,
+  count    INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, book_slug, chapter_slug, type)
 );
 
@@ -191,11 +191,11 @@ CREATE TABLE IF NOT EXISTS analytics_auth (
 
 /* MySQL / MariaDB variant of the same two tables. Differences: AUTO_INCREMENT
    instead of AUTOINCREMENT, VARCHAR(n) instead of TEXT on indexed columns
-   (MySQL cannot index unbounded TEXT), `count` backticked (reserved word),
-   and no expression DEFAULT on ts — insertEvent() always sets ts explicitly,
-   which keeps us compatible with MySQL < 8.0.13 and MariaDB alike. CREATE
-   INDEX has no IF NOT EXISTS in MySQL, so the driver swallows errno 1061
-   (duplicate key) when initializing against an existing database. */
+   (MySQL cannot index unbounded TEXT), and no expression DEFAULT on ts —
+   insertEvent() always sets ts explicitly, which keeps us compatible with
+   MySQL < 8.0.13 and MariaDB alike. CREATE INDEX has no IF NOT EXISTS in
+   MySQL, so the driver swallows errno 1061 (duplicate key) when
+   initializing against an existing database. */
 const MYSQL_SCHEMA = `
 CREATE TABLE IF NOT EXISTS events (
   id           INT PRIMARY KEY AUTO_INCREMENT,
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS daily_stats (
   book_slug    VARCHAR(64) NOT NULL,
   chapter_slug VARCHAR(64) NOT NULL DEFAULT '',
   type         VARCHAR(32) NOT NULL,
-  \`count\`    INT NOT NULL DEFAULT 0,
+  count    INT NOT NULL DEFAULT 0,
   PRIMARY KEY (day, book_slug, chapter_slug, type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -633,27 +633,27 @@ async function queryQuickWindows(
 
     if (kinds === "books") {
       arms.push(
-        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as \`count\` FROM events
+        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as count FROM events
          WHERE ts >= ? AND book_slug IN (${bookSlugSql})
            AND type IN (${bookTotalTypeSql})${bookFilterSql} AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(currentSince, ...knownBookSlugs, ...BOOK_TOTAL_ANALYTICS_EVENTS, ...(bookFilter ? [bookFilter] : []));
 
       arms.push(
-        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as \`count\` FROM events
+        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as count FROM events
          WHERE ts >= ? AND ts < ? AND book_slug IN (${bookSlugSql})
            AND type IN (${bookTotalTypeSql})${bookFilterSql} AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(previousSince, currentSince, ...knownBookSlugs, ...BOOK_TOTAL_ANALYTICS_EVENTS, ...(bookFilter ? [bookFilter] : []));
     } else {
       arms.push(
-        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as \`count\` FROM events
+        `SELECT '${win.key}' as win, 'current' as period, COUNT(*) as count FROM events
          WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(currentSince, ...PAGE_ANALYTICS_EVENTS);
 
       arms.push(
-        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as \`count\` FROM events
+        `SELECT '${win.key}' as win, 'previous' as period, COUNT(*) as count FROM events
          WHERE ts >= ? AND ts < ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
       );
       params.push(previousSince, currentSince, ...PAGE_ANALYTICS_EVENTS);
@@ -706,7 +706,7 @@ async function queryAudienceBreakdowns(
   await Promise.all(
     audienceBreakdowns.map(async ({ key, column }) => {
       result[key] = await d.all(
-        `SELECT ${column}, COUNT(*) as \`count\`
+        `SELECT ${column}, COUNT(*) as count
          FROM (
            SELECT
              ${column},
@@ -718,7 +718,7 @@ async function queryAudienceBreakdowns(
            GROUP BY ${column}, COALESCE(session_id, visitor_id, CONCAT('event-', id))
          ) audience_sessions
          GROUP BY ${column}
-         ORDER BY \`count\` DESC, ${column}
+         ORDER BY count DESC, ${column}
          LIMIT 10`,
         [since, ...scopeParams],
       );
@@ -965,27 +965,30 @@ export async function queryAnalytics(
     const referrerBaseParams = bookFilter ? [since, bookFilter] : [since];
     // Site-level UX signals (outbound host / search query / 404 path) live in
     // `extra` — top N per type, human-only, always site-wide.
-    const signalTopSql = `SELECT extra as value, COUNT(*) as \`count\`
+    const signalTopSql = `SELECT extra as value, COUNT(*) as count
        FROM events
        WHERE ts >= ? AND type = ? AND extra IS NOT NULL AND extra != '' AND ${HUMAN_OR_TRACKED}
-       GROUP BY extra ORDER BY \`count\` DESC, value LIMIT 15`;
+       GROUP BY extra ORDER BY count DESC, value LIMIT 15`;
 
     // Reading channels — the single-book question that actually matters:
     // web reads vs Mini Program vs agent fetches vs RSS, over the range.
-    const channelsSql = `SELECT type, COUNT(*) as \`count\`
+    const channelsSql = `SELECT type, COUNT(*) as count
        FROM events
        WHERE ts >= ? AND type IN ('book_view','chapter_view','mp_chapter_read','agent_read','feed_read')
        GROUP BY type`;
     // Share-intent actions: poster downloads (server) + QR opens / Feed-to-AI
     // copies (client, human-only).
-    const shareSql = `SELECT type, COUNT(*) as \`count\`
+    const shareSql = `SELECT type, COUNT(*) as count
        FROM events
        WHERE ts >= ? AND type IN ('poster_download','qr_open','agent_prompt_copy') AND ${HUMAN_OR_TRACKED}
        GROUP BY type`;
-    const shareTopChaptersSql = `SELECT chapter_slug, COUNT(*) as \`count\`
+    /* chapter_slug != '' keeps BOOK-level poster downloads (NULL chapter —
+       the hero's share-poster entry) out of the chapter ranking; the
+       shareSql total above still counts both surfaces. */
+    const shareTopChaptersSql = `SELECT chapter_slug, COUNT(*) as count
        FROM events
-       WHERE ts >= ? AND type = 'poster_download' AND book_slug = ? AND ${HUMAN_OR_TRACKED}
-       GROUP BY chapter_slug ORDER BY \`count\` DESC, chapter_slug LIMIT 10`;
+       WHERE ts >= ? AND type = 'poster_download' AND book_slug = ? AND chapter_slug != '' AND ${HUMAN_OR_TRACKED}
+       GROUP BY chapter_slug ORDER BY count DESC, chapter_slug LIMIT 10`;
 
     const [
       bookTotalsRows,
@@ -1027,7 +1030,7 @@ export async function queryAnalytics(
                ))
                ELSE 0
              END as completion_rate,
-             COUNT(*) as \`count\`
+             COUNT(*) as count
            FROM events
            WHERE ${bookTotalWhere}`,
           bookTotalParams,
@@ -1039,7 +1042,7 @@ export async function queryAnalytics(
              SUM(CASE WHEN type = 'chapter_complete' THEN 1 ELSE 0 END) as completions,
              SUM(CASE WHEN type = 'pdf_download' THEN 1 ELSE 0 END) as pdf_downloads,
              SUM(CASE WHEN type = 'agent_read' THEN 1 ELSE 0 END) as agent_reads,
-             COUNT(*) as \`count\`
+             COUNT(*) as count
            FROM events
            WHERE ${bookTotalWhere}
            GROUP BY day ORDER BY day`,
@@ -1059,10 +1062,10 @@ export async function queryAnalytics(
                     ))
                     ELSE 0
                   END as completion_rate,
-                  COUNT(*) as \`count\`
+                  COUNT(*) as count
            FROM events
            WHERE ${bookEventWhere}
-           GROUP BY book_slug ORDER BY \`count\` DESC LIMIT 20`,
+           GROUP BY book_slug ORDER BY count DESC LIMIT 20`,
           bookEventParams,
         ),
         d.all(
@@ -1075,7 +1078,7 @@ export async function queryAnalytics(
           `SELECT
              COALESCE(SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END), 0) as page_views,
              COALESCE(SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END), 0) as feed_reads,
-             COUNT(*) as \`count\`
+             COUNT(*) as count
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}`,
           [since, ...PAGE_ANALYTICS_EVENTS],
@@ -1084,7 +1087,7 @@ export async function queryAnalytics(
           `SELECT SUBSTR(ts, 1, 10) as day,
              SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END) as page_views,
              SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END) as feed_reads,
-             COUNT(*) as \`count\`
+             COUNT(*) as count
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}
            GROUP BY day ORDER BY day`,
@@ -1094,22 +1097,22 @@ export async function queryAnalytics(
           `SELECT book_slug as page_slug,
              SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END) as page_views,
              SUM(CASE WHEN type = 'feed_read' THEN 1 ELSE 0 END) as feed_reads,
-             COUNT(*) as \`count\`
+             COUNT(*) as count
            FROM events
            WHERE ts >= ? AND type IN (${pageTypeSql}) AND ${HUMAN_OR_TRACKED}
            GROUP BY page_slug
-           ORDER BY \`count\` DESC, page_slug LIMIT 20`,
+           ORDER BY count DESC, page_slug LIMIT 20`,
           [since, ...PAGE_ANALYTICS_EVENTS],
         ),
         d.all(
-          `SELECT referrer, COUNT(*) as \`count\`
+          `SELECT referrer, COUNT(*) as count
            FROM events
            WHERE ${referrerBaseWhere} AND referrer IS NOT NULL AND referrer != ''
-           GROUP BY referrer ORDER BY \`count\` DESC LIMIT 10`,
+           GROUP BY referrer ORDER BY count DESC LIMIT 10`,
           referrerBaseParams,
         ),
         d.all(
-          `SELECT referrer, COUNT(*) as \`count\`
+          `SELECT referrer, COUNT(*) as count
            FROM events
            WHERE ${referrerBaseWhere}
            GROUP BY referrer`,
@@ -1292,7 +1295,7 @@ export async function queryAnalytics(
         [opts.bookSlug, since],
       ),
       d.all(
-        `SELECT SUBSTR(ts, 1, 10) as day, COUNT(*) as \`count\`
+        `SELECT SUBSTR(ts, 1, 10) as day, COUNT(*) as count
          FROM events
          WHERE book_slug = ? AND ts >= ? AND type IN (${bookTotalTypeSql}) AND ${HUMAN_OR_TRACKED}
          GROUP BY day ORDER BY day`,
@@ -1326,8 +1329,8 @@ export async function rollupDailyStats(): Promise<number> {
     // INSERT OR REPLACE (SQLite/libsql) ≡ REPLACE INTO (MySQL).
     const insert =
       activeDialect === "mysql"
-        ? "REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, `count`)"
-        : "INSERT OR REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, `count`)";
+        ? "REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, count)"
+        : "INSERT OR REPLACE INTO daily_stats (day, book_slug, chapter_slug, type, count)";
     await d.run(
       `${insert}
        SELECT SUBSTR(ts, 1, 10) as day, book_slug,

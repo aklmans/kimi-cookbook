@@ -39,7 +39,6 @@ const CHAPTER_TYPES = new Set([
   "chapter_view",
   "chapter_complete",
   "reading_heartbeat",
-  "poster_download",
   "qr_open",
   "agent_prompt_copy",
 ]);
@@ -218,9 +217,12 @@ export async function POST(req: Request) {
         return new Response(null, { status: 400 });
       }
     } else {
-      // book_view / pdf_download don't require a chapter, but if a
-      // chapterSlug is supplied it must belong to the book (and not be
-      // a draft) — reject arbitrary values so the column stays clean.
+      // book_view / pdf_download / poster_download don't require a
+      // chapter — poster_download has a BOOK-level surface (the hero's
+      // share-poster download) alongside the chapter bar's, so it lives
+      // outside CHAPTER_TYPES. If a chapterSlug is supplied it must
+      // still belong to the book (and not be a draft) — reject
+      // arbitrary values so the column stays clean.
       if (chapterSlug) {
         const found = getChapter(book, chapterSlug);
         if (!found || found.chapter.draft) {

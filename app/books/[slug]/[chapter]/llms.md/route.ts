@@ -124,7 +124,7 @@ export async function GET(
   return new Response(lines.join("\n"), {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
-      "Content-Location": `${chapterUrl}/llms.md`,
+      "Content-Location": `/books/${slug}/${chapterSlug}/llms.md`,
       "Cache-Control": "no-store",
     },
   });

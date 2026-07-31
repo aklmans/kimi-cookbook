@@ -11,6 +11,7 @@ import {
   getAllBooks,
   getBook,
   bookDateShort,
+  bookModifiedAt,
   chapterNumber,
 } from "@/lib/books";
 import { formatReadTime } from "@/lib/format";
@@ -23,6 +24,7 @@ import { CoverVisual } from "@/components/CoverVisual";
 import { AgentReaderButton } from "@/components/AgentReaderButton";
 import { BookTracker } from "./BookTracker";
 import { PdfDownloadLink } from "./PdfDownloadLink";
+import { BookPosterLink } from "./BookPosterLink";
 
 /* Book detail / table of contents — source: book.html */
 
@@ -198,6 +200,7 @@ export default async function BookPage({
               <PdfDownloadLink slug={slug} href={pdfHref} hrefEn={pdfHrefEn}>
                 <T zh="下载 PDF ↓" en="Download PDF ↓" />
               </PdfDownloadLink>
+              <BookPosterLink slug={slug} version={bookModifiedAt(book)} />
               <AgentReaderButton slug={book.slug} />
             </div>
           </div>

@@ -211,6 +211,18 @@ async function main() {
     poster.status === 200 &&
       (poster.headers.get("content-type") ?? "").includes("image/png"),
   );
+  const bookPoster = await fetch(`${BASE_URL}/books/kimi/poster.png`);
+  check(
+    "/books/kimi/poster.png (book-level) returns a PNG",
+    bookPoster.status === 200 &&
+      (bookPoster.headers.get("content-type") ?? "").includes("image/png"),
+  );
+  const bookPosterDark = await fetch(`${BASE_URL}/books/kimi/poster.dark.png`);
+  check(
+    "/books/kimi/poster.dark.png (dark variant) returns a PNG",
+    bookPosterDark.status === 200 &&
+      (bookPosterDark.headers.get("content-type") ?? "").includes("image/png"),
+  );
   const qrStatus = await fetchStatus(
     `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://kimi.read.wiki/books/kimi/01-intro")}`,
   );
@@ -316,6 +328,20 @@ async function main() {
     `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://example.com/x")}`,
   );
   check("/api/mp/qr.png rejects a foreign url", qrForeign === 400);
+  const qrWithQuery = await fetchStatus(
+    `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://kimi.read.wiki/books/kimi/01-intro?r=1")}`,
+  );
+  check(
+    "/api/mp/qr.png rejects a url carrying a query (cache-busting vector)",
+    qrWithQuery === 400,
+  );
+  const qrOffManifest = await fetchStatus(
+    `${BASE_URL}/api/mp/qr.png?url=${encodeURIComponent("https://kimi.read.wiki/about")}`,
+  );
+  check(
+    "/api/mp/qr.png rejects a same-site url outside the book manifest",
+    qrOffManifest === 400,
+  );
 
   // ── Browser checks (Playwright) ──
   const browser = await chromium.launch({ headless: true });
@@ -473,6 +499,48 @@ async function main() {
       "PDF download link targets the static kimi.pdf export",
       kimiPdfHref === "/books/kimi.pdf",
     );
+
+    // The hero offers the book-level share poster as an in-place download
+    // (located by href — the button label localizes). The href follows the
+    // reader's theme: poster.png in light, poster.dark.png in dark.
+    const posterLinkAttrs = async () =>
+      page.evaluate(() => {
+        const link = document.querySelector(
+          'a.book-detail__btn[href*="poster"]',
+        );
+        return {
+          href: link?.getAttribute("href") ?? "",
+          download: link?.getAttribute("download") ?? "",
+        };
+      });
+    const themeNow = await page.evaluate(
+      () => document.documentElement.dataset.theme ?? "light",
+    );
+    const posterAttrs = await posterLinkAttrs();
+    check(
+      "Book hero offers the share poster download (theme-matched)",
+      posterAttrs.href.startsWith(
+        themeNow === "dark"
+          ? "/books/kimi/poster.dark.png?v="
+          : "/books/kimi/poster.png?v=",
+      ) && posterAttrs.download === "kimi-poster.png",
+    );
+    // Flipping the theme swaps the poster file to match.
+    await page.click("[data-theme-toggle]");
+    await page.waitForTimeout(400);
+    const themeFlipped = await page.evaluate(
+      () => document.documentElement.dataset.theme ?? "light",
+    );
+    const posterFlipped = await posterLinkAttrs();
+    check(
+      "Share poster link follows the theme toggle",
+      posterFlipped.href.includes(
+        themeFlipped === "dark" ? "poster.dark.png" : "poster.png",
+      ) && themeFlipped !== themeNow,
+    );
+    // Restore the original theme for the rest of the suite.
+    await page.click("[data-theme-toggle]");
+    await page.waitForTimeout(300);
 
     // EN returning visitor must get correctly localized UI chrome. Lang-
     // dependent aria-labels/placeholders used to hydrate-mismatch and strand
@@ -675,6 +743,26 @@ async function main() {
     check(
       "QR popover closes on Escape",
       (await page.locator(".ch-actions__qr-pop").count()) === 0,
+    );
+
+    // 目录 toggles the chapter outline through GlobalUI's delegated
+    // data-outline-toggle click handler — the single owner of panel
+    // state (this button used to dispatch a synthetic `o` KeyboardEvent,
+    // a coupling that could break silently; guard the contract).
+    const tocAction = page.locator(".ch-actions__action", { hasText: "目录" });
+    await tocAction.click();
+    check(
+      "目录 action opens the chapter outline via data-outline-toggle",
+      await page.evaluate(() =>
+        document.body.classList.contains("is-outline-open"),
+      ),
+    );
+    await tocAction.click();
+    check(
+      "目录 action closes the chapter outline on a second click",
+      await page.evaluate(
+        () => !document.body.classList.contains("is-outline-open"),
+      ),
     );
 
     // Poster action downloads the PNG in place (no throwaway tab)

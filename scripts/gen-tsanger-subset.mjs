@@ -46,6 +46,23 @@ const POSTER_TTFS = [
   { src: "TsangerJinKai02-W05.woff2", out: "TsangerJinKai02-W05.poster.ttf" },
 ];
 
+/* JetBrains Mono 600 for the chapter share poster (masthead / serial /
+   chapter label / footer host). The OG image routes still stream it from
+   Google Fonts via lib/og-fonts, but the poster prerenders ~75 PNGs per
+   build — its mono must be local like the Tsanger serif, or a Google
+   hiccup fails the whole build. The source TTF (OFL) was fetched once
+   from the Google Fonts css2 API without a browser UA (which is what
+   makes the API return TTF instead of WOFF2) and committed as
+   JetBrainsMono-SemiBold.ttf. The poster only sets ASCII plus a few
+   marks in mono, so the subset is a fixed glyph list, not a scan. */
+const MONO_POSTER = {
+  src: "JetBrainsMono-SemiBold.ttf",
+  out: "JetBrainsMono-SemiBold.poster.ttf",
+  chars:
+    " !\"#$%&'()*+,-./0123456789:;<=>?@[\\]^_`{|}~" +
+    "·–—…",
+};
+
 /* Punctuation / symbols the design may render even when absent from source text
    (kept explicit so a subset never drops a quote mark or dash). */
 const ALWAYS =
@@ -112,6 +129,18 @@ async function main() {
     await writeFile(path.join(FONT_DIR, w.out), out);
     console.log(
       `  ${w.out.padEnd(34)} ${(out.length / 1024).toFixed(0)}KB (sfnt, for next/og)`,
+    );
+  }
+
+  {
+    const srcPath = path.join(FONT_DIR, MONO_POSTER.src);
+    const buf = await readFile(srcPath);
+    const out = await subsetFont(buf, MONO_POSTER.chars, {
+      targetFormat: "sfnt",
+    });
+    await writeFile(path.join(FONT_DIR, MONO_POSTER.out), out);
+    console.log(
+      `  ${MONO_POSTER.out.padEnd(34)} ${(out.length / 1024).toFixed(0)}KB (sfnt, for next/og)`,
     );
   }
 

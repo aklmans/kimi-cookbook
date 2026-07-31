@@ -16,6 +16,7 @@ import rehypeCodeTitle from "@/lib/rehype-code-title";
 import { ZHAPHAR_CODE_THEMES } from "@/lib/code-theme";
 import { chapterModifiedAt, chapterPublishedAt } from "@/lib/book-dates";
 import { chapterNumber } from "@/lib/books";
+import { chineseNum } from "@/lib/format";
 import { extractChapterOutline } from "@/lib/chapter-outline";
 import { absoluteUrl } from "@/lib/site";
 import type { BookMeta, Chapter } from "@/lib/types";
@@ -240,7 +241,7 @@ function MpCover({
     <div>
       <p>
         <small>
-          {number} · 第{["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"][index] ?? index + 1}章
+          {number} · 第{chineseNum(index + 1)}章
         </small>
       </p>
       <h1>

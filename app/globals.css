@@ -11006,3 +11006,38 @@ html {
   color: var(--accent);
   font-weight: 600;
 }
+
+/* ============================================================
+   Round-105 · Book share poster entries; the hero foot fills the
+   lede measure. A fourth action (分享海报 / Poster) joined the row
+   and the flex wrap left it orphaned 3+1, while the stats' fixed
+   92px cells died into right whitespace inside the 36em colophon.
+   At ≥761px the foot mirrors the share poster's own colophon: the
+   stats split into three even columns with vertical separators, and
+   the four actions form a 2×2 grid stretched to the same measure.
+   ≤640 keeps the stacked phone layout. */
+@media screen and (min-width: 761px) {
+  .book-detail__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .book-detail__stat {
+    width: auto;
+  }
+  .book-detail__stat + .book-detail__stat {
+    padding-left: 32px;
+    border-left: 0.5px solid var(--border);
+  }
+  .book-detail__actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 28px;
+  }
+  .book-detail .book-detail__actions .book-detail__btn {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+  }
+}

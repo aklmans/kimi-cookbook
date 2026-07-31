@@ -28,8 +28,10 @@ test("mysql schema statements are valid MySQL DDL", () => {
   assert.match(sql, /INT PRIMARY KEY AUTO_INCREMENT/);
   assert.doesNotMatch(sql, /AUTOINCREMENT/);
   assert.match(sql, /type\s+VARCHAR\(32\) NOT NULL/);
-  // daily_stats count is backticked (MySQL reserved word)
-  assert.match(sql, /`count`\s+INT NOT NULL DEFAULT 0/);
+  // daily_stats count is spelled bare (COUNT is an aggregate, not a
+  // reserved word, in MySQL / MariaDB / SQLite alike)
+  assert.match(sql, /^  count\s+INT NOT NULL DEFAULT 0/m);
+  assert.doesNotMatch(sql, /`count`/);
   // indexes exist and are separate statements (MySQL lacks CREATE INDEX IF NOT EXISTS)
   assert.ok(
     statements.filter((s) => s.startsWith("CREATE INDEX idx_events_")).length >= 5,

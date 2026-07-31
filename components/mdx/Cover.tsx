@@ -1,19 +1,9 @@
 import type { BookMeta, Chapter } from "@/lib/types";
-import { formatByline } from "@/lib/format";
+import { chineseNum, formatByline } from "@/lib/format";
 import { chapterModifiedAt } from "@/lib/book-dates";
 import { T } from "@/components/T";
 import { StopPunct } from "./StopPunct";
 import { ChapterActions } from "./ChapterActions";
-
-const CN_DIGITS = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
-const CN_TENS = ["", "十", "二十", "三十", "四十", "五十", "六十", "七十", "八十", "九十"];
-
-function chineseNum(n: number): string {
-  if (n < 1) return "";
-  if (n < 10) return CN_DIGITS[n];
-  if (n < 20) return `十${CN_DIGITS[n % 10]}`;
-  return CN_TENS[Math.floor(n / 10)] + CN_DIGITS[n % 10];
-}
 
 /* `.v3-cover` — chapter title page. Data comes from meta.ts (closure
    in getMdxComponents), so the MDX body just writes `<Cover />`.

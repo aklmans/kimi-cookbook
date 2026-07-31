@@ -3,9 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 import QRCode from "qrcode";
 import { getAllBooks, getBook, getChapter, chapterNumber } from "@/lib/books";
-import { loadGoogleFont } from "@/lib/og-fonts";
+import { chineseNum } from "@/lib/format";
 import { ogText } from "@/lib/og-text";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, SITE_HOST, SITE_NAME } from "@/lib/site";
 
 /* Share poster for a chapter — THE SAME poster the Mini Program draws
    (miniapp utils/poster.js, "Zhaphar poster grammar"), re-implemented
@@ -71,16 +71,39 @@ function estLines(text: string, perLineEm: number, cap: number): number {
 /* Title fits on ONE line (size down until the estimate fits, floor 30) —
    the MP poster applies the same rule. When the accent stop-dot will be
    drawn (title not self-closed), its room is reserved up front so a
-   near-full-width title never swallows the dot. */
-function titleSize(title: string, reserveDot: boolean): number {
+   near-full-width title never swallows the dot. Past the floor the
+   title is truncated with an ellipsis instead of painting past the
+   right margin (a >22-unit title used to overflow the canvas). */
+function fitTitle(
+  title: string,
+  reserveDot: boolean,
+): { text: string; size: number } {
   const fitW = CONTENT_W - (reserveDot ? 40 : 0);
-  return Math.max(30, Math.min(66, Math.floor(fitW / displayWidthEm(title))));
+  const size = Math.max(
+    30,
+    Math.min(66, Math.floor(fitW / displayWidthEm(title))),
+  );
+  if (displayWidthEm(title) * size <= fitW) return { text: title, size };
+  const budget = fitW / size - 1; // 1em of room for the ellipsis
+  let text = "";
+  let width = 0;
+  for (const ch of title) {
+    const w = displayWidthEm(ch);
+    if (width + w > budget) break;
+    text += ch;
+    width += w;
+  }
+  return { text: `${text.trimEnd()}…`, size };
 }
 
 /* The protagonist quote is the chapter's closing <Kicker zh="…" />
    manifesto. Extracting it from the raw MDX (instead of re-running the
    whole MDX pipeline like lib/mp-render.tsx) is safe here because the
-   prop is a plain JS string in every chapter. */
+   prop is a plain JS string in every chapter. A literal "<Kicker" can
+   also appear MID-chapter (a CodeBlock sample in a chapter teaching the
+   vocabulary), so take the LAST match — the manifesto is the chapter's
+   closing beat by convention. Both `zh={"…"}` and `zh="…"` prop forms
+   are accepted. */
 function extractKicker(bookSlug: string, chapterSlug: string): string {
   try {
     const raw = fs.readFileSync(
@@ -94,9 +117,15 @@ function extractKicker(bookSlug: string, chapterSlug: string): string {
       ),
       "utf8",
     );
-    const match = raw.match(/<Kicker[\s\S]*?zh=\{"((?:[^"\\]|\\.)*)"\}/);
-    return match
-      ? match[1].replace(/\\n/g, " ").replace(/\s+/g, " ").trim()
+    const matches = [
+      ...raw.matchAll(
+        /<Kicker[\s\S]*?zh=(?:\{"((?:[^"\\]|\\.)*)"\}|"((?:[^"\\]|\\.)*)")/g,
+      ),
+    ];
+    const last = matches.at(-1);
+    const value = last?.[1] ?? last?.[2];
+    return value
+      ? value.replace(/\\n/g, " ").replace(/\s+/g, " ").trim()
       : "";
   } catch {
     return "";
@@ -137,8 +166,12 @@ export async function GET(
      blocks can never overlap; H is the only estimate and is deliberately
      generous — slack lands above the footer band (marginTop: "auto").
      estLines is used for H padding only, never for positioning. */
-  const titleClosed = /[。!?…；，、：:;,.!?…]$/.test(chapterTitle.trim());
-  const size = titleSize(chapterTitle, !titleClosed);
+  const titleSelfClosed = /[。!?…；，、：:;,.!?…]$/.test(chapterTitle.trim());
+  const fitted = fitTitle(chapterTitle, !titleSelfClosed);
+  /* Truncation appends an ellipsis — itself a closing mark — so the
+     stop-dot decision reads the FITTED text, not the raw title. */
+  const titleClosed = /[。!?…；，、：:;,.!?…]$/.test(fitted.text.trim());
+  const size = fitted.size;
   const titleEndY = 300 + size * 1.23;
   const kickerLines = kicker ? estLines(kicker, 674 / 30, 4) : 0;
   const ledeLines = lede ? estLines(lede, CONTENT_W / 26, 6) : 0;
@@ -152,7 +185,7 @@ export async function GET(
     Math.round(titleEndY + flowEstimate + 46 + FOOTER + 64),
   );
 
-  const titleWidthPx = displayWidthEm(chapterTitle) * size;
+  const titleWidthPx = displayWidthEm(fitted.text) * size;
 
   const qrDataUrl = await QRCode.toDataURL(
     absoluteUrl(`/books/${book.slug}/${ch.slug}`),
@@ -164,15 +197,19 @@ export async function GET(
     },
   );
 
-  /* Poster serif is the LOCAL Tsanger subset TTF (npm run gen:font —
-     next/og rejects WOFF2). Mono keeps the cached Google loader. */
+  /* Poster fonts are ALL local subset TTFs (npm run gen:font — next/og
+     rejects WOFF2): the Tsanger serif plus JetBrains Mono. Nothing is
+     fetched from Google Fonts at build time — 75 posters prerender per
+     build, and a network hiccup must not fail it. */
   const serif600 = fs.readFileSync(
     path.join(process.cwd(), "assets/fonts", "TsangerJinKai02-W05.poster.ttf"),
   );
   const serif400 = fs.readFileSync(
     path.join(process.cwd(), "assets/fonts", "TsangerJinKai02-W04.poster.ttf"),
   );
-  const mono600 = await loadGoogleFont("JetBrains Mono", 600, false);
+  const mono600 = fs.readFileSync(
+    path.join(process.cwd(), "assets/fonts", "JetBrainsMono-SemiBold.poster.ttf"),
+  );
 
   return new ImageResponse(
     <div
@@ -209,7 +246,7 @@ export async function GET(
           letterSpacing: 4,
         }}
       >
-        KIMI COOKBOOK
+        {SITE_NAME.toUpperCase()}
       </div>
       <div
         style={{
@@ -249,7 +286,7 @@ export async function GET(
           color: INK_3,
         }}
       >
-        {`${serial} · 第${["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"][index] ?? ""}章`}
+        {`${serial} · 第${chineseNum(index + 1)}章`}
       </div>
 
       {/* title — one line, with the accent stop-dot circle */}
@@ -265,7 +302,7 @@ export async function GET(
           lineHeight: 1.23,
         }}
       >
-        {chapterTitle}
+        {fitted.text}
       </div>
       {!titleClosed ? (
         <div
@@ -385,7 +422,7 @@ export async function GET(
                   color: INK_3,
                 }}
               >
-                kimi.read.wiki
+                {SITE_HOST}
               </div>
             </div>
             <div

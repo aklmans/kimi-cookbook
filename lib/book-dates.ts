@@ -37,3 +37,15 @@ export function chapterModifiedAt(book: BookMeta, chapter: Chapter): string {
   if (last) return normalizeDate(last);
   return chapterPublishedAt(book, chapter);
 }
+
+/** The book's last-modified date — the newest chapter modified date,
+    falling back to the book's own date. Drives the ?v= cache-buster on
+    the book-level share poster (a chapter edit must bust it too). */
+export function bookModifiedAt(book: BookMeta): string {
+  let latest = book.date;
+  for (const chapter of book.chapters) {
+    const modified = chapterModifiedAt(book, chapter);
+    if (modified > latest) latest = modified;
+  }
+  return latest;
+}
