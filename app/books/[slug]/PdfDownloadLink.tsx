@@ -1,10 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
 import { track } from "@/lib/analytics-client";
 import { useLang } from "@/components/LangProvider";
+import { useHydrated } from "@/lib/use-hydrated";
 
+/* PDF download entry in the hero actions. The lang-aware href is
+   derived at render time from the hydration flag + lang (SSR and the
+   hydration render both emit the zh href, so no mismatch) — previously
+   a rAF-wrapped setState, which stalled in non-compositing
+   environments (see lib/use-hydrated). */
 export function PdfDownloadLink({
   slug,
   href,
@@ -17,14 +22,8 @@ export function PdfDownloadLink({
   children: ReactNode;
 }) {
   const { lang } = useLang();
-  const [activeHref, setActiveHref] = useState(href);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      setActiveHref(lang === "en" && hrefEn ? hrefEn : href);
-    });
-    return () => cancelAnimationFrame(id);
-  }, [href, hrefEn, lang]);
+  const hydrated = useHydrated();
+  const activeHref = hydrated && lang === "en" && hrefEn ? hrefEn : href;
 
   return (
     <a

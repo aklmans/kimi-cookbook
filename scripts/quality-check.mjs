@@ -2113,8 +2113,8 @@ assertIncludes(
 );
 assertIncludes(
   "app/books/[slug]/PdfDownloadLink.tsx",
-  "setActiveHref",
-  "PDF download link should update href after hydration; otherwise the server-rendered Chinese href can survive in English mode.",
+  "useHydrated",
+  "PDF download link should derive its lang-aware href at render time (useHydrated); an rAF'd setState stalls in non-compositing tabs.",
 );
 
 assertIncludes(
@@ -2202,7 +2202,12 @@ assertIncludes(
 );
 assertIncludes(
   "app/books/[slug]/BookPosterLink.tsx",
-  "poster.png?v=",
+  "poster.dark.png",
+  "The hero poster link should wire the dark variant (render-time theme derivation via useHydrated).",
+);
+assertIncludes(
+  "app/books/[slug]/BookPosterLink.tsx",
+  "?v=${version}",
   "The hero poster link should carry the ?v= cache-buster on the immutable PNG.",
 );
 {

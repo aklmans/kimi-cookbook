@@ -305,7 +305,10 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   gets stranded on Chinese. Give chrome controls a **static bilingual**
   `aria-label` (`"中文 / English"`, like `ChapterOutline`), and gate visible
   language-specific text (search placeholders) on `search !== "closed"` or a
-  mounted flag so it matches the server at hydration then localizes. Never
+  mounted flag — canonically `useHydrated` (`lib/use-hydrated.ts`, a
+  `useSyncExternalStore` flag: no effect, no rAF, so it can't stall in a
+  non-compositing tab) — so it matches the server at hydration then
+  localizes. Never
   reach for `suppressHydrationWarning` on an attribute — React keeps the server
   value and never patches it.
 - **cover + detail intro (Round-80)**: the book cover and the detail-page H1
@@ -439,8 +442,11 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   The QR is a URL code to the book page (the MP draws the home 小程序码,
   but that endpoint needs WeChat credentials absent at build). Both
   variants prerender at build, immutable; the hero 分享海报 button
-  (`BookPosterLink`) picks the file per the reader's theme (rAF swap
-  after mount, SSR stays light) and carries `?v=<bookModifiedAt>`.
+  (`BookPosterLink`) picks the file per the reader's theme — derived at
+  render time via the `useHydrated` flag (`lib/use-hydrated.ts`), so a
+  theme flip can never leave the href stale without a composite (the
+  old rAF swap could, in a background tab) — and carries
+  `?v=<bookModifiedAt>`.
   `moonDataUri()` inlines the MoonScene palette — keep it in sync with
   `CoverVisual`. The hero foot fills the lede measure at ≥761px
   (Round-105 in globals.css): stats split into three even columns with

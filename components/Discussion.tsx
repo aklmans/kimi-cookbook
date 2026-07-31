@@ -4,6 +4,7 @@ import Giscus from "@giscus/react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/components/LangProvider";
+import { useHydrated } from "@/lib/use-hydrated";
 import { T } from "@/components/T";
 
 const REPO = process.env.NEXT_PUBLIC_GISCUS_REPO;
@@ -31,7 +32,7 @@ type DiscussionState =
 export function Discussion({ closed = false }: { closed?: boolean }) {
   const { lang } = useLang();
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [widgetState, setWidgetState] = useState<
     Extract<DiscussionState, "initializing" | "loading" | "loaded" | "failed">
   >(
@@ -44,11 +45,6 @@ export function Discussion({ closed = false }: { closed?: boolean }) {
     : CONFIGURED
       ? widgetState
       : "unconfigured";
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   useEffect(() => {
     if (!mounted || !CONFIGURED || closed) return;

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { T } from "@/components/T";
 import { track } from "@/lib/analytics-client";
+import { useHydrated } from "@/lib/use-hydrated";
 
 /* Book-level share-poster entry in the hero actions — same grammar as
    PdfDownloadLink: a plain <a> + download, no throwaway tab. The poster
@@ -11,7 +11,13 @@ import { track } from "@/lib/analytics-client";
    like the MP follows its reader's theme) and served immutable, so the
    link carries ?v=<bookModifiedAt> to bust stale caches after content
    updates. Tracked as a BOOK-level poster_download (no chapterSlug —
-   the event route accepts poster_download at both surfaces). */
+   the event route accepts poster_download at both surfaces).
+   The href is DERIVED AT RENDER TIME: SSR + the hydration render keep
+   the light variant (mismatch-free), and once hydrated it follows
+   resolvedTheme on every render — no effect, no rAF, so a theme flip
+   can never leave the href stale in a non-compositing environment
+   (background tab → right-click "save link as" used to get the wrong
+   variant). */
 export function BookPosterLink({
   slug,
   version,
@@ -21,24 +27,14 @@ export function BookPosterLink({
   version: string;
 }) {
   const { resolvedTheme } = useTheme();
-  /* SSR + the first client render keep the LIGHT url so hydration
-     matches; the theme-correct swap lands a rAF after mount (the same
-     pattern as PdfDownloadLink's lang-aware href). */
-  const [href, setHref] = useState(`/books/${slug}/poster.png?v=${version}`);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      setHref(
-        `/books/${slug}/${resolvedTheme === "dark" ? "poster.dark.png" : "poster.png"}?v=${version}`,
-      );
-    });
-    return () => cancelAnimationFrame(id);
-  }, [slug, version, resolvedTheme]);
+  const hydrated = useHydrated();
+  const variant =
+    hydrated && resolvedTheme === "dark" ? "poster.dark.png" : "poster.png";
 
   return (
     <a
       className="book-detail__btn"
-      href={href}
+      href={`/books/${slug}/${variant}?v=${version}`}
       download={`${slug}-poster.png`}
       onClick={() => track({ type: "poster_download", bookSlug: slug })}
     >
