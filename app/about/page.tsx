@@ -58,14 +58,19 @@ export default function AboutPage() {
                 很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。
                 那是它的旧定位。到 K3, 它长成一套对标 OpenAI / Anthropic 的 agent 栈:
                 四模式、做出成品的 Agent、上百子 agent 的 Swarm、Deep Research、
-                跑在终端的 Kimi Code, 和一套双兼容的 API。这本书给这套栈画张图。
+                跑在终端的 Kimi Code, 和一套双兼容的 API。在 AI 时代, Builder 不再专属于敲代码的工程师,
+                每一个用 AI 深度学习、对抗思考、组装轻量工法与重构生产力的个体, 都是 Universal Builder。
+                这本书与社区月刊为这套栈与工法画张图。
               </p>
               <p lang="en">
                 Most people still remember Kimi as the long-context tool. That is
                 its old job description. With K3 it has grown into an agent stack
                 comparable to OpenAI and Anthropic: four modes, an Agent that ships
                 finished artifacts, a Swarm of sub-agents, Deep Research, Kimi Code
-                in the terminal, and a dual-compatible API. This book maps that stack.
+                in the terminal, and a dual-compatible API. In the AI era, builders
+                are not just syntax coders — anyone leveraging intelligence for rapid
+                learning, adversarial thinking, workflow automation, and career
+                transformation is a Universal Builder. This book and its monthly dispatch map that stack.
               </p>
             </div>
           </div>
@@ -235,6 +240,20 @@ export default function AboutPage() {
               </p>
               <Link href="/books/kimi">
                 <T zh="打开这本书" en="Open the book" />
+              </Link>
+            </div>
+            <div className="about-routes__row">
+              <h3>
+                <T zh="月刊" en="Monthly" />
+              </h3>
+              <p>
+                <T
+                  zh="面向泛 Builder 的月度进化雷达: 认知跃迁、实战案例与即插即用 Prompt 资产包。"
+                  en="Monthly dispatch for Universal Builders: paradigm shifts, case studies, and ready-to-use prompt artifacts."
+                />
+              </p>
+              <Link href="/monthly">
+                <T zh="查看月刊" en="Open Monthly" />
               </Link>
             </div>
             <div className="about-routes__row">

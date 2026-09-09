@@ -4,14 +4,14 @@
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/Content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![Site: kimi.read.wiki](https://img.shields.io/badge/Read-kimi.read.wiki-1783FF)](https://kimi.read.wiki)
 
-**一本讲透 Kimi 产品栈的书(10 章),和承载它的网站、小程序内容 API 与部署链路 —— 全部源码。**
+**一本讲透 Kimi 产品栈的书(10 章), 面向泛 Builder 的月度进化指南, 和承载它的网站、小程序内容 API 与部署链路 —— 全部源码。**
 
 > Think clearly. Build with Kimi.
 
 <img src="docs/readme/web-home-desktop.png" alt="Kimi Cookbook 首页 — 书籍详情" />
 
-Zhaphar 写给已经在付费 Kimi、却只用到一小部分的人:K3 与模型、四种模式、
-Agent 与 Agent Swarm、Deep Research、Kimi Code 与开放 API、五档会员的取舍。
+Zhaphar 写给已经在付费 Kimi、却只用到一小部分的人, 也写给在 AI 时代探索认知升级、决策反思、轻量构建与职业转型的 Universal Builders: K3 与模型、四种模式、
+Agent 与 Agent Swarm、Deep Research、Kimi Code 与开放 API、泛 Builder 实战工法与五档会员的取舍。
 在线阅读: <https://kimi.read.wiki>
 
 ---
@@ -68,9 +68,11 @@ Agent 与 Agent Swarm、Deep Research、Kimi Code 与开放 API、五档会员�
 
 ## 这是什么
 
-- **一本书**(`content/books/kimi/`):10 章 MDX + 结构化 meta
-  (标题、引文、修订记录、海报摘要),含引用脚注;
-- **一个网站**(Next.js 16 App Router):**ChapterOutline 章节大纲轨**、
+- **一本书**(`content/books/kimi/`): 10 章 MDX + 结构化 meta
+  (标题、引文、修订记录、海报摘要、Universal Builders 全维工法速查), 含引用脚注;
+- **一份月刊**(`app/monthly/`): 面向 Universal Builders 的月度场景雷达与进化指南
+  (认知范式跃迁 + 真实场景案例拆解 + 开箱即用 Prompt 资产包 + 工具避坑审计);
+- **一个网站**(Next.js 16 App Router): **ChapterOutline 章节大纲轨**、
   阅读辅助栏、giscus 评论、中英文 `<T>` 双语组件;
   **Bilingual PDF exports** —— 整书 PDF 跟随当前语言模式导出,不串味;
 - **Agent 可读面**:全书与逐章 `llms.md`(含截断自检)、`/llms.txt` 索引、

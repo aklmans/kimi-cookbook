@@ -18,7 +18,7 @@ export const about: BookAbout = {
   lede: "一本讲 Kimi 的书, 和指挥 Kimi 写书的人。",
   bookline: `Kimi · 从长文本到一套 agent 栈 · Zhaphar · ${SITE_YEAR}`,
   intro:
-    "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。到 K3, 它长成一套对标 OpenAI / Anthropic 的 agent 栈: 四模式、做出成品的 Agent、上百子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code, 和一套双兼容的 API。这本书给这套栈画张图。",
+    "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。到 K3, 它长成一套对标 OpenAI / Anthropic 的 agent 栈: 四模式、做出成品的 Agent、上百子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code, 和一套双兼容的 API。在 AI 时代, Builder 不再专属于写代码的工程师, 每一个用 AI 深度学习、对抗思考、组装轻量工法与重构业务的个体, 都是 Universal Builder。这本书给这套栈画张图。",
 
   meta: [
     { label: "读者", value: "已付费 Kimi · 用得浅" },
@@ -35,7 +35,7 @@ export const about: BookAbout = {
       title: "为什么写这本书",
       paragraphs: [
         "产品页会告诉你 Kimi 能做什么, 但很少告诉你这件功能值不值得花十分钟学。一份会员打开的入口越来越多: 聊天框、四种模式、Agent、Agent 集群、Deep Research、Kimi Code、开放平台 API。问题不再是「有没有功能」, 而是「这件活该从哪一面开始」。",
-        "这本书只解决一类判断: Kimi 的每一面对标前沿的哪一个、买哪档够用、什么活该交给它、什么时候该回 frontier。读完以后, 你应该能去做一件事, 或者放心不做一件事。",
+        "这本书只解决一类判断: Kimi 的每一面对标前沿的哪一个、买哪档够用、什么活该交给它、什么时候该回 frontier。无论你是想用它深度学习、沙盘思考、轻量构建还是职业转型, 读完以后, 你应该能去做一件事, 或者放心不做一件事。",
       ],
     },
     {

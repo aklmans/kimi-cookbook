@@ -6,13 +6,13 @@ export const meta: BookMeta = {
   titleEn: "",
   coverTitle: "从长文本到一套 agent 栈",
   subtitle:
-    "K3 旗舰（2.8 万亿参数、1M 上下文、思考永远开）与 K2.7-Code 编码专线, 撑起一套整合的 agent 栈: 四模式、做出网站幻灯文档表格的 Agent、最多 300 子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code、常驻的 Kimi Claw、五档会员, 底下是 OpenAI + Anthropic 双兼容、K2 系开源权重的 API。国内可达、中文长材料顺手。哪一面该用、买哪档够用、什么时候回 frontier。",
+    "K3 旗舰（2.8 万亿参数、1M 上下文、思考永远开）与 K2.7-Code 编码专线, 撑起一套整合的 agent 栈, 也是泛 Builder 用 AI 学习、深度思考、敏捷构建与重构业务的智能底座: 四模式、做出网站幻灯文档表格的 Agent、最多 300 子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code、常驻的 Kimi Claw、五档会员, 底下是 OpenAI + Anthropic 双兼容、K2 系开源权重的 API。国内可达、中文长材料顺手。哪一面该用、买哪档够用、什么时候回 frontier。",
   description:
-    "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。它现在给自己的定位是「为智能体编程与知识工作打造」: 一套整合的 agent 栈 —— K3 旗舰（2.8 万亿参数、1M 上下文、思考永远开）与 K2.7-Code 编码专线, 四种模式、做出成品的 Agent、最多 300 子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code、常驻的 Kimi Claw, 五档会员, 再加一套 OpenAI / Anthropic 双兼容、K2 系开源权重打底的 API。它早已不靠便宜取胜 —— K3 直接把价格定在了 frontier 那一栏; 最难的活, 官方自己也承认还差 Claude Fable 5 / GPT 5.6 Sol 半步。这本书给这套栈画张图: 每块产品干什么、对标前沿的哪一个、买哪档够用、什么活该交给它、什么时候回 frontier, 厂商自评与独立实测分开算账。截至 2026-07。",
+    "很多人对 Kimi 的印象还停在「长文本」那一年 —— 一次吃几万字、中文写得稳。那是它的旧定位。它现在给自己的定位是「为智能体编程与知识工作打造」: 一套整合的 agent 栈 —— K3 旗舰（2.8 万亿参数、1M 上下文、思考永远开）与 K2.7-Code 编码专线, 四种模式、做出成品的 Agent、最多 300 子 agent 的 Swarm、Deep Research、跑在终端的 Kimi Code、常驻的 Kimi Claw, 五档会员, 再加一套 OpenAI / Anthropic 双兼容、K2 系开源权重打底的 API。在 AI 时代, Builder 不再专属于敲代码的工程师, 每一个运用智能模型深度学习、对抗思考、组装轻量工法与重构生产力的个体, 都是 Universal Builder。这本书给这套栈与工法画张图: 每块产品干什么、对标前沿的哪一个、买哪档够用、什么活该交给它、什么时候回 frontier, 厂商自评与独立实测分开算账。截至 2026-07。",
   descriptionEn: "",
   // Card copy — short forms shown on home / library cards.
   titleShort: "Kimi",
-  lede: "别再把它当长文本工具 —— K3 旗舰思考永远开, 一套整合的 agent 栈加双兼容 API, 国内可达、中文长材料顺手; 该用的那几面替你挑出来, 什么时候回 frontier 也说清。",
+  lede: "别再把它当长文本工具 —— K3 旗舰思考永远开, 一套整合的 agent 栈加双兼容 API, 国内可达、中文长材料顺手; 覆盖学、思、造、转全场景, 该用的那几面替你挑出来, 什么时候回 frontier 也说清。",
   cover: "/books/kimi/cover.jpg",
   author: "Zhaphar",
   date: "2026-07-17",
