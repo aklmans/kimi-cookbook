@@ -22,6 +22,7 @@ export function SiteFooter({
         <a href="https://www.kimi.com/">Kimi</a>.
       </span>
       <span className="v3-footer__right">
+        <a href="/monthly">Monthly</a>
         <a href="https://x.com/ak_zhaphar">Twitter</a>
         <a href="https://github.com/aklmans/kimi-cookbook">GitHub</a>
         <a href="/feed.xml">RSS</a>

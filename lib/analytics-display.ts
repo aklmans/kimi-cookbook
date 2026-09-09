@@ -14,6 +14,7 @@ const STATIC_PAGE_LABELS: Record<StaticPageSlug, PageDisplay> = {
   about: { label: "About", path: "/about", kind: "page" },
   license: { label: "License", path: "/license", kind: "page" },
   feed: { label: "RSS Feed", path: "/feed.xml", kind: "feed" },
+  monthly: { label: "Monthly", path: "/monthly", kind: "page" },
 };
 
 function titleCase(value: string): string {

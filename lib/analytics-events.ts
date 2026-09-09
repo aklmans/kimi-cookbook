@@ -41,7 +41,13 @@ export const SIGNAL_BOOK_SLUG: Record<SignalAnalyticsEvent, string> = {
   not_found: "_404",
 };
 
-export const STATIC_PAGE_SLUGS = ["home", "about", "license", "feed"] as const;
+export const STATIC_PAGE_SLUGS = [
+  "home",
+  "about",
+  "license",
+  "feed",
+  "monthly",
+] as const;
 
 export type BookAnalyticsEvent = (typeof BOOK_ANALYTICS_EVENTS)[number];
 export type BookTotalAnalyticsEvent =

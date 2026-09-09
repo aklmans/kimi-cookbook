@@ -163,6 +163,15 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
     },
     {
       type: "page",
+      titleZh: "Builders 月刊",
+      titleEn: "Builders Monthly",
+      href: "/monthly",
+      meta: "Monthly Dispatch · Universal Builders · 进化指南",
+      shortText: "月刊 Monthly Builders 学习 思考 构建 转型 资产包 提示词 Prompt",
+      bodyText: "泛 Builder 时代：从敲代码到放大个人终极杠杆，用 AI 学习、思考、构建、转型与协同一切。",
+    },
+    {
+      type: "page",
       titleZh: "RSS 订阅",
       titleEn: "RSS Feed",
       href: "/feed.xml",

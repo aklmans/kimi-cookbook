@@ -94,6 +94,9 @@ export function SiteHeader({ backHref }: { backHref?: string }) {
               <T zh="← 目录" en="← Index" />
             </Link>
           )}
+          <Link className="v3-header__monthly" href="/monthly">
+            <T zh="月刊" en="Monthly" />
+          </Link>
           <Link className="v3-header__about" href="/about">
             <T zh="关于" en="About" />
           </Link>

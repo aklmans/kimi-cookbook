@@ -39,6 +39,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: absoluteUrl("/monthly"),
+      lastModified: lastSiteUpdate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: absoluteUrl("/license"),
       lastModified: lastSiteUpdate,
       changeFrequency: "yearly",
