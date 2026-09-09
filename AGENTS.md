@@ -456,6 +456,19 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   route accepts `poster_download` at both surfaces, and
   `shareTopChaptersSql` filters `chapter_slug != ''` so book downloads
   never pollute the chapter ranking.
+- **monthly dispatch (Round-106)**: `/monthly` — the Builders 月刊 page,
+  backed by the static manifest `lib/monthly.ts`
+  (`getLatestMonthlyIssue` reads the SORTED list, so appending an issue
+  never strands the page on an old one). The page reuses the about-page
+  skeleton (`about-library` hero, `about-section`, `about-routes`,
+  `.v3-table`). Deliberate style calls: case studies are borderless
+  hairline-separated ROWS (not boxed cards — a page of boxes reads as a
+  spreadsheet); block labels are mono kickers (no 【】 brackets);
+  prompt artifacts show a fixed-height fade-masked preview (never an
+  inner scrollbar) with the copy button as the primary action; the
+  insights grid uses explicit column counts (auto-fit orphaned the
+  third card). Registered everywhere a page belongs: search index,
+  sitemap, `STATIC_PAGE_SLUGS` + `analytics-display`, header/footer nav.
 
 ---
 

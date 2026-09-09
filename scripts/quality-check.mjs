@@ -154,6 +154,31 @@ assertIncludes(
   "<Discussion />",
   "About page should include a site-level discussion section.",
 );
+
+/* ── /monthly (Builders 月刊) ── */
+assertExists(
+  "app/monthly/page.tsx",
+  "The /monthly dispatch page must exist.",
+);
+assertExists(
+  "lib/monthly.ts",
+  "The monthly issue manifest must exist.",
+);
+assertIncludes(
+  "app/monthly/page.tsx",
+  "CopyPromptButton",
+  "The monthly page should mount the prompt copy buttons.",
+);
+assertIncludes(
+  "app/monthly/page.tsx",
+  "v3-table",
+  "The monthly audit section should reuse the v3 table.",
+);
+assertIncludes(
+  "lib/monthly.ts",
+  "getAllMonthlyIssues()[0]",
+  "The latest issue must come from the SORTED list — an issue appended to the array's end must never leave /monthly stuck on an old one.",
+);
 assertFileIncludes(
   "lib/og-text.ts",
   "\\uFFFD",

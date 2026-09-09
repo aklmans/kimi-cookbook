@@ -74,6 +74,7 @@ async function main() {
     "/books/kimi/01-intro",
     "/about",
     "/license",
+    "/monthly",
     "/internal/stats",
   ];
   for (const path of status200) {
@@ -111,6 +112,14 @@ async function main() {
   check(
     "/sitemap.xml contains /books/kimi",
     sitemap.includes("/books/kimi"),
+  );
+
+  // Monthly dispatch renders its prompt artifacts + audit
+  const monthlyHtml = await fetchText(`${BASE_URL}/monthly`);
+  check(
+    "/monthly renders prompt cards and the audit golden rule",
+    monthlyHtml.includes("monthly-prompt-card") &&
+      monthlyHtml.includes("本月核心铁律"),
   );
   check(
     "/sitemap.xml does NOT contain /books/warp",
@@ -349,6 +358,8 @@ async function main() {
     const ctx = await browser.newContext({
       viewport: { width: 1280, height: 800 },
     });
+    // The monthly prompt cards' copy button uses the Clipboard API.
+    await ctx.grantPermissions(["clipboard-write"]);
     const page = await ctx.newPage();
 
     // Helper: assert no horizontal overflow
@@ -443,6 +454,7 @@ async function main() {
 
     await assertNoOverflow("/");
     await assertNoOverflow("/books/kimi");
+    await assertNoOverflow("/monthly");
     await assertStatsInsights();
 
     // Search: open palette, type "Swarm", first result href
@@ -541,6 +553,23 @@ async function main() {
     // Restore the original theme for the rest of the suite.
     await page.click("[data-theme-toggle]");
     await page.waitForTimeout(300);
+
+    // /monthly — Builders 月刊: cards render, copy button reports success.
+    await page.goto(`${BASE_URL}/monthly`, { waitUntil: "networkidle" });
+    check(
+      "/monthly renders 4 prompt artifact cards",
+      (await page.locator(".monthly-prompt-card").count()) === 4,
+    );
+    check(
+      "/monthly renders 3 case-study rows",
+      (await page.locator(".monthly-case-card").count()) === 3,
+    );
+    await page.locator(".monthly-prompt__btn").first().click();
+    await page.waitForTimeout(300);
+    check(
+      "Prompt copy button reports success",
+      ((await page.locator(".monthly-prompt__btn").first().textContent()) ?? "").includes("已复制"),
+    );
 
     // EN returning visitor must get correctly localized UI chrome. Lang-
     // dependent aria-labels/placeholders used to hydrate-mismatch and strand
