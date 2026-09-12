@@ -3237,10 +3237,11 @@ assertIncludes(
 );
 
 /* ── OG font resilience ──
-   OG image routes fetch Google Fonts at build time. A single transient
-   network error used to fail the whole route with no retry. We now
-   retry the CSS and font-file fetches with a timeout and clean the
-   cache on failure so the next request can retry. */
+   The book/chapter OG images render from local poster subset TTFs
+   since Round-108; loadGoogleFont stays for ad-hoc routes. A single
+   transient network error used to fail the whole route with no retry,
+   so the loader retries the CSS and font-file fetches with a timeout
+   and cleans the cache on failure so the next request can retry. */
 assertIncludes(
   "lib/og-fonts.ts",
   "MAX_FONT_FETCH_ATTEMPTS",

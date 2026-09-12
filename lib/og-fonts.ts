@@ -1,9 +1,9 @@
-/* Build-time font loader for next/og ImageResponse.
-    Fetches the actual font file from Google Fonts CSS so the OG previews
-    render in v3 brand typography (Playfair italic, JetBrains Mono) instead
-    of falling back to the runtime's default Georgia / Menlo. Each
-    variant is fetched once per Node worker and cached for the rest of
-    the build. */
+/* Build-time Google font loader for next/og ImageResponse.
+    Kept for ad-hoc routes — the book/chapter OG images switched to the
+    local poster subset TTFs in Round-108 (upright TsangerJinKai), so
+    nothing in the app calls this at build time anymore. Each variant
+    is fetched once per Node worker and cached for the rest of the
+    build. */
 
 const MAX_FONT_FETCH_ATTEMPTS = 3;
 const FONT_FETCH_TIMEOUT_MS = 10_000;
