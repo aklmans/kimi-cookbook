@@ -70,7 +70,7 @@ export default function ShowcasePage() {
               </h2>
               <p className="nav-card__desc">
                 封面 + 标题 + Lede + 章节目录 + 作者的话。
-                鼠标停在任一章上, 整行左移 4px, 章节号变暖橙。
+                鼠标停在任一章上, 行首浮出品牌蓝标记线, 章节号与标题随之变蓝。
               </p>
               <span className="nav-card__route">/books/anthropic</span>
             </Link>
@@ -86,7 +86,7 @@ export default function ShowcasePage() {
               <p className="nav-card__desc">
                 完整的 v3 长文版式 —— 扉页 / 章节标号 / H3 / 正文 / 引用 /
                 代码块 / 列表 / 分隔符 / 收束 Kicker / 底部签名条。←/→ 翻章,
-                顶部 0.5px 暖橙进度条, 滚动位置自动持久化。
+                顶部 0.5px 品牌蓝进度条, 滚动位置自动持久化。
               </p>
               <span className="nav-card__route">
                 /books/anthropic/01-intro
@@ -123,7 +123,7 @@ export default function ShowcasePage() {
               <div className="note">
                 <p className="note__label">— Restraint</p>
                 <p className="note__body">
-                  暖橙 (accent) 全站只用于: 标题末尾的句号、章节标号 (— I)、
+                  品牌蓝 (accent) 全站只用于: 标题末尾的句号、章节标号 (— I)、
                   行内链接下划线、当前位置标记、hover 状态。一页内出现 1–2
                   次为佳, 永远不做大块背景。
                 </p>
@@ -251,7 +251,7 @@ export function Cover(props: CoverProps) {
           <li className="v3-list__item">
             <span className="v3-list__marker">01</span>
             <span className="v3-list__body">
-              有序列表使用 Mono 14px 暖橙数字, 32px 列宽对齐。
+              有序列表使用 Mono 14px 品牌蓝数字, 32px 列宽对齐。
             </span>
           </li>
           <li className="v3-list__item">
@@ -266,7 +266,7 @@ export function Cover(props: CoverProps) {
           <li className="v3-list__item">
             <span className="v3-list__marker">—</span>
             <span className="v3-list__body">
-              无序列表的项目符号是 em dash, 暖橙 600 字重。
+              无序列表的项目符号是 em dash, 品牌蓝 600 字重。
             </span>
           </li>
           <li className="v3-list__item">
