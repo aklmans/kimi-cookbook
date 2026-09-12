@@ -469,6 +469,22 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   insights grid uses explicit column counts (auto-fit orphaned the
   third card). Registered everywhere a page belongs: search index,
   sitemap, `STATIC_PAGE_SLUGS` + `analytics-display`, header/footer nav.
+- **Kimi-official data-viz roles (Round-108)**: the analytics dashboard
+  (`/internal/stats`, `AnalyticsDashboard.tsx`) follows the official chart
+  semantics from kimi-brand — one electric-blue focus on a neutral-gray
+  comparison baseline. Round-108 in `globals.css` defines `--dv-focus` /
+  `--dv-compare` (mixed from `--ink-3` + `--bg`, so the paper keeps its
+  warmth) / `--dv-grid`. Trend bars render history in `--dv-compare` with
+  only the latest day in blue (`.is-current`), hovering a bar raises a
+  direct value label (`.an-chart__value`), and each trend carries a quiet
+  scope note; audience ranking bars take blue on the top row only
+  (`.is-focus` — rows arrive sorted `count DESC` from `lib/db.ts`, and
+  the section note states the dedupe rule). The book/chapter OG images
+  dropped the build-time Google Fonts fetch (`loadGoogleFont`) for the
+  local poster subset TTFs — upright TsangerJinKai titles (CJK never gets
+  a synthetic italic), zero network at build. The chapter OG's small
+  book-title eyebrow is serif on purpose: the JetBrains subset has no CJK
+  glyphs.
 
 ---
 
