@@ -428,6 +428,26 @@ async function main() {
       }
 
       check("/internal/stats exposes #stats-tab-insights", tabCount > 0);
+
+      // Round-108 data-viz roles: history bars sit on the neutral
+      // baseline, only the latest day takes the focus blue, and every
+      // bar carries a hover value label (official direct-label rule).
+      const trendBars = page.locator(".an-chart__bar");
+      const trendBarCount = await trendBars.count();
+      if (trendBarCount > 0) {
+        check(
+          "/internal/stats trend marks exactly one latest bar .is-current",
+          (await page.locator(".an-chart__bar.is-current").count()) === 1,
+        );
+        check(
+          "/internal/stats trend renders one hover value label per bar",
+          (await page.locator(".an-chart__value").count()) === trendBarCount,
+        );
+        check(
+          "/internal/stats trend carries a scope note",
+          (await page.locator(".an-chart + .an-section__note").count()) > 0,
+        );
+      }
       await insightsTab.click();
       const insightsPanel = page.locator("#stats-panel-insights");
       const panelVisible = await insightsPanel
@@ -450,6 +470,13 @@ async function main() {
         "Insights panel contains audience",
         normalizedPanelText.includes("audience"),
       );
+      const audienceRowCount = await page.locator(".an-audience__row").count();
+      if (audienceRowCount > 0) {
+        check(
+          "/internal/stats audience highlights the top row per group",
+          (await page.locator(".an-audience__row.is-focus").count()) >= 1,
+        );
+      }
     }
 
     await assertNoOverflow("/");

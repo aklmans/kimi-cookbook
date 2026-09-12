@@ -914,7 +914,12 @@ function AudienceSection({
 }) {
   return (
     <section className="an-section">
-      <h3 className="an-section__title">Audience</h3>
+      <div className="an-section__heading">
+        <h3 className="an-section__title">Audience</h3>
+        <p className="an-section__note">
+          Top 10 per group · deduped per visitor/session · top row highlighted
+        </p>
+      </div>
       <div className="an-audience">
         <AudienceBreakdown
           title="Visitor Kind"
@@ -974,8 +979,11 @@ function AudienceBreakdown({
       <h4 className="an-audience__title">{title}</h4>
       {rows.length > 0 ? (
         <ol className="an-audience__list">
-          {rows.map((row) => (
-            <li className="an-audience__row" key={`${title}-${row.label}`}>
+          {rows.map((row, index) => (
+            <li
+              className={`an-audience__row${index === 0 ? " is-focus" : ""}`}
+              key={`${title}-${row.label}`}
+            >
               <span className="an-audience__label">{row.label}</span>
               <span className="an-audience__bar" aria-hidden="true">
                 <span
@@ -1033,25 +1041,35 @@ function TrendSection({
   empty: string;
 }) {
   const maxDaily = rows.reduce((m, r) => Math.max(m, r.count), 0);
+  const latestDay = rows.length > 0 ? rows[rows.length - 1].day : null;
   return (
     <section className="an-section">
       <h3 className="an-section__title">{title}</h3>
       {rows.length > 0 ? (
-        <div className="an-chart">
-          {rows.map((row) => {
-            const pct = maxDaily > 0 ? (row.count / maxDaily) * 100 : 0;
-            return (
-              <div className="an-chart__bar-wrap" key={row.day}>
-                <div
-                  className="an-chart__bar"
-                  style={{ height: `${pct}%` }}
-                  title={`${row.day}: ${row.count}`}
-                />
-                <span className="an-chart__label">{row.day.slice(5)}</span>
-              </div>
-            );
-          })}
-        </div>
+        <>
+          <div className="an-chart">
+            {rows.map((row) => {
+              const pct = maxDaily > 0 ? (row.count / maxDaily) * 100 : 0;
+              return (
+                <div className="an-chart__bar-wrap" key={row.day}>
+                  <div
+                    className={`an-chart__bar${
+                      row.day === latestDay ? " is-current" : ""
+                    }`}
+                    style={{ height: `${pct}%` }}
+                    title={`${row.day}: ${row.count}`}
+                  >
+                    <span className="an-chart__value">{row.count}</span>
+                  </div>
+                  <span className="an-chart__label">{row.day.slice(5)}</span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="an-section__note">
+            {`Daily · last ${rows.length} days · hover a bar for its exact count`}
+          </p>
+        </>
       ) : (
         <p className="an-empty">{empty}</p>
       )}

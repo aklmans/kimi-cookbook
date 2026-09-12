@@ -11337,3 +11337,69 @@ html {
   margin: 0;
 }
 
+
+/* ============================================================
+   Round-108 · Data-viz roles — Kimi official semantics on the
+   analytics dashboard. The brand manual (kimi-brand) gives a
+   chart exactly one electric-blue focus and a neutral-gray
+   comparison baseline (official #C3C3C3; here mixed from
+   --ink-3 + --bg so it keeps the paper's warmth), with grid
+   lines weaker than the data. Trend bars read history-as-
+   baseline (gray) with the latest day as the single blue
+   "current value"; hovering a bar raises a direct value label
+   so the axis stays clean. Audience rows arrive sorted
+   (count DESC, lib/db.ts), so only the first row — the top
+   item — takes the focus blue, per the official ranking rule
+   焦点蓝、其余灰.
+   ============================================================ */
+:root {
+  --dv-focus: var(--accent);
+  --dv-compare: color-mix(in srgb, var(--ink-3) 30%, var(--bg));
+  --dv-grid: var(--border);
+}
+
+.an-chart {
+  padding-top: 18px; /* headroom for hover value labels */
+  border-bottom: 0.5px solid var(--dv-grid);
+}
+
+.an-chart__bar {
+  position: relative; /* anchor for the hover value label */
+  background: var(--dv-compare);
+}
+
+.an-chart__bar.is-current {
+  background: var(--dv-focus);
+}
+
+.an-chart__value {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.an-chart__bar:hover .an-chart__value,
+.an-chart__bar:focus-visible .an-chart__value {
+  opacity: 1;
+}
+
+.an-chart + .an-section__note {
+  margin-top: 8px;
+}
+
+.an-audience__bar span {
+  background: var(--dv-compare);
+}
+
+.an-audience__row.is-focus .an-audience__bar span {
+  background: var(--dv-focus);
+}
