@@ -1,0 +1,1120 @@
+/* ============================================================
+   Round-81 · Book detail hero colophon.
+   The hero's facts + actions sit under a hairline as an editorial colophon
+   (章节 / 时长 / 更新 / 作者), mirroring the About page's label/value block.
+   Round-82 makes the whole hero a single title-page column; these rules
+   style the colophon that lives inside it.
+   ============================================================ */
+@media screen {
+  .book-detail__lede {
+    margin-bottom: 0;
+  }
+  .book-detail__foot {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 0.5px solid var(--border);
+  }
+  .book-detail__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 26px 40px;
+    margin: 0 0 32px 0;
+  }
+  .book-detail__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .book-detail__stat dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .book-detail__stat dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+}
+
+/* ============================================================
+   Round-82 · Book detail hero → single title-page column.
+   The hero is one reading-width column (aligned with the TOC below):
+   an icon brand mark,
+   then the text once (kicker → title → lede), a hairline, the colophon,
+   and the actions. No separate cover panel — the full cover artwork still
+   lives on library / home thumbnails, where the cover is the label.
+   ============================================================ */
+@media screen {
+  .book-detail {
+    display: block;
+    max-width: var(--content-w);
+  }
+  /* The brand mark is the combined logo — icon + wordmark (e.g.
+     "A\ ANTHROPIC") — the same lockup the library thumbnails use, rendered
+     flat. No framed tile (it clashed with the editorial language). The
+     wordmark carries the brand name, so the title can drop the redundant
+     product prefix. --cover-logo-color (the book's accent) tints the icon;
+     the wordmark uses --ink. */
+  .book-detail__mark {
+    --cover-mark-display: none;
+    --cover-combine-display: flex;
+    --cover-combine-icon-size: 42px;
+    --cover-combine-text-size: 23px;
+    --cover-combine-gap: 13px;
+    /* Warp's symbol is sized off --cover-logo-size (not the lobehub
+       --cover-combine-icon-size), so without this its width collapses to
+       calc(unset * 3.42) → auto → 0 and the mark disappears. Match the
+       combine icon size so the cropped symbol lands at the same ~42px. */
+    --cover-logo-size: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 0 34px;
+  }
+  .book-detail__mark .book-cover-logo {
+    width: auto;
+    height: auto;
+  }
+  /* Let the title use more of the column (so it doesn't cluster in a thin
+     block on the left) and keep CJK words intact so it never splits
+     mid-word — it was breaking "电脑" across lines as 电 / 脑. */
+  .book-detail__title {
+    max-width: 26ch;
+    word-break: keep-all;
+  }
+  :root[data-lang="en"] .book-detail__title {
+    max-width: 30ch;
+  }
+  .book-detail__lede {
+    max-width: 36em;
+  }
+  /* The colophon hairline aligns with the lede measure rather than
+     spanning the full reading column. */
+  .book-detail__foot {
+    max-width: 36em;
+  }
+}
+
+/* Phones: center the hero (desktop stays left-aligned to match the TOC
+   below), and stack the actions one per row — a full-width primary CTA with
+   the secondary links centered under it. */
+@media screen and (max-width: 640px) {
+  .book-detail {
+    text-align: center;
+  }
+  .book-detail__mark {
+    justify-content: center;
+  }
+  .book-detail__stats {
+    justify-content: center;
+  }
+  .book-detail__stat {
+    align-items: center;
+  }
+  .book-detail__actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .book-detail__btn--primary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   Round-83 · Flowing-gradient cover art + two-column detail hero.
+   <CoverVisual> is a pure-SVG "terminal" card themed entirely by CSS custom
+   properties: the defaults derive from --cover-accent via color-mix, and a
+   brand overrides any --cv-* var inline (Warp ships an explicit blue→teal→cyan
+   palette — see lib/cover-visual.ts). The book-detail hero goes back to two
+   columns — text left, cover card right (reverses Round-82's single column).
+   Thumbnails keep the flat cover-art (the wave art is too busy at 124px).
+   ============================================================ */
+.cover-visual {
+  --cv-bg: color-mix(in oklab, var(--cover-accent) 20%, #0A1622);
+  --cv-1: color-mix(in oklab, var(--cover-accent) 82%, #08131F);
+  --cv-2: var(--cover-accent);
+  --cv-3: color-mix(in oklab, var(--cover-accent) 55%, #EAFDF7);
+  --cv-4: color-mix(in oklab, var(--cover-accent) 30%, #FFFFFF);
+  --cv-hi: color-mix(in oklab, var(--cover-accent) 14%, #FFFFFF);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.cover-visual__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.cover-visual__motif {
+  position: absolute;
+  top: 6%;
+  left: 8%;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #eaf6ff;
+}
+
+@media screen {
+  /* Two-column hero: text left, cover card right. The card column shrinks in
+     place via clamp (never reflows above/below), so small screens just get a
+     proportionally smaller card. */
+  .book-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(110px, 25vw, 264px);
+    gap: clamp(18px, 2.4vw, 30px);
+    align-items: start;
+    max-width: var(--content-w);
+  }
+  /* The card is first in the DOM (for the mobile float); pin the columns so
+     desktop still reads text-left, card-right regardless of source order. */
+  .book-detail__main {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+  .book-detail__aside {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  /* The 2-column split narrows the text column, and EN button labels are
+     wider than zh. The old 0.25em tracking + 28px gap fit a full-width hero
+     but overflowed here (EN wrapped to a 2nd line). Tighten both so all three
+     actions sit on one line in both languages, consistent with each other. */
+  .book-detail__actions {
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .book-detail__btn {
+    letter-spacing: 0.1em;
+  }
+  /* Cover card = a flat, hard-edged panel (matches the editorial language:
+     hairline + whitespace, not radius + shadow) — a light strip with just the
+     brand logo, over the flowing-gradient art. No overlaid text. */
+  /* The card is a theme-stable "book cover" object — a light strip + dark art
+     that does NOT invert in dark mode (like a physical jacket on a dark shelf).
+     So the strip stays light and the brand wordmark is pinned to a stable dark
+     ink; otherwise --cover-combine-text-color (--ink) would go white on the
+     light strip in dark mode and vanish. */
+  .cover-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fcfbf9;
+    border: 0.5px solid var(--border);
+  }
+  .cover-card__brand {
+    --cover-mark-display: none;
+    --cover-combine-display: flex;
+    --cover-combine-icon-size: 26px;
+    --cover-combine-text-size: 14px;
+    --cover-combine-gap: 8px;
+    --cover-logo-size: 26px;
+    --cover-combine-text-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    padding: 15px 17px;
+    border-bottom: 0.5px solid #ece9e3;
+  }
+  /* Brands whose mark colour follows --ink (cursor / hermes / zhipu) would go
+     white on the light strip in dark mode — pin them dark. Accent-coloured and
+     tile-backed (Kimi) marks already show fine on the light strip. */
+  .cover-card__brand .book-cover-logo--cursor,
+  .cover-card__brand .book-cover-logo--hermes,
+  .cover-card__brand .book-cover-logo--zhipu-glm {
+    --cover-logo-color: #1a1a1a;
+  }
+  .cover-card__brand .book-cover-logo {
+    width: auto;
+    height: auto;
+  }
+  .cover-card__art {
+    position: relative;
+    aspect-ratio: 3 / 3.9;
+  }
+  /* Fixed stat + button sizes so the colophon and the action row keep the
+     same width/height in zh and en (sized to the wider English labels), and
+     don't shift when the language toggles. */
+  .book-detail__stat {
+    width: 92px;
+  }
+  .book-detail__btn--primary {
+    min-width: 176px;
+    text-align: center;
+  }
+  /* Secondary actions are bordered boxes on every screen (clearer than bare
+     underlined links, and consistent with the mobile layout). Fixed equal
+     width so they match each other and stay identical in zh / en. */
+  .book-detail__actions .book-detail__btn:not(.book-detail__btn--primary) {
+    width: 132px;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    border: 0.5px solid var(--border);
+    text-decoration: none;
+  }
+  .book-detail__actions .book-detail__btn:not(.book-detail__btn--primary):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+/* Phones: the card floats top-right and the title wraps to its left; the lede,
+   colophon, and actions clear to full width below it (matches the mobile
+   reference). Not a rigid 2-column grid — that clipped the title. Undo
+   Round-82's single-column centering too. */
+@media screen and (max-width: 640px) {
+  .book-detail {
+    display: block;
+    text-align: left;
+  }
+  .book-detail__aside {
+    float: right;
+    width: 38%;
+    max-width: 168px;
+    margin: 0 0 16px 18px;
+  }
+  /* Smaller title on phones, and allow the CJK title to wrap (Round-82's
+     word-break:keep-all otherwise forces it to a single unbreakable line that
+     can't fit beside the card and drops below it). Large and small screens
+     don't need the same title size. Must also target the `data-lang="en"`
+     selector: the ≤760px block sets `:root[data-lang="en"] .book-detail__title`
+     (specificity 0,2,0), which would otherwise beat a plain `.book-detail__title`
+     (0,1,0) and leave the EN title at the larger clamp size — most visible on
+     zh-only books, where the same title renders bigger in EN mode. */
+  .book-detail__title,
+  :root[data-lang="en"] .book-detail__title {
+    font-size: 30px;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+  /* Lede clears the card so it's full width below it (even lines) instead of
+     wrapping raggedly beside the card — keeps title + lede tidy against the
+     card. A short accent rule bridges the title and the lede. */
+  .book-detail__lede {
+    clear: right;
+  }
+  .book-detail__lede::before {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 2px;
+    margin: 0 0 20px;
+    background: var(--accent);
+  }
+  .book-detail__mark,
+  .book-detail__stats {
+    justify-content: flex-start;
+  }
+  .book-detail__stats {
+    column-gap: 22px;
+  }
+  .book-detail__stat {
+    align-items: flex-start;
+  }
+  /* Colophon + actions clear the floated card and go full width. */
+  .book-detail__foot {
+    clear: right;
+  }
+  .book-detail__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .book-detail__btn--primary {
+    width: 100%;
+    min-width: 0;
+  }
+  /* The two secondary actions become equal-width bordered boxes that fill the
+     row, aligned with the full-width primary above (clearer than bare links). */
+  .book-detail__actions .book-detail__btn:not(.book-detail__btn--primary) {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 12px;
+    border: 0.5px solid var(--border);
+    text-decoration: none;
+  }
+}
+
+/* Desktop: the card fills the hero height so its bottom lines up with the left
+   column's actions — no dead space beside the buttons. The art grows to fill
+   whatever height the text column sets; on phones the card keeps its fixed
+   aspect (above) so it doesn't stretch to the tall stacked column. */
+@media screen and (min-width: 641px) {
+  .book-detail {
+    align-items: stretch;
+  }
+  .cover-card {
+    height: 100%;
+  }
+  .cover-card__art {
+    flex: 1 1 auto;
+    aspect-ratio: auto;
+    min-height: 320px;
+  }
+}
+
+/* ============================================================
+   Round-84 · PDF content readability (print-only). Two P0 fixes:
+   1 · Code blocks — at 14px/1.85 barely ~55 chars fit the A4 column, so every
+       non-trivial line wrapped, and (`:root .v3-codeblock__pre` is pre-wrap with
+       no hanging indent) the continuation fell to column 0 — destroying the
+       indentation. Shrink the print font so ~100+ chars fit (most lines stop
+       wrapping), hanging-indent each source line so unavoidable wraps sit
+       indented under the line, and lift the desaturated editorial token colours
+       so keyword / string / function separate on paper (web is untouched).
+   2 · Section eyebrow — the `.v3-section__number` ("— I / II") has a 56px bottom
+       margin, so on paper the tiny numeral floats orphaned above a big gap
+       before its title. Pull it tight so it reads as one unit with the title.
+   ============================================================ */
+@media print {
+  .v3-codeblock__pre {
+    font-size: 8.8pt;
+    line-height: 1.5;
+  }
+  /* Each source line is a display:block [data-line] span; padding-left +
+     negative text-indent = hanging indent (first line at col 0, wrapped
+     continuation indented ~2.5ch). */
+  .v3-codeblock__pre code[data-language] > [data-line] {
+    display: block;
+    padding-left: 2.5ch;
+    text-indent: -2.5ch;
+  }
+  /* Token colours come from inline --shiki-light (no per-type class to target),
+     so lift them together — the editorial theme is too desaturated to separate
+     tokens at print size. */
+  .v3-codeblock__pre code[data-language] {
+    filter: saturate(1.6);
+  }
+
+  .v3-section__number {
+    margin-bottom: 5mm !important;
+    font-size: 9pt;
+  }
+}
+
+/* ============================================================
+   Round-85 · PromptBox wraps in the print book. On the /print route the
+   verbatim `.v3-promptbox__text` resolves to `white-space: pre`, so a long
+   `<T en="…">` example line (one unbroken line, no author newline) runs
+   1300px+ wide and overflows the A4 column — both in the exported PDF and in
+   the /print screen preview (the smoke overflow guard caught it). Force
+   pre-wrap on the print route only: it keeps the template's own line breaks but
+   wraps the overlong ones. `.print-book …` (0,2,0) outranks the plain
+   `.v3-promptbox__text` (0,1,0); the child `span[data-i18n-lang]` is targeted
+   too so the fix holds whether white-space is inherited or set on the span.
+   Web chapter pages keep their existing behavior. Print-only: shrink to near
+   the code-block size so a wrapped template stays compact on paper.
+   ============================================================ */
+.print-book .v3-promptbox__text,
+.print-book .v3-promptbox__text > span[data-i18n-lang] {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media print {
+  .v3-promptbox__text {
+    font-size: 9pt;
+    line-height: 1.55;
+  }
+}
+
+/* ============================================================
+   Round-86 · PDF content polish (print-only, P1). Two reading-experience fixes
+   seen in the exported book:
+   1 · References — every reference row floats a ↩ "back to citation" link at its
+       right edge. Live on screen (Chromium makes it a GoTo annotation) but on
+       paper it's just noise beside a formal reference list. Hide it, and collapse
+       the item grid from `28px 1fr 24px` to `28px 1fr` so the reference body
+       reclaims the vacated 24px track instead of leaving a ragged right gutter.
+   2 · Divider — the verbatim print rule gives ". . ." a 24mm top+bottom margin,
+       ~48mm between sections (a sixth of an A4 page), which reads as a half-blank
+       page. Tighten to 14mm — still a clear section breath, ~20mm reclaimed per
+       divider. Needs !important to match the verbatim rule's !important.
+   Chapter intro/body hierarchy and the closing manifesto were reviewed in the
+   PDF and left as-is — they already read correctly.
+   ============================================================ */
+@media print {
+  .v3-refs__back {
+    display: none;
+  }
+  .v3-refs__item {
+    grid-template-columns: 28px 1fr;
+  }
+  .v3-divider {
+    margin: 14mm 0 !important;
+  }
+}
+
+/* ============================================================
+   Round-87 · PDF content polish (print-only, P2). Three requested refinements:
+   1 · Tables — a touch more room to breathe on paper (12x16 -> 16x20 cells).
+   2 · Code colour — the editorial Shiki tokens carry real but muted hues that
+       collapse toward monochrome at 8.8pt. P0 (Round-84) lifted them with
+       saturate(1.6); push a bit further so keyword / string / function separate
+       more clearly on paper. Supersedes Round-84's filter (last rule wins). One
+       global filter is the only lever — Shiki tokens have no per-type class.
+   3 · Accent restraint — the Kimi blue (Round-100) stays the structural signature
+       (title stops `.stop`, chapter/section eyebrows `.v3-section__number` — left
+       untouched), but the purely-decorative uses go to ink: the divider dots and
+       the TOC / reference numbers. The divider needs !important to beat the
+       verbatim print rule's `color: #C95F3D !important`; the two number styles
+       only override their base `var(--accent)`, so no !important needed.
+   ============================================================ */
+@media print {
+  /* 1 · Tables */
+  .v3-table th,
+  .v3-table td {
+    padding: 16px 20px;
+  }
+  .v3-table thead th {
+    padding-bottom: 16px;
+  }
+  .v3-table .num,
+  .v3-table th.num {
+    padding-right: 20px;
+  }
+
+  /* 2 · Code colour — stronger than Round-84's saturate(1.6) */
+  .v3-codeblock__pre code[data-language] {
+    filter: saturate(2.1) contrast(1.06);
+  }
+
+  /* 3 · Accent restraint — decorative orange -> ink */
+  .v3-divider {
+    color: var(--ink) !important;
+  }
+  .print-toc__num,
+  .v3-refs__num {
+    color: var(--ink);
+  }
+}
+
+/* ============================================================
+   Round-88 · Kicker sig — every chapter closes with a <Kicker> manifesto whose
+   sig reads "Kimi x Zhaphar". In the concatenated PDF that repeats the brand at
+   the foot of every chapter; the back-cover (Round-89) already carries it. Hide
+   the sig in print only (the web keeps it — each chapter is its own page there).
+   The manifesto text itself stays.
+   ============================================================ */
+@media print {
+  .v3-kicker__sig {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Round-89 · Print back-cover (bookPrintBackCover) — the book's closing
+   colophon page. A structured "back matter" composition (no cover art): a
+   centred brand mark → title + subtitle → rule → [QR | author bio] row → a
+   tinted notice box → an icon link row → a 4-up stat strip → rule → © +
+   disclaimer. On its own footer-less page (Round-90). Screen preview is rough;
+   the PDF is the deliverable.
+   ============================================================ */
+.print-backcover {
+  max-width: 150mm;
+  margin: 0 auto;
+  padding: 20mm var(--reading-px) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8mm;
+  text-align: center;
+  page: backcover;
+  page-break-before: always;
+  break-before: page;
+}
+
+/* Brand mark — combined icon + wordmark, centred on white (mirrors the front
+   jacket's standalone mark, sized down). */
+.print-backcover__mark {
+  --cover-mark-display: none;
+  --cover-combine-display: flex;
+  --cover-combine-icon-size: 9mm;
+  --cover-combine-text-size: 13pt;
+  --cover-combine-gap: 2.5mm;
+  --cover-logo-size: 9mm;
+  --cover-combine-text-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.print-backcover__mark .book-cover-logo--cursor,
+.print-backcover__mark .book-cover-logo--hermes,
+.print-backcover__mark .book-cover-logo--zhipu-glm {
+  --cover-logo-color: #1a1a1a;
+}
+
+.print-backcover__head {
+  display: flex;
+  flex-direction: column;
+  gap: 5mm;
+  align-items: center;
+  margin-top: -2mm;
+}
+.print-backcover__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.print-backcover__subtitle {
+  margin: 0;
+  max-width: 62ch;
+  font-family: var(--text);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.print-backcover__rule {
+  width: 100%;
+  height: 0;
+  border-top: 0.5px solid var(--border);
+}
+
+/* QR + author bio — two columns, left-aligned within. */
+.print-backcover__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 10mm;
+  width: 100%;
+  text-align: left;
+}
+.print-backcover__qr {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2mm;
+  padding: 3mm;
+  background: #ffffff;
+  border: 0.5px solid var(--border);
+}
+.print-backcover__qr-img {
+  width: 26mm;
+  height: 26mm;
+}
+.print-backcover__qr-img svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.print-backcover__qr-cap {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.print-backcover__bio {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+}
+.print-backcover__author {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.print-backcover__author-sep {
+  color: var(--ink-3);
+}
+.print-backcover__author-name {
+  color: var(--accent);
+}
+.print-backcover__biotext {
+  margin: 0;
+  font-family: var(--text);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* Notice — a quiet tinted box with an info glyph. */
+.print-backcover__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 3mm;
+  width: 100%;
+  padding: 4mm 5mm;
+  text-align: left;
+  background: color-mix(in srgb, var(--ink) 4%, #ffffff);
+  border: 0.5px solid var(--border);
+}
+.print-backcover__notice-ico {
+  flex: none;
+  width: 4.5mm;
+  height: 4.5mm;
+  margin-top: 0.3mm;
+  color: var(--accent);
+}
+.print-backcover__notice-ico svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.print-backcover__notice-text {
+  margin: 0;
+  font-family: var(--text);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* Links — icon + URL, dot-separated, centred row. */
+.print-backcover__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+}
+.print-backcover__link-item {
+  display: inline-flex;
+  align-items: center;
+}
+.print-backcover__link-sep {
+  margin: 0 3.5mm;
+  color: var(--ink-3);
+}
+.print-backcover__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+  text-underline-offset: 2px;
+}
+.print-backcover__link-ico {
+  flex: none;
+  width: 3.6mm;
+  height: 3.6mm;
+  color: var(--ink-3);
+}
+.print-backcover__link-ico svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Stat strip — 4 columns, label over value. */
+.print-backcover__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6mm;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+.print-backcover__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+}
+.print-backcover__stat dt {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.print-backcover__stat dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.print-backcover__legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3mm;
+}
+.print-backcover__copy {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.print-backcover__disclaimer {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--text);
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   Round-90 · Back-cover is a footer-less page. The verbatim @page :left/:right
+   print the "N / M" page number + "KIMI" (Round-99) in the bottom margin
+   boxes; the
+   closing colophon reads cleaner without them (and the user asked to drop the
+   page number there). A named page zeroes those margin boxes; the section opts
+   in via `page: backcover` (Round-89). The :left/:right variants are declared
+   too so the named page wins whichever side it lands on. @page :first already
+   does the same for the front cover.
+   ============================================================ */
+@page backcover {
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+@page backcover:left {
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+@page backcover:right {
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+/* ============================================================
+   Round-91 · Chapter index is click-to-open, not hover. The hover popover
+   (globals.css:1734 + Round-79) dropped the moment the pointer left the narrow
+   "NN / MM" trigger to cross the gap into the panel — so a chapter could never
+   actually be clicked. ChapterIndexMenu now toggles `.is-open` on click (pinned
+   until you pick a chapter, click away, or press Escape). Show the panel on
+   `.is-open`, and neutralize the verbatim hover / focus-within auto-open so the
+   JS state is the single source of truth. (Mobile keeps globals.css:8792
+   `display:none`; there the trigger just follows its link to the book page.)
+   ============================================================ */
+@media screen {
+  /* Hover / focus never auto-open (that was the flaky part). The panel is
+     shown only by the JS `.is-open` toggle. !important + source order keep
+     `.is-open` winning even when it and :focus-within both match after a click. */
+  .ch-nav__index-wrap:hover .ch-toc,
+  .ch-nav__index-wrap:focus-within .ch-toc {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(4px) !important;
+  }
+  .ch-nav__index-wrap.is-open .ch-toc {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 0s !important;
+  }
+
+  /* Trigger reads as a menu: a small chevron that flips when the panel opens. */
+  .ch-nav__index-caret {
+    display: inline-block;
+    margin-left: 0.5ch;
+    width: 0;
+    height: 0;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+    border-top: 4px solid currentColor;
+    opacity: 0.5;
+    vertical-align: middle;
+    transition: transform 160ms ease, opacity 160ms ease;
+  }
+  .ch-nav__index-wrap.is-open .ch-nav__index-caret {
+    transform: rotate(180deg);
+    opacity: 0.85;
+  }
+}
+
+/* ============================================================
+   Round-92 · Chapter-outline density — most H2 titles are ~12 CJK chars but the
+   panel fit only ~9, so they wrapped. The panel can't just widen: at 1280px (its
+   min width) the right margin is already full. So widen a hair toward the
+   viewport edge (196→206, floor 18→8 — all toward the edge, still clear of the
+   text column) and mainly tighten the type + insets: items 14→13px, slimmer link
+   + panel padding. Nets ~12 chars/line. Corridor width tracks the var, so its
+   guard is unaffected.
+   ============================================================ */
+@media screen {
+  .chapter-outline-shell {
+    --chapter-outline-width: 206px;
+    --chapter-outline-right: max(8px, calc((100vw - var(--content-w)) / 2 - 250px));
+  }
+  .chapter-outline__link {
+    font-size: 13px;
+    padding: 7px 5px 7px 8px;
+  }
+  .chapter-outline__item--level-3 .chapter-outline__link {
+    font-size: 12px;
+  }
+  body:not(.is-outline-hidden) .chapter-outline.chapter-outline {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* ============================================================
+   Round-93 · Search modal — sync to Zhaphar/website's overlay
+   ------------------------------------------------------------
+   The verbatim v3 search modal (~L1539) is close; this nudges it to
+   match the newer Zhaphar search overlay: a serif query field with a
+   larger italic-serif placeholder, a bigger search glyph, a
+   regular-sentence empty hint (was mono / uppercase), quieter group
+   dividers, and a 4-up space-between footer. The result-row
+   hover / active treatment (accent rail + title recolour) is
+   deliberately left untouched — it reads better than Zhaphar's and
+   the design owner asked to keep it.
+   ============================================================ */
+.v3-search__card {
+  overflow: hidden;
+  max-height: min(720px, 82vh);
+}
+@media (max-width: 600px) {
+  .v3-search__card { max-height: calc(100vh - 80px); }
+}
+
+/* Larger search glyph (Zhaphar renders it at 25px). */
+.v3-search__icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+/* Serif query field + a larger italic-serif placeholder. */
+.v3-search__input {
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.2;
+}
+.v3-search__input::placeholder {
+  font-size: 20px;
+}
+
+.v3-search__esc {
+  min-height: 28px;
+  letter-spacing: 0.12em;
+}
+
+.v3-search__results {
+  max-height: 54vh;
+  padding: 10px 0;
+}
+
+.v3-search__group-label {
+  letter-spacing: 0.18em;
+  margin: 12px 20px 4px;
+}
+.v3-search__group + .v3-search__group {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 0.5px solid var(--border);
+}
+
+.v3-search__item {
+  padding: 14px 22px;
+}
+
+/* Empty-state hint reads as a normal sentence, not a mono/caps label.
+   The title stays italic-serif via its <em>. */
+.v3-search__empty-sub {
+  font-family: var(--text);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+/* Footer: four evenly-spread hint groups. */
+.v3-search__foot {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Round-94 · fde thumbnail workmark
+   ══════════════════════════════════════════════════════════════════ */
+
+/* "FDE" (3 chars) is the shortest workmark in the library — shorter
+   even than study-work's "STUDY". At the default 14pt the combined
+   block only reaches ~78px, well under the ~100–115px the thumbnail
+   container expects, so the mark floats in obvious whitespace. Bump
+   the wordmark so the block lands in the same range as the other
+   typographic books. */
+.book-row__cover .book-cover-logo--fde,
+.lib-row__cover .book-cover-logo--fde,
+.next-book__cover .book-cover-logo--fde {
+  --cover-combine-text-size: 26px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Round-95 · Printed TOC fits on one page
+   ══════════════════════════════════════════════════════════════════ */
+
+/* The printed 目录 broke after row 15, stranding the last chapter alone
+   on its own page. Measured under Chromium print emulation: an A4 page
+   minus the @page margins (22mm + 24mm) leaves 251mm ≈ 948.7px of content,
+   while the title block cost 88.3px and each row 57.4px — capacity 15.
+   opencode (17 chapters), fde (16), and primer (16) all overflowed, and
+   build-agent (15) fit with only 14px to spare.
+
+   Tighten the row padding and the title gap so ~20 rows fit, which clears
+   the longest book by 3 rows — enough slack for a title that wraps to two
+   lines. scripts/quality-check.mjs asserts no non-draft book exceeds that
+   capacity, so a future 21-chapter book fails the gate instead of silently
+   orphaning a row.
+
+   Row padding lives on `.print-toc__link` (not the `<li>`) because the link
+   box is what Chromium turns into the clickable PDF destination — shrinking
+   it here keeps the whole row the hit target. */
+@media print {
+  .print-toc__title {
+    margin-bottom: 36px;
+  }
+  .print-toc__link {
+    padding: 9px 0;
+  }
+  /* A row must never split across a page boundary. */
+  .print-toc__item,
+  .print-toc__link {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Round-96 · claude-code thumbnail logo sizing
+   ══════════════════════════════════════════════════════════════════ */
+
+/* claude-code uses its own lobehub brand (BookCoverLogo claude-code branch):
+   the terracotta Claude Code logogram (Color variant, #D97757 — matching the
+   book's accent) + a "Claude Code" wordmark. Keep the per-brand thumbnail
+   shrink so the icon + wordmark block fits the ~124px thumbnail container. */
+.book-row__cover .book-cover-logo--claude-code,
+.lib-row__cover .book-cover-logo--claude-code,
+.next-book__cover .book-cover-logo--claude-code {
+  --cover-combine-icon-size: 28px;
+  --cover-combine-text-size: 10px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Round-97 · codex cover logo (dedicated Codex brand — blue mark + wordmark)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* codex uses its own lobehub brand (BookCoverLogo codex branch): the blue
+   Codex logogram (Color variant, keeps its #3941FF blue via style={undefined})
+   + a "Codex" wordmark. The blue mark needs no color override; only the
+   monochrome wordmark takes the theme ink. The "Codex" wordmark fits the
+   ~124px thumbnail at the default combine sizes, so no per-brand shrink. */
+.book-cover-logo--codex {
+  --cover-combine-text-color: var(--ink);
+}
+
+/* On the theme-stable light cover-card strip (web hero + print jacket) and
+   the print back-cover mark, pin the WORDMARK dark so a var(--ink) wordmark
+   doesn't go white-on-light in dark mode. The blue mark keeps its own color,
+   so only the wordmark needs pinning. */
+.cover-card__brand .book-cover-logo--codex,
+.print-backcover__mark .book-cover-logo--codex {
+  --cover-combine-text-color: #1a1a1a;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Round-98 · Metric-matched Tsanger fallback face
+   ══════════════════════════════════════════════════════════════════ */
+
+/* layout.tsx moved Tsanger from display:optional to display:swap + preload
+   so a cold first view still ends up in 仓耳今楷 — `optional` never applies
+   the font once it misses its ~100ms first-paint race, which locked every
+   uncached visit into the system serif until a refresh. `swap` alone would
+   reflow on upgrade: the system CJK serifs run taller vertical metrics than
+   Tsanger (Songti SC hhea 1060/−340 vs Tsanger 984/−269, both UPM 1000).
+   This face pins whichever local CJK serif the reader has to Tsanger's
+   metrics, so pre-swap and post-swap line boxes match wherever line-height
+   is `normal` (fixed line-heights, like the 1.78 body, never moved
+   vertically anyway). Hanzi advances already agree — 1em full-width in both
+   — so on swap, line breaking only moves at Tsanger's proportional CJK
+   punctuation (。 is 0.68em); that residual measures ≈0.01 CLS. The face is
+   first in the localFont `fallback` list (layout.tsx), so it is only ever
+   rendered during the download window or if the woff2 fails; if none of the
+   local() sources exist the face fails silently and the stack falls through
+   to the raw families after it. font-weight 100 900 keeps W05 (500) text on
+   this same face instead of skipping past it. */
+@font-face {
+  font-family: "TsangerJinKai02 Fallback";
+  src:
+    local("Noto Serif SC"),
+    local("Source Han Serif SC"),
+    local("Songti SC"),
+    local("STSong"),
+    local("SimSun");
+  font-weight: 100 900;
+  ascent-override: 98.4%; /* Tsanger hhea ascender  984 / UPM 1000 */
+  descent-override: 26.9%; /* Tsanger hhea descender −269 / UPM 1000 */
+  line-gap-override: 0%; /* Tsanger hhea lineGap 0 */
+}
+
+
+/* ============================================================
+   Round-99 · Single-book Kimi rebrand — PDF page footer stamp.
+   The verbatim v3 block owns @page :left/:right and prints "AKLMAN"
+   in the @bottom-right margin box of every page. kimi-cookbook is a
+   single-book Kimi site, so the stamp becomes "KIMI". Same-specificity
+   later rule wins `content`; the mono 9pt ink-3 styling carries over
+   from the verbatim rule untouched.
+   ============================================================ */
+@media print {
+  @page :left  { @bottom-right { content: "KIMI"; } }
+  @page :right { @bottom-right { content: "KIMI"; } }
+}
+
+/* ============================================================
+   Round-100 · Kimi blue accent — this is now a single-book Kimi site,
+   so the editorial accent leaves the old library terracotta (#C95F3D)
+   for the Kimi brand blue already carried by the cover's orbit
+   satellite (#1783FF): one blue across cover, chrome, and print.
+   The warm paper bg and the rest of the language stay untouched.
+   Same selectors as the verbatim token defs / print overrides, later
+   in the cascade — wins without editing the verbatim block. Dark mode
+   brightens, mirroring the old #C95F3D → #E8835B pattern. Accent use
+   stays decorative-only (stops, section numbers, underlines, hovers),
+   so #1783FF's ≈3.5:1 on #FAFAFA is fine (large/decorative ≥3:1).
+   Print: recolors the structural accents only (link underline, title
+   stop, section number) — the decorative print accents deliberately
+   stay ink per the earlier accent-restraint block (divider dots, TOC /
+   reference numbers), which this block must not override.
+   ============================================================ */
+:root { --accent: #1783FF; }
+:root[data-theme="light"] { --accent: #1783FF; }
+:root[data-theme="dark"] { --accent: #5E9FFF; }
+@media print {
+  a { text-decoration-color: #1783FF !important; }
+  .stop { color: #1783FF !important; }
+  .v3-section__number { color: #1783FF !important; }
+}
+

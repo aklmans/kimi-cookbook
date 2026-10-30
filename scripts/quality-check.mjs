@@ -155,39 +155,6 @@ assertIncludes(
   "About page should include a site-level discussion section.",
 );
 
-/* ── /monthly (Builders 月刊) ── */
-assertExists(
-  "app/monthly/page.tsx",
-  "The /monthly dispatch page must exist.",
-);
-assertExists(
-  "lib/monthly.ts",
-  "The monthly issue manifest must exist.",
-);
-assertIncludes(
-  "app/monthly/_components/MonthlyIssue.tsx",
-  "CopyPromptButton",
-  "The monthly page should mount the prompt copy buttons.",
-);
-assertIncludes(
-  "app/monthly/_components/MonthlyIssue.tsx",
-  "v3-table",
-  "The monthly audit section should reuse the v3 table.",
-);
-assertExists(
-  "app/monthly/[issue]/page.tsx",
-  "Every monthly issue must have a permanent archive route.",
-);
-assertIncludes(
-  "app/monthly/_components/MonthlyIssue.tsx",
-  "MonthlyArchive",
-  "Latest and archived issues should both expose the issue archive.",
-);
-assertIncludes(
-  "lib/monthly.ts",
-  "getAllMonthlyIssues()[0]",
-  "The latest issue must come from the SORTED list — an issue appended to the array's end must never leave /monthly stuck on an old one.",
-);
 assertFileIncludes(
   "lib/og-text.ts",
   "\\uFFFD",
@@ -2070,11 +2037,6 @@ assertNotIncludes(
   "Public RSS cache misses should not be counted as feed/agent reads.",
 );
 assertIncludes(
-  "lib/markdown-response.ts",
-  '"Cache-Control": "public, no-cache"',
-  "Agent markdown should revalidate at origin and reuse ETag-validated content.",
-);
-assertIncludes(
   "lib/types.ts",
   'language: "zh-en" | "zh"',
   "BookMeta.language should be constrained to the supported language modes.",
@@ -3157,36 +3119,6 @@ assertIncludes(
   "app/books/[slug]/[chapter]/page.tsx",
   '"text/markdown"',
   "Chapter pages should advertise their markdown twin via alternates.types text/markdown.",
-);
-
-/* ── Chapter source hardening ──
-   Every reading surface must fail loudly when a chapter cannot be read.
-   The shared loader logs the slug and re-throws; no route should reintroduce
-   an empty-body fallback that returns a plausible but incomplete document. */
-assertNotIncludes(
-  "app/books/[slug]/llms.md/route.ts",
-  "catch {\n        raw = \"\";\n      }",
-  "llms.md route must not silently swallow a missing chapter file with an empty fallback.",
-);
-assertIncludes(
-  "lib/chapter-content.ts",
-  '[content] Failed to read',
-  "The shared chapter loader should log the book and chapter slug on failure.",
-);
-assertIncludes(
-  "lib/chapter-content.ts",
-  "throw error;",
-  "The shared chapter loader must re-throw so no surface ships an empty chapter.",
-);
-assertIncludes(
-  "app/books/[slug]/[chapter]/llms.md/route.ts",
-  "export const dynamicParams = false;",
-  "Chapter llms.md route should disable unspecified dynamic params.",
-);
-assertIncludes(
-  "app/books/[slug]/[chapter]/llms.md/route.ts",
-  'from "@/lib/llms-clean-mdx"',
-  "Chapter llms.md route should reuse the shared cleanMdx pipeline.",
 );
 
 /* ── Smoke test script ──

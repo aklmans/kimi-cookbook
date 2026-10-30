@@ -1,23 +1,19 @@
-import { getAllBooks, getChapter } from "@/lib/books";
+import { getBook, getChapter } from "@/lib/books";
 import { renderChapterToMpHtml } from "@/lib/mp-render";
 import { trackMpRead } from "@/lib/analytics-server";
 
-/* Mini Program content API — one chapter as restricted HTML (see
-   lib/mp-render.tsx for the MDX → HTML degradation contract). Dynamic
-   so every fetch can be tracked (mp_chapter_read); the compiled
-   payload is cached per process, so the MDX compile cost is paid once
-   per chapter per release, not per request. */
+/* Mini Program content API — the current single-book Kimi reader as
+   restricted HTML (see lib/mp-render.tsx for the degradation contract).
+   Dynamic so every fetch can be tracked; compiled payloads are cached per
+   process, keyed by both book and chapter to avoid cross-book collisions. */
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = false;
 
-/* Per-process compiled-payload cache (see header comment). */
 const payloadCache = new Map<string, Awaited<ReturnType<typeof renderChapterToMpHtml>>>();
 
 export function generateStaticParams() {
-  return getAllBooks().flatMap((b) =>
-    b.chapters.map((c) => ({ slug: c.slug })),
-  );
+  return getBook("kimi")?.chapters.map((chapter) => ({ slug: chapter.slug })) ?? [];
 }
 
 export async function GET(
@@ -25,7 +21,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const book = getAllBooks()[0];
+  const book = getBook("kimi");
   const found = book && getChapter(book, slug);
   if (!book || !found) {
     return Response.json({ error: "not found" }, { status: 404 });
@@ -34,12 +30,12 @@ export async function GET(
   trackMpRead("mp_chapter_read", book.slug, slug, req.headers.get("user-agent"));
 
   const { chapter, index } = found;
-  // Payload only changes at deploy time, and a process serves one release —
-  // compile each chapter once per process instead of per request.
-  let payload = payloadCache.get(slug);
+  // Payload only changes at deploy time, and a process serves one release.
+  const cacheKey = `${book.slug}/${slug}`;
+  let payload = payloadCache.get(cacheKey);
   if (!payload) {
     payload = await renderChapterToMpHtml(book, chapter, index);
-    payloadCache.set(slug, payload);
+    payloadCache.set(cacheKey, payload);
   }
   const prev = index > 0 ? book.chapters[index - 1] : null;
   const next =

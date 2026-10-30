@@ -24,18 +24,26 @@ strict + Tailwind v4 + MDX (`next-mdx-remote/rsc`) + `next-themes` +
 
 ## 1 · v3.css is VERBATIM
 
-`app/globals.css` is layered:
+`app/globals.css` is a **generated, byte-for-byte concatenation** of the
+ordered partials in `styles/globals/`; do not edit it directly. The manifest
+`styles/globals.manifest` fixes cascade order, and
+`scripts/build-globals-css.mjs` joins the files without adding separators.
+`npm run gen:css` regenerates (also wired into predev / prebuild);
+`npm run check:css` fails on drift and runs as part of `test:static`.
 
-1. Tailwind import + `@theme` tokens (lines 1–34)
-2. **Verbatim v3.css block** (lines ~38–2034) — DO NOT EDIT
-3. Page-local `<style>` blocks (lines ~2289–2989) — also verbatim
-4. **Round-N post-port blocks** (3–6 right now) — your territory
+The ordered sources preserve the original layout:
 
-When you need to change v3 behavior, append a Round-N block at the
-bottom of the file. Never edit the verbatim block — same-specificity
-later rules win the cascade, but `:root[data-theme="light"]` vs
-`:root` are different specificities, so override needs to match or
-exceed the original selector specificity.
+1. `00-head.css` — Tailwind import + `@theme` tokens
+2. `10-v3-verbatim.css` — **verbatim v3.css, DO NOT EDIT**
+3. `20-rounds-001-002.css` — early post-port additions (before page-local)
+4. `30-page-local.css` — prototype `<style>` blocks, also verbatim
+5. `40-…` through `100-…` — Round-N post-port blocks, your territory
+
+When you need to change v3 behavior, append a Round-N block to the latest
+partial (or add one and append its filename to the manifest), then regenerate.
+Never edit a verbatim partial or reorder the manifest — same-specificity later
+rules win, but `:root[data-theme="light"]` vs `:root` have different
+specificities, so overrides must match or exceed the original selector.
 
 The verbatim part of v3.css is sometimes wrong by accident
 (e.g. `:root` print override loses to `:root[data-theme="light"]` —

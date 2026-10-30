@@ -12,3 +12,17 @@ test("chapter source shares parsed frontmatter and body across consumers", async
   assert.ok(source.references.length > 0);
   assert.ok(!source.body.startsWith("---"));
 });
+
+test("chapter source failures reject and are not cached", async () => {
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    const first = getChapterSource("kimi", "not-real");
+    await assert.rejects(first, /ENOENT/);
+    const retry = getChapterSource("kimi", "not-real");
+    assert.notStrictEqual(retry, first);
+    await assert.rejects(retry, /ENOENT/);
+  } finally {
+    console.error = originalError;
+  }
+});

@@ -1,0 +1,33 @@
+/* ============================================================
+   Aklman Library · globals.css
+   Design tokens surface to Tailwind v4 via the CSS-first `@theme`
+   directive below. After that, assets/v3.css is appended VERBATIM
+   (only the --serif/--text/--sans/--mono stacks are repointed to
+   the next/font CSS variables), followed by each prototype page's
+   local <style> block, also verbatim.
+   v3.css is intentionally UNLAYERED so it always wins over
+   Tailwind's layered preflight — the prototype CSS is the truth.
+   ============================================================ */
+@import "tailwindcss";
+
+@custom-variant dark ([data-theme="dark"] &);
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-code-bg: var(--code-bg);
+  --color-row-hover: var(--row-hover);
+
+  --font-serif: var(--serif);
+  --font-text: var(--text);
+  --font-sans: var(--sans);
+  --font-mono: var(--mono);
+
+  --max-width-content: 680px;
+}
+

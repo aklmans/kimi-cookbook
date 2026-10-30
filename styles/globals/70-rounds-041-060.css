@@ -1,0 +1,1961 @@
+/* ============================================================
+   Round-41  Component style sync — bring the remaining v3
+   components into line with the newer website design language
+   (the authoritative reference). "Lines over boxes": strip the
+   box tints / rounded corners on callout & promptbox, hairline
+   the footer & library-search rules, underline the active filter
+   chip, warm the inline code, and tighten label / caption /
+   kicker typography to the website's values. Tokens are value-
+   identical across the two repos, so no retint is needed.
+   Italic display headings/titles are deliberately NOT touched
+   here — that's a separate editorial-voice decision.
+   Every selector matches or exceeds the verbatim / page-local
+   rule it supersedes and is appended last, so the cascade favors
+   it without editing the verbatim block.
+   ============================================================ */
+
+/* — Callout (note / tip / warn): box + tint + 4px radius → left-rule only.
+     Reverts the Round-13 box treatment; keeps the per-kind semantic rule
+     colors (accent / teal / red) and label colors. kind="key" untouched. */
+.v3-callout__inner {
+  border-left-width: 1.5px;
+  border-radius: 0;
+  padding: 2px 0 2px 24px;
+}
+.v3-callout--note .v3-callout__inner,
+.v3-callout--tip .v3-callout__inner,
+.v3-callout--warn .v3-callout__inner {
+  background: transparent;
+}
+
+/* — PromptBox: full box + 4px radius → left-rule frame (faint accent wash kept). */
+.v3-promptbox__frame {
+  border: 0;
+  border-left: 1.5px solid var(--accent);
+  border-radius: 0;
+  padding: 18px 24px;
+  background: color-mix(in oklab, var(--accent) 7%, transparent);
+}
+.v3-promptbox__model { border-radius: 0; }
+
+/* — Inline code: cool flat chip → warm editorial chip, square, accent hairline.
+     Reuses the Round-40 --code-* tokens. :not(pre) keeps block code untouched. */
+.prose :not(pre) > code {
+  background: color-mix(in srgb, var(--code-surface) 76%, transparent);
+  border-bottom: 0.5px solid color-mix(in srgb, var(--code-rule) 30%, transparent);
+  border-radius: 0;
+  color: var(--code-text);
+  padding: 2px 6px;
+  font-size: 0.86em;
+}
+
+/* — Footer: full-ink top rule → hairline (the heaviest line in the chrome). */
+.v3-footer { border-top: 0.5px solid var(--border); }
+
+/* — Active filter chip: solid accent fill → transparent + accent underline. */
+.lib-tag.is-active {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: inset 0 -1.5px 0 var(--accent);
+}
+
+/* — Library search: double full-ink rule → single quiet hairline. */
+.lib-search {
+  border-top: 0;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+/* — Kicker (closing manifesto): heavy ink rule → hairline; size to website. */
+.v3-kicker { padding-top: 24px; border-top-color: var(--rule); }
+.v3-kicker__text { font-size: 26px; line-height: 1.45; }
+.v3-kicker__sig { font-size: 10px; margin-top: 18px; }
+
+/* — Quote: inner padding + source label size parity. */
+.v3-quote__inner { padding-left: 24px; }
+.v3-quote__source { font-size: 10px; }
+
+/* — Mono micro-labels 11 → 10px (the website's move toward smaller labels). */
+.v3-cover__eyebrow { font-size: 10px; letter-spacing: 0.25em; }
+.v3-section__number { font-size: 10px; letter-spacing: 0.25em; }
+
+/* — Cover lede + list marker sizing parity. */
+.v3-cover__lede { font-size: 20px; line-height: 1.65; }
+.v3-list__marker { font-size: 12px; }
+
+/* — Figure + gallery captions: serif-italic-center → mono-uppercase-right,
+     unifying them with the code-caption / eyebrow / source label system. */
+.v3-figure__caption {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-align: right;
+}
+.v3-gallery__grid { gap: 18px; }
+.v3-gallery__item .asset-frame { border-radius: 0; }
+.v3-gallery__caption,
+.v3-gallery__fcaption {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+/* ============================================================
+   Round-42  Typography voice sync — de-italicize display
+   headings + card / cover / hero / search / section titles to
+   match the newer website (upright Playfair, no -0.02em
+   tracking; body headings pick up the website's fluid clamp
+   sizing on screen). Per the user's "全部改正体" decision.
+
+   Deliberately KEPT italic (the website keeps these italic too):
+   <em>, pull-quote text, the kicker manifesto, ledes, footnote /
+   refs back-links, decorative dividers, input placeholders.
+   Deferred (separate artifacts): book-cover art (.cover-art*) and
+   the PDF print titles (.print-*, pending the cover redesign).
+   font-style is set unconditionally so print headings go upright
+   too; the clamp sizes are @media screen so the print pt-scale
+   (@media print) is preserved.
+   ============================================================ */
+
+/* Body headings — upright + the website's fluid clamp sizing. */
+.v3-section__title { font-style: normal; letter-spacing: 0; }
+.v3-h3 { font-style: normal; }
+@media screen {
+  .v3-section__title { font-size: clamp(1.72rem, 3vw, 2.18rem); line-height: 1.12; }
+  .v3-h3 { font-size: clamp(1.22rem, 2vw, 1.42rem); }
+}
+
+/* All other display titles — upright, drop the -0.02em tracking. */
+.v3-cover__title,
+.v3-h3__anchor,
+.book-detail__title,
+.discussion__title,
+.section-head__title,
+.v3-help__title,
+.v3-search__item-title,
+.v3-search__empty-title,
+.ch-toc__title,
+.v3-refs__title,
+.next-book__title,
+.home-hero__statement,
+.featured__title,
+.book-row__title,
+.lib-row__title,
+.lib-empty__text,
+.nf__title,
+.index-hero__title,
+.nav-card__title,
+.tokens__title,
+.v3-chapter-draft__title,
+.ts-h1, .ts-h2, .ts-h3,
+.an-auth__title,
+.an-header__title,
+.an-card__value,
+.an-empty {
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   Round-43  Bordered table — full hairline grid + warm header.
+   Per user preference (a bordered table reads better here). Kept
+   to 0.5px hairline weight, square corners, a warm --code-bg
+   header fill and a --border grid so it still sits in the
+   editorial design language — bordered, not heavy. Overrides the
+   verbatim lines-only .v3-table (≈2161). Markdown `| … |` tables
+   render as <table class="v3-table"> (elements.tsx).
+   ============================================================ */
+.v3-table th,
+.v3-table td {
+  border: 0.5px solid var(--border);
+  padding: 12px 16px;
+  vertical-align: top;
+}
+.v3-table thead th {
+  background: var(--code-bg);
+  border: 0.5px solid var(--border);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+/* restore the box's bottom edge (verbatim dropped it for the lines look) */
+.v3-table tbody tr:last-child td {
+  border-bottom: 0.5px solid var(--border);
+}
+/* right-aligned numeric cells need their padding back inside the box */
+.v3-table .num,
+.v3-table th.num {
+  padding-right: 16px;
+}
+
+/* Same bordered grid on the <PriceTable> component, so both table styles match
+   (it keeps its right-aligned numbers, warm header fill and highlight row). */
+.v3-pricetable__table th,
+.v3-pricetable__table td {
+  border: 0.5px solid var(--border);
+}
+.v3-pricetable__table tbody tr:last-child td {
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* ============================================================
+   Round-44  Tables, more substantial — heavier header rule +
+   zebra rows. Per user preference ("更实一点"). Keeps Round-43's
+   warm hairline grid; adds a strong header underline (1.5px --ink,
+   3× the grid) and a subtle warm stripe on even rows. Theme-aware
+   via --ink / --code-bg. Both .v3-table and the PriceTable; the
+   PriceTable's highlight row is excluded so it still stands out.
+   ============================================================ */
+.v3-table thead th,
+.v3-pricetable__table thead th {
+  border-bottom: 1px solid var(--ink);
+}
+.v3-table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--code-bg) 55%, transparent);
+}
+.v3-pricetable__table tbody tr:nth-child(even):not(.is-highlight) td {
+  background: color-mix(in srgb, var(--code-bg) 55%, transparent);
+}
+
+/* ============================================================
+   Round-45  Wider reading column — 680px → 840px (per user
+   preference, to sit closer to the website's article width).
+   One lever: every content block caps at var(--content-w), so
+   prose, diagrams, tables, callouts all widen together and stay
+   consistent. Scoped to @media screen so the PDF/print layout
+   (page-limited) is untouched. Overrides the verbatim :root token.
+   ============================================================ */
+@media screen {
+  :root { --content-w: 840px; }
+}
+
+/* ============================================================
+   Round-46  English chapter-cover title — size it to wrap clean.
+   English titles run far longer than the dense Chinese, so the
+   52px display size pushed them to 3 uneven lines with a stranded
+   2-word last line ("…Your / Subscription Stack / and the API
+   Line"). 46px (a close optical match to the CJK 52px) lets them
+   break into 2 balanced lines. EN-only — the zh title keeps 52px;
+   section titles already shrank via Round-42's clamp().
+   ============================================================ */
+:root[data-lang="en"] .v3-cover__title {
+  font-size: 46px;
+  line-height: 1.12;
+}
+
+/* ============================================================
+   Round-47  Tighten section spacing. The verbatim stacked a 96px
+   section top margin + a 56px number→title gap + 96px divider
+   margins — excessive, and more obvious now the column is 840px.
+   Pull them in (number gap 56→24, matching the website). When a
+   `. . .` divider already separates two sections, drop the
+   section's own top margin so the gap isn't doubled. Screen only
+   — the print pt-spacing (@media print) is left as-is.
+   ============================================================ */
+@media screen {
+  .v3-section { margin-top: 56px; margin-bottom: 40px; }
+  .v3-section__number { margin-bottom: 24px; }
+  .v3-divider { margin: 56px 0; }
+  .v3-divider + .v3-section { margin-top: 0; }
+}
+
+/* ============================================================
+   Round-48  Captioned fenced code block. <CodeBlock caption> that
+   wraps a ``` fence used to double-frame (two left-rules + two
+   Copy buttons); the component now renders a caption-only wrapper
+   around the already-framed fence (components/mdx/blocks.tsx).
+   This lays out that wrapper: the inner fence keeps its frame, and
+   the standalone caption is re-boxed to content width so it lines
+   up under the code (right-aligned, like the in-frame caption).
+   ============================================================ */
+.v3-codeblock-captioned { margin: 40px 0; }
+.v3-codeblock-captioned > .v3-codeblock { margin-top: 0; margin-bottom: 0; }
+.v3-codeblock-captioned > .v3-codeblock__caption {
+  max-width: var(--content-w);
+  margin: 12px auto 0 auto;
+  padding: 0 var(--reading-px);
+}
+
+/* ============================================================
+   Round-49  Compare containing code — stack full-width. The
+   side-by-side grid (1fr auto 1fr) was tuned for short prose; two
+   code blocks in ~half columns wrap mid-token (worsened by the
+   global pre-wrap + overflow-wrap:anywhere at ~3838). When a
+   Compare holds a code block, stack the slots so each block gets
+   the whole reading column and stops wrapping — the diff stays
+   clear from the slot labels + the inline `# changed here`
+   comments. Text-only Compares keep side-by-side. Pure CSS :has()
+   — no component or MDX change. Specificity (0,3,0) beats the
+   :root pre-wrap rule.
+   ============================================================ */
+.v3-compare:has(.v3-codeblock) {
+  grid-template-columns: 1fr;
+  row-gap: 28px;
+}
+.v3-compare:has(.v3-codeblock) > .v3-compare__divider { display: none; }
+.v3-compare:has(.v3-codeblock) .v3-codeblock {
+  max-width: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.v3-compare:has(.v3-codeblock) .v3-codeblock__pre {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+/* ============================================================
+   Round-50  Footer width — a deliberate decision (the sister-
+   project brief asked us to choose, not leave it "unchosen").
+   Measured: content / discussion / chapter-nav all sit on the 840
+   reading column, while the footer is 1080 — and that 1080 MATCHES
+   the header's content width. So header nav + footer are site
+   chrome that intentionally frame the narrower reading column
+   (the same model the website uses: footer at page-max, content at
+   content-max). The ~120px the footer hairline extends past the
+   reading column is on purpose and aligned with the header — not
+   drift. Tokenized as --page-max so the chrome width has one source.
+   (To instead hug the reading column on chapter pages, scope
+   .v3-footer to var(--content-w) there — left as an owner choice.)
+   ============================================================ */
+:root { --page-max: 1080px; }
+.v3-footer { max-width: var(--page-max); }
+
+/* ============================================================
+   Round-51  CJK upright guard for italic editorial surfaces.
+   The home-hero lede and the chapter kicker are italic --serif;
+   CJK has no italic, so the browser synthesizes a skewed render
+   (DESIGN §3 forbids it). Mirror the existing fix at
+   .cover-art__subtitle (≈:5527): keep the Latin italic, upright
+   the CJK. The lede text is inside <T> (→ a [lang] descendant
+   span); the Kicker sets lang on the <p> itself (→ attribute
+   selector, no space).
+   ============================================================ */
+.home-hero__lede [lang="zh"],
+.v3-kicker__text[lang="zh"] {
+  font-style: normal;
+}
+
+/* ============================================================
+   Round-52  :focus-visible on the main interactive surfaces.
+   Search results, list rows, chapter-TOC links, header controls
+   and book-detail buttons are focusable <Link>/<button> but had
+   no custom focus ring → the low-contrast UA default on the warm
+   bg. Reuse the existing .an-tab ring (accent outline + offset);
+   the project already self-manages focus on ~11 other elements.
+   ============================================================ */
+.v3-search__item:focus-visible,
+.book-row:focus-visible,
+.lib-row:focus-visible,
+.ch-toc__link:focus-visible,
+.book-detail__btn:focus-visible,
+.featured__link:focus-visible,
+.v3-header__brand:focus-visible,
+.v3-header__search:focus-visible,
+.v3-header__back:focus-visible,
+.v3-header__library:focus-visible,
+.v3-header__about:focus-visible,
+.v3-header__theme:focus-visible,
+.v3-header__lang:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Round-53  Inline SVG diagrams — legible on mobile. The 1280×720
+   viewBox scales to ~24% at 390px → ~4–5px labels. Below 720px,
+   give the frame horizontal scroll (the .v3-table-wrap pattern)
+   and the svg a min-width so the labels stay readable.
+   ============================================================ */
+@media (max-width: 720px) {
+  .v3-diagram__frame { overflow-x: auto; }
+  .v3-diagram__frame svg { min-width: 640px; }
+}
+
+/* ============================================================
+   Round-54  PromptBox — warm monospace "fill-in template" + 模板/示例
+   tabs. Aligns the box with the code-block surface (it IS a literal,
+   copyable template, not prose), highlights <…> placeholders as
+   fill-in slots, moves Copy into an always-visible header, and —
+   when a usage supplies `example` — shows 模板 / 示例 tabs reusing
+   .v3-tabs (the GlobalUI data-tab handler + keyboard nav switch them;
+   the copy handler copies the active panel). Overrides Round-15/41.
+   ============================================================ */
+.v3-promptbox__frame {
+  background: var(--code-surface-soft);
+  border-left: 1.5px solid var(--accent);
+  padding: 14px 18px;
+}
+.v3-promptbox__text {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.95;
+  color: var(--code-text);
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.v3-promptbox__slot {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  padding: 1px 5px;
+}
+.v3-promptbox__header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.v3-promptbox__copy {
+  position: static;
+  opacity: 1;
+  padding: 3px 9px;
+  border: 0.5px solid var(--accent);
+  color: var(--accent);
+}
+.v3-promptbox__copy:hover {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.v3-promptbox__tabs {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+.v3-promptbox__tabs .v3-tabs__panel {
+  padding: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Round-55  Interactive, persistent checklist. <Checklist> rows are now
+   click-to-toggle and the checked state is cached per chapter in localStorage
+   (see ChecklistClient.tsx). The is-done / marker / checkmark visuals already
+   exist above (~line 4407); this only adds the interaction affordance —
+   pointer cursor, keyboard focus ring, and a hover hint on the box.
+   ───────────────────────────────────────────────────────────────────────── */
+.v3-checklist__item {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s ease;
+}
+.v3-checklist__item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+@media (hover: hover) {
+  .v3-checklist__item:hover {
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+  }
+  .v3-checklist__item:hover .v3-checklist__marker {
+    border-color: var(--accent);
+  }
+}
+/* In print the list is a static snapshot — no interaction affordances. */
+@media print {
+  .v3-checklist__item {
+    cursor: auto;
+    background: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Round-56  Chapter opening rhythm. The cover rule should breathe the same
+   way on both sides: .v3-cover__byline leaves 32px above the rule, so the
+   first body block after the rule gets the same top gap.
+   ───────────────────────────────────────────────────────────────────────── */
+.v3-cover + .prose,
+.v3-cover + span[data-i18n-lang],
+.v3-cover + span[data-i18n-lang] + span[data-i18n-lang] {
+  margin-top: 32px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Round-57  Zhaphar data-viz component sync. Mirrors the final
+   `ded2640`→`b63f562` component styling from ../Zhaphar/website, mapped to
+   this repo's token names and unscoped layout model. These components share
+   the same class contracts; this block restores the newer visual treatment
+   without changing MDX/component structure.
+   ───────────────────────────────────────────────────────────────────────── */
+.v3-table {
+  min-width: 520px;
+  border: 0.5px solid var(--border);
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+}
+
+.v3-table th,
+.v3-table td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+  border: 0;
+  border-right: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  background: transparent;
+}
+
+.v3-table th:last-child,
+.v3-table td:last-child {
+  border-right: 0;
+}
+
+.v3-table thead th {
+  background: var(--code-bg);
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.v3-table tbody td {
+  color: var(--ink-2);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.v3-table tbody td:first-child {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.v3-table tbody tr:nth-child(even) td {
+  background: transparent;
+}
+
+.v3-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.v3-table tbody code {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  background: none;
+  padding: 0;
+}
+
+.v3-diagram__frame {
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  padding: 16px 18px;
+}
+
+.v3-diagram__caption {
+  margin: 14px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.v3-stats__grid {
+  gap: 0.5px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.v3-stats__item {
+  background: var(--bg);
+  padding: 16px 18px;
+}
+
+.v3-stats__value {
+  font-family: var(--sans);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+.v3-stats__unit { color: var(--ink-3); }
+.v3-stats__label { color: var(--ink-2); }
+.v3-stats__sub,
+.v3-stats__caption { color: var(--ink-3); }
+
+.v3-pricetable__label {
+  color: var(--ink-2);
+}
+
+.v3-pricetable__asof {
+  color: var(--ink-3);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  padding: 1px 6px;
+}
+
+.v3-pricetable__wrap {
+  overflow-x: auto;
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+}
+
+.v3-pricetable__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+}
+
+.v3-pricetable__table th,
+.v3-pricetable__table td {
+  padding: 10px 14px;
+  text-align: left;
+  border: 0;
+  border-bottom: 0.5px solid var(--border);
+  border-right: 0.5px solid var(--border);
+}
+
+.v3-pricetable__table th:last-child,
+.v3-pricetable__table td:last-child {
+  border-right: 0;
+}
+
+.v3-pricetable__table thead th {
+  background: var(--code-bg);
+  color: var(--ink-3);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.v3-pricetable__th-model,
+.v3-pricetable__model {
+  text-align: left;
+}
+
+.v3-pricetable__num {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.v3-pricetable__model code {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  background: none;
+  padding: 0;
+}
+
+.v3-pricetable__note {
+  color: var(--ink-3);
+}
+
+.v3-pricetable__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.v3-pricetable__table tbody tr.is-highlight td {
+  background: var(--row-hover);
+}
+
+.v3-pricetable__table tbody tr.is-highlight .v3-pricetable__model code {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.v3-pricetable__caption {
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.v3-timeline__item {
+  position: relative;
+  margin: 0;
+  padding: 0 0 26px 30px;
+}
+
+.v3-timeline__item::before {
+  left: 5.25px;
+  top: 5px;
+  bottom: -5px;
+  width: 1.5px;
+  background: var(--border);
+}
+
+.v3-timeline__dot {
+  left: 0;
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  border: 1.5px solid var(--rule);
+  background: var(--bg);
+}
+
+.v3-timeline__item.is-current .v3-timeline__dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.v3-timeline__label {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.v3-timeline__item.is-current .v3-timeline__label {
+  color: var(--accent);
+}
+
+.v3-timeline__note {
+  color: var(--ink-2);
+}
+
+.v3-timeline__caption,
+.v3-timeline__date {
+  color: var(--ink-3);
+}
+
+.v3-quadrant__grid {
+  gap: 0.5px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.v3-quadrant__cell {
+  background: var(--bg);
+  padding: 16px 18px;
+  min-height: 88px;
+}
+
+.v3-quadrant__cell.is-highlight {
+  background: var(--row-hover);
+}
+
+.v3-quadrant__cell-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.v3-quadrant__cell.is-highlight .v3-quadrant__cell-label {
+  color: var(--accent);
+}
+
+.v3-quadrant__cell-body {
+  display: block;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.v3-quadrant__caption {
+  margin: 12px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.v3-barcompare__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 0.5px solid var(--border);
+  padding: 18px;
+}
+
+.v3-barcompare__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 12px;
+  row-gap: 7px;
+  align-items: baseline;
+}
+
+.v3-barcompare__label {
+  grid-area: 1 / 1;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  text-align: left;
+}
+
+.v3-barcompare__track {
+  grid-area: 2 / 1 / 3 / 3;
+  height: 20px;
+  background: var(--code-bg);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.v3-barcompare__fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  background: var(--ink-3);
+  border-radius: 0;
+}
+
+.v3-barcompare__fill.is-accent {
+  background: var(--accent);
+}
+
+.v3-barcompare__value {
+  grid-area: 1 / 2;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.v3-barcompare__note {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  margin-left: 5px;
+}
+
+.v3-barcompare__caption {
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.v3-callout--key .v3-callout__inner {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  border-left-color: var(--accent);
+}
+
+.v3-callout--key .v3-callout__label {
+  color: var(--accent);
+}
+
+.v3-callout--key .v3-callout__body {
+  font-weight: 500;
+}
+
+/* ============================================================
+   Round-58 · Canon album, figure lightbox, and export surface
+   ============================================================ */
+
+.album {
+  max-width: var(--content-w);
+  margin: 32px auto 10px;
+  padding: 0 var(--reading-px);
+}
+
+.figcard {
+  position: relative;
+  overflow: hidden;
+  color: var(--ink);
+  background: transparent;
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+}
+
+.figcard-slide {
+  display: none;
+}
+
+.figcard-slide.is-active {
+  display: block;
+}
+
+.figcard-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.12fr);
+  gap: 36px;
+  align-items: center;
+  padding: 32px 36px;
+}
+
+.figcard-eyebrow {
+  margin: 0 0 16px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.figcard-title {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.figcard-sub {
+  max-width: 32ch;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.figcard-art {
+  min-width: 0;
+}
+
+.figcard-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+}
+
+.figcard-strip {
+  display: grid;
+  grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+  padding: 9px 20px;
+  border-top: 0.5px solid var(--border);
+}
+
+.figcard-export {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 0 1px;
+  color: var(--accent);
+  background: transparent;
+  border: 0;
+  border-bottom: 0.5px solid transparent;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.figcard-export:hover,
+.figcard-export:focus-visible {
+  border-color: var(--accent);
+}
+
+.figcard-export:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.figcard-export:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.figcard-steps {
+  grid-column: 2;
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.45;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.figcard-steps .ar {
+  padding: 0 7px;
+  color: var(--accent);
+}
+
+.figcard-steps .seg {
+  white-space: nowrap;
+}
+
+.figcard-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.figcard-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: var(--ink);
+  background: var(--code-bg);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.figcard-nav:hover:not(:disabled),
+.figcard-nav:focus-visible:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.figcard-nav:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.figcard-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.figcard-counter {
+  min-width: 7ch;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fig-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--ink);
+}
+
+.fig-svg .fig-ink {
+  fill: none;
+  stroke: currentColor;
+  opacity: 0.64;
+}
+
+.fig-svg .fig-accent {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.fig-svg .fig-accent-line {
+  fill: none;
+  stroke: var(--accent);
+}
+
+.fig-svg .fig-spine {
+  stroke: var(--accent);
+}
+
+.fig-svg .fig-big {
+  fill: var(--ink);
+  font-family: var(--serif);
+  font-size: 30px;
+}
+
+.fig-svg .fig-label {
+  fill: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.fig-svg .fig-sub {
+  fill: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+.fig-svg .fig-ord {
+  fill: var(--accent);
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .figcard-slide.is-active {
+    animation: canonFigIn 0.32s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  }
+}
+
+@keyframes canonFigIn {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.figcard-zoom {
+  position: absolute;
+  top: 11px;
+  right: 13px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  color: var(--ink-3);
+  background: var(--code-bg);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.72;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.figcard:hover .figcard-zoom,
+.figcard-zoom:hover,
+.figcard-zoom:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+.figcard-zoom:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 64px 40px;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.72);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lb-card {
+  flex: none;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0;
+}
+
+.lb-card .figcard {
+  cursor: default;
+  background: var(--code-bg);
+}
+
+.lightbox .figcard-body {
+  padding: 44px 48px;
+  gap: 44px;
+}
+
+.lightbox .figcard-title {
+  font-size: 40px;
+}
+
+.lightbox .figcard-art svg {
+  max-height: 52vh;
+}
+
+.lb-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex: none;
+  margin-top: 4px;
+}
+
+.lb-controls.is-single {
+  display: none;
+}
+
+.lb-close {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  color: var(--ink);
+  background: var(--code-bg);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.lb-close:hover,
+.lb-close:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.lb-close:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 720px) {
+  .figcard-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 24px;
+  }
+
+  .figcard-title {
+    font-size: 22px;
+  }
+
+  .figcard-export {
+    justify-self: start;
+    margin-left: 12px;
+  }
+
+  .figcard-strip {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    min-height: 0;
+    padding: 10px 24px 12px;
+  }
+
+  .figcard-steps {
+    flex: 1 1 100%;
+    text-align: left;
+  }
+
+  .fig-svg .fig-label {
+    font-size: 26px;
+  }
+
+  .fig-svg .fig-sub,
+  .fig-svg .fig-ord {
+    font-size: 19px;
+  }
+
+  .lightbox {
+    padding: 56px 18px;
+  }
+
+  .lightbox .figcard-body {
+    padding: 26px 22px;
+  }
+
+  .lightbox .figcard-title {
+    font-size: 24px;
+  }
+}
+
+@media print {
+  .lightbox,
+  .figcard-zoom,
+  .figcard-controls,
+  .figcard-export {
+    display: none !important;
+  }
+
+  .album {
+    break-inside: avoid;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Round-59 · About page as an editorial library colophon.
+   The page speaks for the shelf first; author links move to the
+   closing colophon instead of becoming the hero.
+------------------------------------------------------------------- */
+
+.about-page {
+  padding-bottom: 96px;
+}
+
+.about-library {
+  max-width: 1080px;
+  margin: 0 auto 84px;
+  padding: 104px var(--reading-px) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 72px;
+  align-items: end;
+}
+
+.about-library__copy {
+  min-width: 0;
+}
+
+.about-library__eyebrow,
+.about-section__label {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.about-library__title {
+  margin: 30px 0 26px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(58px, 8vw, 98px);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.about-library__lede {
+  max-width: 620px;
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--text);
+  font-size: clamp(22px, 3vw, 31px);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.about-library__byline {
+  margin: 34px 0 0;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+.about-library__rule {
+  width: 96px;
+  height: 0.5px;
+  margin: 38px 0 38px;
+  border: 0;
+  background: var(--rule);
+}
+
+.about-library__intro {
+  max-width: 720px;
+  color: var(--ink-2);
+  font-family: var(--text);
+  font-size: 19px;
+  line-height: 1.78;
+  text-wrap: pretty;
+}
+
+.about-library__intro p {
+  margin: 0;
+}
+
+.about-library__aside {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 2px;
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.about-facts {
+  margin: 0;
+}
+
+.about-facts__row {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 18px;
+  padding: 15px 0;
+  border-top: 0.5px solid var(--border);
+}
+
+.about-facts__row:first-child {
+  border-top: 0;
+}
+
+.about-facts dt {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.about-facts dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.about-facts a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.about-facts a:hover,
+.about-facts a:focus-visible {
+  color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+.about-section {
+  max-width: var(--content-w);
+  margin: 0 auto 78px;
+  padding: 0 var(--reading-px);
+}
+
+.about-section__head {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  margin: 0 0 30px;
+  padding-top: 28px;
+  border-top: 0.5px solid var(--rule);
+}
+
+.about-section__title {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(31px, 4vw, 44px);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.about-section .prose {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about-section .prose + .prose {
+  margin-top: 22px;
+}
+
+.about-routes {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 0.5px solid var(--border);
+}
+
+.about-routes__row {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 150px;
+  gap: 24px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.about-routes__row h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+.about-routes__row p {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.about-routes__row a,
+.about-routes__row span {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.about-routes__row a {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.about-routes__row a:hover,
+.about-routes__row a:focus-visible {
+  color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+.about-colophon {
+  display: grid;
+  gap: 36px;
+}
+
+.about-colophon .prose {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about-page .elsewhere {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about-page .wechat {
+  max-width: var(--content-w);
+  margin-top: 42px;
+}
+
+@media (max-width: 860px) {
+  .about-library {
+    grid-template-columns: 1fr;
+    gap: 42px;
+    padding-top: 78px;
+  }
+
+  .about-library__aside {
+    max-width: 420px;
+  }
+
+  .about-routes__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-page {
+    padding-bottom: 72px;
+  }
+
+  .about-library {
+    margin-bottom: 66px;
+    padding-top: 68px;
+  }
+
+  .about-library__title {
+    margin-top: 24px;
+    font-size: clamp(48px, 16vw, 62px);
+  }
+
+  .about-library__lede {
+    font-size: 21px;
+  }
+
+  .about-library__intro {
+    font-size: 18px;
+  }
+
+  .about-section {
+    margin-bottom: 64px;
+  }
+
+  .about-section__head {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .about-section__title {
+    font-size: clamp(28px, 9vw, 36px);
+  }
+
+  .about-facts__row {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .about-routes__row {
+    padding: 20px 0;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Round-60 · Chapter prose rhythm.
+   The MDX renderer emits each paragraph as its own `.prose` sibling,
+   so the website `post-content` rhythm has to be mapped onto the
+   direct children of the chapter page instead of a single wrapper.
+------------------------------------------------------------------- */
+
+:root {
+  --rhythm-xs: 16px;
+  --rhythm-sm: 24px;
+  --rhythm-md: 32px;
+  --rhythm-lg: 48px;
+  --rhythm-xl: 64px;
+  --rhythm-2xl: 80px;
+}
+
+@media screen {
+  .ch-page > .prose p,
+  .ch-page > span[data-i18n-lang] {
+    margin-bottom: var(--rhythm-xs);
+    line-height: 1.78;
+  }
+
+  .ch-page > :is(
+    .v3-quote,
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-figure,
+    .v3-diagram,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox,
+    .v3-gallery,
+    .v3-showcase,
+    .album
+  ) {
+    margin-top: var(--rhythm-md);
+    margin-bottom: var(--rhythm-md);
+  }
+
+  .ch-page > :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox
+  ):has(+ :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox
+  )) {
+    margin-bottom: var(--rhythm-sm);
+  }
+
+  .ch-page > :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox
+  ) + :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox
+  ) {
+    margin-top: var(--rhythm-sm);
+  }
+
+  .ch-page > .prose + :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-figure,
+    .v3-diagram
+  ),
+  .ch-page > span[data-i18n-lang] + :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-figure,
+    .v3-diagram
+  ),
+  .ch-page > span[data-i18n-lang] + span[data-i18n-lang] + :is(
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-figure,
+    .v3-diagram
+  ) {
+    margin-top: var(--rhythm-sm);
+  }
+
+  .ch-page > .v3-list {
+    margin-top: var(--rhythm-sm);
+    margin-bottom: var(--rhythm-sm);
+  }
+
+  .ch-page .v3-codeblock__frame {
+    padding: 18px 0 18px 24px;
+  }
+
+  .ch-page .v3-codeblock__pre {
+    padding-right: 64px;
+  }
+
+  .ch-page .v3-list {
+    display: grid;
+    gap: 9px;
+  }
+
+  .ch-page .v3-list__item {
+    grid-template-columns: 16px minmax(0, 1fr);
+    column-gap: 12px;
+    margin-bottom: 0;
+    line-height: 1.7;
+  }
+
+  .ch-page .v3-list__marker {
+    font-size: 12px;
+    text-align: right;
+  }
+
+  .ch-page > .v3-h3 {
+    margin-top: var(--rhythm-lg);
+    margin-bottom: var(--rhythm-sm);
+    line-height: 1.3;
+  }
+
+  .ch-page > .v3-section {
+    margin-top: var(--rhythm-2xl);
+    margin-bottom: var(--rhythm-md);
+  }
+
+  .ch-page > .v3-section__number,
+  .ch-page .v3-section__number {
+    margin-bottom: var(--rhythm-sm);
+  }
+
+  .ch-page > .v3-divider {
+    margin-top: var(--rhythm-lg);
+    margin-bottom: var(--rhythm-lg);
+  }
+
+  .ch-page > .v3-divider + .v3-section {
+    margin-top: 0;
+  }
+
+  .ch-page > .v3-refs {
+    margin-top: var(--rhythm-xl);
+  }
+
+  .ch-page > .v3-cover + .prose,
+  .ch-page > .v3-cover + span[data-i18n-lang],
+  .ch-page > .v3-cover + span[data-i18n-lang] + span[data-i18n-lang] {
+    margin-top: var(--rhythm-md);
+  }
+
+  .ch-page .v3-tabs__panel {
+    padding-top: 22px;
+  }
+
+  .ch-page .v3-tabs__panel > figure {
+    margin: 0;
+  }
+
+  .ch-page .v3-tabs__panel > .v3-codeblock,
+  .ch-page .v3-tabs__panel > figure > .v3-codeblock,
+  .ch-page .v3-tabs__panel > .v3-codeblock-captioned > .v3-codeblock {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ch-page .v3-tabs__panel .v3-codeblock__frame {
+    width: 100%;
+    padding: 18px 0 18px 24px;
+  }
+
+  .ch-page .v3-tabs__panel .v3-codeblock__pre {
+    padding-right: 64px;
+  }
+
+  .ch-page .v3-tabs__panel > .v3-codeblock-captioned {
+    margin: 0;
+  }
+
+  .ch-page .v3-tabs__panel > .v3-codeblock-captioned > .v3-codeblock {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ch-page .v3-tabs__panel > .v3-codeblock-captioned > .v3-codeblock__caption {
+    max-width: none;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .ch-page > .v3-codeblock-captioned {
+    max-width: var(--content-w);
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 var(--reading-px);
+  }
+
+  .ch-page > .v3-codeblock-captioned > .v3-codeblock,
+  .ch-page > .v3-codeblock-captioned > figure > .v3-codeblock {
+    max-width: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .ch-page > .v3-codeblock-captioned .v3-codeblock__frame {
+    width: 100%;
+  }
+
+  .ch-page > .v3-codeblock-captioned > .v3-codeblock__caption {
+    max-width: none;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .ch-page .v3-codeblock__caption,
+  .ch-page .v3-table caption,
+  .ch-page .v3-figure__caption,
+  .ch-page .v3-diagram__caption,
+  .ch-page .v3-stats__caption,
+  .ch-page .v3-pricetable__caption,
+  .ch-page .v3-timeline__caption,
+  .ch-page .v3-quadrant__caption,
+  .ch-page .v3-barcompare__caption {
+    margin-top: 12px;
+  }
+}
+

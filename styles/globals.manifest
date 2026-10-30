@@ -1,0 +1,13 @@
+# Ordered source for app/globals.css; concatenated without separators.
+# Preserve this cascade order. Run npm run gen:css after editing partials.
+00-head.css
+10-v3-verbatim.css
+20-rounds-001-002.css
+30-page-local.css
+40-rounds-003-010.css
+50-rounds-011-020.css
+60-rounds-021-040.css
+70-rounds-041-060.css
+80-rounds-061-080.css
+90-rounds-081-100.css
+100-rounds-101-108.css

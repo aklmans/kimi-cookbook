@@ -1,0 +1,2 @@
+# CSS split boundaries intentionally retain the original blank lines at EOF.
+styles/globals/*.css whitespace=-blank-at-eof

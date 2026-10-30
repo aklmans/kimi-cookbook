@@ -112,6 +112,7 @@ npm run test:release
 | `content/books/kimi/` | 书:`meta.ts` + 章节 MDX + `about.ts`(关于页内容模块) |
 | `content/prompts/` | 书籍与月刊共享的 Prompt 资产,网页 / MP / `llms.md` 同源渲染 |
 | `components/` | 站点组件;`components/mdx/` 是章节 MDX 词汇表 |
+| `styles/globals/` | 有序 CSS 源码片段;`app/globals.css` 由 `npm run gen:css` 逐字合并 |
 | `lib/` | 书籍/分析/渲染/字体等核心库;`lib/db.ts` 是多后端分析存储 |
 | `ops/` | 部署脚本(release 切换、rollup、PM2 配置) |
 | `promo/` | 小红书海报母版(HTML → PNG) |

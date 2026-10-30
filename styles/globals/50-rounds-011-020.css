@@ -1,0 +1,982 @@
+/* ─────────────────────────────────────────────────────────────────
+   Round-11: Section decoration — accent rule above section number
+   ───────────────────────────────────────────────────────────────── */
+
+.v3-section__number::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+  margin-bottom: 20px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Round-12: Block-level <T> fix — constrain bare i18n spans
+   MDX doesn't <p>-wrap standalone JSX elements, so <T> used as
+   block-level paragraphs become bare <span> children of .v3-page
+   with no width constraint.  Match .prose paragraph styling.
+   ───────────────────────────────────────────────────────────────── */
+
+.v3-page > span[data-i18n-lang] {
+  display: block;
+  max-width: var(--content-w);
+  margin: 0 auto 22px auto;
+  padding: 0 var(--reading-px);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Round-13: Callout visual redesign
+   Distinctive backgrounds per kind, thicker left border,
+   padded inner box.  Theme-aware via color-mix().
+   ───────────────────────────────────────────────────────────────── */
+
+/* Shared: padded inner box with background fill */
+.v3-callout__inner {
+  border-left-width: 2.5px;
+  border-radius: 0 4px 4px 0;
+  padding: 16px 20px 16px 20px;
+}
+
+/* Note — warm accent wash */
+.v3-callout--note .v3-callout__inner {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-left-color: var(--accent);
+}
+.v3-callout--note .v3-callout__label { color: var(--accent); }
+
+/* Tip — cool teal/green tint */
+:root { --callout-tip: #3a8f6a; }
+:root[data-theme="dark"] { --callout-tip: #5ab88a; }
+
+.v3-callout--tip .v3-callout__inner {
+  background: color-mix(in srgb, var(--callout-tip) 7%, transparent);
+  border-left-color: var(--callout-tip);
+}
+.v3-callout--tip .v3-callout__label { color: var(--callout-tip); }
+
+/* Warn — warm red tint */
+:root { --callout-warn: #bf4d4d; }
+:root[data-theme="dark"] { --callout-warn: #e07070; }
+
+.v3-callout--warn .v3-callout__inner {
+  background: color-mix(in srgb, var(--callout-warn) 6%, transparent);
+  border-left-color: var(--callout-warn);
+}
+.v3-callout--warn .v3-callout__label { color: var(--callout-warn); }
+
+/* Print: strip backgrounds, keep border for structure */
+@media print {
+  .v3-callout__inner {
+    background: transparent !important;
+    border-left-width: 2px !important;
+    padding: 8px 0 8px 16px !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Round-14: Checklist + LinkCard
+   ───────────────────────────────────────────────────────────────── */
+
+/* ── Checklist ── */
+.v3-checklist {
+  max-width: var(--content-w);
+  margin: 32px auto;
+  padding: 0 var(--reading-px);
+  list-style: none;
+}
+.v3-checklist__item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.v3-checklist__item:last-child { border-bottom: none; }
+
+.v3-checklist__marker {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1.5px solid var(--ink-3);
+  position: relative;
+  top: 3px;
+}
+.v3-checklist__item.is-done .v3-checklist__marker {
+  border-color: var(--callout-tip, #3a8f6a);
+  background: var(--callout-tip, #3a8f6a);
+}
+/* Checkmark via ::after */
+.v3-checklist__item.is-done .v3-checklist__marker::after {
+  content: "";
+  position: absolute;
+  left: 3.5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(40deg);
+}
+
+.v3-checklist__body {
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.v3-checklist__item.is-done .v3-checklist__body {
+  color: var(--ink-3);
+}
+
+/* ── LinkCard ── */
+.v3-linkcard {
+  display: flex;
+  align-items: center;
+  max-width: var(--content-w);
+  margin: 24px auto;
+  padding: 16px 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.v3-linkcard:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+.v3-linkcard__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.v3-linkcard__title {
+  font-family: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.v3-linkcard__desc {
+  font-family: var(--text);
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+.v3-linkcard__arrow {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--ink-3);
+  margin-left: 16px;
+  transition: color 0.15s, transform 0.15s;
+}
+.v3-linkcard:hover .v3-linkcard__arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* LinkCard needs reading-px for mobile alignment */
+@media (max-width: 540px) {
+  .v3-linkcard { margin-left: var(--reading-px); margin-right: var(--reading-px); }
+}
+
+/* Print */
+@media print {
+  .v3-checklist__item { break-inside: avoid; }
+  .v3-checklist__item.is-done .v3-checklist__marker {
+    background: #333 !important;
+    border-color: #333 !important;
+  }
+  .v3-linkcard {
+    border: 0.5px solid #999;
+    page-break-inside: avoid;
+  }
+  .v3-linkcard::after {
+    content: " (" attr(href) ")";
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #666;
+  }
+  .v3-linkcard__arrow { display: none; }
+}
+
+/* ================================================================
+   Round-15  PromptBox · Gallery · ShowcaseCard
+   ================================================================ */
+
+/* ── PromptBox ── */
+.v3-promptbox {
+  max-width: var(--content-w);
+  margin: 32px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-promptbox__frame {
+  position: relative;
+  border: 0.5px solid var(--border);
+  border-left: 2.5px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  padding: 16px 20px;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+.v3-promptbox__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.v3-promptbox__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.v3-promptbox__model {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  border: 0.5px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.v3-promptbox__copy {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.v3-promptbox__frame:hover .v3-promptbox__copy {
+  opacity: 1;
+}
+.v3-promptbox__text {
+  font-family: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  overflow: visible;
+}
+
+/* ── Gallery ── */
+.v3-gallery {
+  max-width: var(--content-w);
+  margin: 32px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-gallery__grid {
+  display: grid;
+  gap: 12px;
+}
+.v3-gallery__item[data-lightbox-src] {
+  cursor: zoom-in;
+}
+.v3-gallery__item .asset-frame {
+  border-radius: 4px;
+  overflow: hidden;
+}
+.v3-gallery__caption {
+  font-family: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin-top: 6px;
+  text-align: center;
+}
+.v3-gallery__fcaption {
+  font-family: var(--text);
+  font-size: 13px;
+  color: var(--ink-3);
+  text-align: center;
+  margin-top: 12px;
+}
+@media (max-width: 540px) {
+  .v3-gallery__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ── ShowcaseCard ── */
+.v3-showcase {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: var(--content-w);
+  margin: 12px auto;
+  padding: 14px 20px;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+@media (max-width: 540px) {
+  .v3-showcase { margin-left: var(--reading-px); margin-right: var(--reading-px); }
+}
+.v3-showcase:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.v3-showcase__type {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 0.5px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 2px;
+  min-width: 52px;
+  text-align: center;
+}
+.v3-showcase__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.v3-showcase__title {
+  font-family: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.v3-showcase__desc {
+  font-family: var(--text);
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.v3-showcase__arrow {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink-3);
+  transition: transform 0.15s, color 0.15s;
+}
+.v3-showcase:hover .v3-showcase__arrow {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* Type-specific badge accents */
+.v3-showcase--web .v3-showcase__type {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.v3-showcase--repo .v3-showcase__type,
+.v3-showcase--commit .v3-showcase__type {
+  color: var(--callout-tip);
+  border-color: color-mix(in srgb, var(--callout-tip) 40%, transparent);
+}
+.v3-showcase--slides .v3-showcase__type,
+.v3-showcase--sheet .v3-showcase__type {
+  color: var(--callout-warn);
+  border-color: color-mix(in srgb, var(--callout-warn) 40%, transparent);
+}
+
+/* ── Print — Round-15 ── */
+@media print {
+  .v3-promptbox__copy { display: none; }
+  .v3-promptbox__frame {
+    background: none !important;
+    border-left-width: 2px;
+  }
+  .v3-gallery { break-inside: avoid; }
+  .v3-showcase {
+    break-inside: avoid;
+    border-radius: 0;
+  }
+  .v3-showcase__arrow { display: none; }
+  .v3-showcase::after {
+    content: " [" attr(href) "]";
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #666;
+    word-break: break-all;
+  }
+}
+
+/* ============================================================
+   Round-16  Analytics Dashboard (/internal/analytics)
+   Internal-only page — English, no bilingual tokens.
+   Reuses --ink, --bg, --accent, --border, --mono, --text.
+   ============================================================ */
+
+/* ── Shell ── */
+.an-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+  font-family: var(--text);
+  color: var(--ink);
+}
+
+/* ── Auth gate ── */
+.an-auth {
+  max-width: 360px;
+  margin: 120px auto 0;
+  text-align: center;
+}
+.an-auth__title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.an-auth__hint {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 0 0 24px;
+}
+.an-auth__form {
+  display: flex;
+  gap: 8px;
+}
+.an-auth__input {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  outline: none;
+}
+.an-auth__input:focus {
+  border-color: var(--accent);
+}
+.an-auth__btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.an-auth__btn:hover {
+  opacity: 0.85;
+}
+
+/* ── Header ── */
+.an-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 36px;
+  padding: 0 0 20px;
+  border-bottom: 0.5px solid var(--border);
+}
+.an-header__title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.an-header__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.an-select {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 8px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.an-select--book {
+  min-width: 140px;
+  max-width: 200px;
+}
+.an-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.an-btn:hover { opacity: 0.85; }
+.an-btn:disabled { opacity: 0.5; cursor: wait; }
+.an-btn--text {
+  background: none;
+  color: var(--accent);
+  padding: 4px 0;
+  text-transform: none;
+  font-weight: 500;
+}
+.an-btn--text:hover { text-decoration: underline; }
+
+/* ── Error ── */
+.an-error {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 0 0 24px;
+}
+
+/* ── Summary cards ── */
+.an-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0 0 36px;
+}
+.an-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 16px;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+}
+.an-card__value {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.an-card__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* ── Section ── */
+.an-section {
+  margin: 0 0 36px;
+}
+.an-section__title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin: 0 0 16px;
+  padding: 0 0 8px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* ── Bar chart (CSS-only) ── */
+.an-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 160px;
+  padding: 0 0 24px;
+  border-bottom: 0.5px solid var(--border);
+}
+.an-chart__bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+.an-chart__bar {
+  width: 100%;
+  max-width: 24px;
+  min-height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transition: height 300ms ease;
+}
+.an-chart__bar:hover {
+  opacity: 0.75;
+}
+.an-chart__label {
+  position: absolute;
+  bottom: -20px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ── Table ── */
+.an-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.an-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 0.5px solid var(--border);
+}
+.an-table td {
+  padding: 10px 12px;
+  border-bottom: 0.5px solid color-mix(in srgb, var(--border) 50%, transparent);
+  vertical-align: top;
+}
+.an-table code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+.an-table__clickable {
+  cursor: pointer;
+}
+.an-table__clickable:hover td {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.an-ua {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.an-table--agents time {
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ── Breadcrumb ── */
+.an-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.an-breadcrumb code {
+  color: var(--ink);
+}
+
+/* ── Empty state ── */
+.an-empty {
+  font-size: 14px;
+  color: var(--ink-3);
+  font-style: italic;
+  padding: 24px 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .an-cards { grid-template-columns: repeat(2, 1fr); }
+  .an-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .an-chart { height: 120px; }
+  .an-table { font-size: 12px; }
+  .an-table th,
+  .an-table td { padding: 8px 6px; }
+  .an-ua { max-width: 160px; }
+}
+
+/* ============================================================
+   Round-17  Stats login session + account controls
+   ============================================================ */
+
+.an-auth__form--stack {
+  flex-direction: column;
+}
+
+.an-auth__form--stack .an-auth__btn {
+  width: 100%;
+}
+
+.an-auth code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.an-auth__error,
+.an-account__message {
+  margin: 12px 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.an-account {
+  padding-top: 4px;
+}
+
+.an-account__form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .an-account__form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Round-18  Split stats panels
+   ============================================================ */
+
+.an-panel {
+  margin: 0 0 52px;
+  padding: 0 0 44px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.an-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(104px, 1fr));
+  gap: 2px;
+  padding: 2px;
+  margin: 0 0 28px;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+}
+
+.an-tab {
+  min-height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.an-tab.is-active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.an-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.an-panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 18px;
+}
+
+.an-panel__eyebrow {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.an-panel__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.an-panel .an-cards {
+  margin-bottom: 32px;
+}
+
+.an-cards--compact {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 240px));
+}
+
+@media (max-width: 600px) {
+  .an-panel {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+  }
+
+  .an-panel__head {
+    display: block;
+  }
+
+  .an-tabs {
+    display: grid;
+  }
+
+  .an-panel__eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .an-panel__title {
+    font-size: 30px;
+  }
+
+  .an-cards--compact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================================
+   Round-19  Stats tabs before filters
+   ============================================================ */
+
+.an-header {
+  display: block;
+}
+
+.an-header__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 18px;
+}
+
+.an-header .an-tabs {
+  margin: 0;
+}
+
+.an-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.an-header__logout {
+  white-space: nowrap;
+}
+
+.an-header__controls {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .an-header {
+    display: block;
+  }
+
+  .an-header__top {
+    display: block;
+  }
+
+  .an-header .an-tabs {
+    margin-top: 16px;
+  }
+
+  .an-header__nav {
+    display: block;
+  }
+
+  .an-header__logout {
+    margin-top: 14px;
+  }
+
+  .an-header__controls {
+    justify-content: flex-start;
+  }
+}
+
+/* ============================================================
+   Round-20  Stats quick summaries
+   ============================================================ */
+
+.an-quick {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 24px;
+}
+
+.an-quick__item {
+  display: grid;
+  gap: 4px;
+  padding: 14px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+}
+
+.an-quick__label,
+.an-quick__delta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.an-quick__value {
+  font-family: var(--mono);
+  font-size: 24px;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .an-quick {
+    grid-template-columns: 1fr;
+  }
+}
+

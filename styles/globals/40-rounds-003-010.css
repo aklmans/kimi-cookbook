@@ -1,0 +1,1356 @@
+/* ============================================================
+   Round-3 · post-port enhancements (v3.css above is untouched)
+   1 · .ch-nav prev/next — compact arrow + number, with the
+       chapter title in a hover popover (consistent with the
+       center index's hover TOC).
+   ============================================================ */
+
+/* 1 · chapter-nav hover popover */
+.ch-nav__prev,
+.ch-nav__next {
+  position: relative;
+}
+.ch-nav__peek {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  width: max-content;
+  max-width: 240px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 0.5px solid var(--ink);
+  box-shadow: 0 12px 36px -12px color-mix(in oklab, var(--ink) 18%, transparent);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
+  white-space: normal;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  z-index: 110;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.ch-nav__prev .ch-nav__peek {
+  left: 0;
+  text-align: left;
+}
+.ch-nav__next .ch-nav__peek {
+  right: 0;
+  text-align: right;
+}
+@media (hover: hover) {
+  .ch-nav__prev:hover .ch-nav__peek,
+  .ch-nav__next:hover .ch-nav__peek,
+  .ch-nav__prev:focus-visible .ch-nav__peek,
+  .ch-nav__next:focus-visible .ch-nav__peek {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Round-4 · PDF print route (/books/<slug>/print)
+   - .print-cover / .print-toc / .print-colophon visuals
+   - Page-break refinements layered on top of v3.css @media print
+     (v3.css already owns: @page A4, page numbers + AKLMAN footer,
+      hidden chrome, 11.5pt body, .v3-cover/.v3-section/.v3-kicker
+      page-break-before, accent colors preserved).
+   ============================================================ */
+
+.print-book {
+  /* No own background — body's bg paints the whole page (light
+     #FAFAFA on screen, #FFFFFF in print). Setting `background:
+     var(--bg)` here would PIN the warm #FAFAFA into the print PDF
+     because v3.css's screen rule `:root[data-theme="light"]` has
+     higher specificity than its `@media print { :root { --bg: #FFF } }`
+     reset, so --bg stays warm in PDF and paints a cream rectangle
+     over the content area only — leaving Chromium's print margins
+     white. Removing the fill lets body's #FFFFFF show through. */
+  color: var(--ink);
+}
+
+/* ─── Front matter: book cover page ─── */
+.print-cover {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 72px var(--reading-px) 64px var(--reading-px);
+  text-align: center;
+}
+.print-cover__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  min-height: 90vh;
+}
+.print-cover__art {
+  width: min(360px, 78vw);
+  aspect-ratio: 3 / 4;
+  background:
+    repeating-linear-gradient(135deg, var(--code-bg) 0px, var(--code-bg) 8px, var(--bg) 8px, var(--bg) 9px),
+    var(--code-bg);
+  border: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.print-cover__art .cover-art {
+  --cover-pad: 38px;
+  --cover-logo-width: min(100%, 224px);
+  --cover-logo-size: 56px;
+  --cover-combine-icon-size: 56px;
+  --cover-combine-text-size: 22px;
+  --cover-combine-gap: 9px;
+  --cover-logo-top: 70px;
+  --cover-title-top: 70px;
+  --cover-large-title-size: 42px;
+  --cover-title-size: var(--cover-large-title-size);
+  --cover-subtitle-size: 17px;
+  --cover-brand-display: none;
+  --cover-mark-display: none;
+  --cover-combine-display: flex;
+}
+.print-cover__art .cover-art::after {
+  content: "";
+  width: 42%;
+  height: 34%;
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  background-image: radial-gradient(color-mix(in oklab, var(--cover-accent) 28%, transparent) 0.7px, transparent 0.8px);
+  background-size: 9px 9px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.print-cover__art .cover-art__logo {
+  justify-content: flex-start;
+}
+.print-cover__art .cover-art__title {
+  line-height: 1.04;
+  -webkit-line-clamp: 3;
+}
+.print-cover__art .cover-art__subtitle {
+  margin-top: 22px;
+}
+.print-cover__art .cover-art__subtitle::before {
+  content: "";
+  width: 34px;
+  height: 2px;
+  display: block;
+  margin: 0 0 18px 0;
+  background: var(--cover-accent);
+}
+.print-cover__art .cover-art__sig {
+  width: 100%;
+  padding-top: 18px;
+  border-top: 0.5px solid var(--border);
+}
+/* Masthead (imprint + serial) — only the print cover passes it. Base
+   styling for the on-screen /print preview; the @media print block owns
+   the A4 sizing. */
+.cover-art__masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ─── Front matter: TOC page ─── */
+.print-toc {
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 96px var(--reading-px) 64px var(--reading-px);
+}
+.print-toc__title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 56px 0;
+}
+.print-toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.print-toc__item {
+  border-bottom: 0.5px solid var(--border);
+}
+.print-toc__item:first-child {
+  border-top: 0.5px solid var(--border);
+}
+/* The whole row is the anchor so the printed TOC entry is clickable
+   edge-to-edge (Chromium turns #chapter-<slug> into a PDF GoTo link).
+   The grid + row padding live here (not on the <li>) so the link box —
+   and thus the clickable rect — covers the entire row. */
+.print-toc__link {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  column-gap: 24px;
+  align-items: baseline;
+  padding: 16px 0;
+  color: inherit;
+  text-decoration: none;
+}
+.print-toc__num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.print-toc__title-cell {
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.print-toc__time {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ─── Back matter: colophon ─── */
+.print-colophon {
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 120px var(--reading-px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 70vh;
+  gap: 28px;
+}
+.print-colophon__line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0;
+}
+.print-colophon__sig,
+.print-colophon__copy {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ─── Print-only: page breaks + block-keep refinements ─── */
+@media print {
+  /* Page background is left at v3.css's verbatim white (#FFFFFF).
+     A warm fill on the content area alone made the PDF look like a
+     tinted rectangle floating on white printer margins; full-bleed
+     warmth would mean tearing apart the @page page-number + AKLMAN
+     footer (which depends on counter(pages) only available inside
+     @page margin boxes). Pure white sidesteps both. */
+
+  /* Force backgrounds + colors through to the PDF for every element,
+     including pseudo-elements. Chromium with `printBackground: true`
+     already covers the page bg, but nested element backgrounds (the
+     Kimi tile, callout fills, etc.) can still get stripped without
+     explicit print-color-adjust. */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Per-chapter byline (read time + revision dates) is screen-only —
+     in a printed book the reader doesn't need a "5 min read" stamp on
+     every chapter cover; the book-level read time already sits on the
+     front matter and the total page count is right there in the footer. */
+  .v3-cover__byline {
+    display: none !important;
+  }
+
+  /* Cover / TOC each on their own page */
+  .print-cover,
+  .print-toc {
+    min-height: 0;
+    padding: 0;
+    page-break-after: always;
+    break-after: page;
+  }
+  .print-cover {
+    width: 210mm;
+    height: 297mm;
+    max-width: none;
+    margin: 0;
+    overflow: hidden;
+  }
+  .print-cover__inner {
+    width: 210mm;
+    min-height: 297mm;
+    height: 297mm;
+    justify-content: center;
+    gap: 0;
+  }
+  .print-cover__art {
+    width: 210mm;
+    height: 297mm;
+    aspect-ratio: auto;
+    border: 0;
+  }
+  /* Two-column print jacket (mirrors the web detail hero): masthead over a top
+     hairline → body [ text column | flowing-gradient cover card ] → 3-part
+     colophon over a bottom hairline. */
+  .print-jacket {
+    width: 210mm;
+    height: 297mm;
+    box-sizing: border-box;
+    padding: 15mm 16mm;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    color: var(--ink);
+    text-align: left;
+  }
+  .print-jacket__masthead,
+  .print-jacket__colophon {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6mm;
+    font-family: var(--mono);
+    font-size: 8pt;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .print-jacket__masthead {
+    padding-bottom: 4mm;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .print-jacket__colophon {
+    padding-top: 4mm;
+    border-top: 0.5px solid var(--border);
+  }
+  .print-jacket__body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 66mm;
+    gap: 13mm;
+    align-items: center;
+  }
+  .print-jacket__lead {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .print-jacket__kicker {
+    margin: 0 0 9mm;
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cover-accent);
+  }
+  .print-jacket__mark {
+    --cover-mark-display: none;
+    --cover-combine-display: flex;
+    --cover-combine-icon-size: 13mm;
+    --cover-combine-text-size: 17pt;
+    --cover-combine-gap: 3mm;
+    --cover-logo-size: 13mm;
+    display: flex;
+    margin: 0 0 10mm;
+  }
+  .print-jacket__title {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 31pt;
+    line-height: 1.12;
+    color: var(--ink);
+  }
+  .print-jacket__rule {
+    width: 14mm;
+    height: 0.6mm;
+    margin: 6mm 0;
+    background: var(--cover-accent);
+  }
+  .print-jacket__lede {
+    margin: 0;
+    max-width: 90mm;
+    font-family: var(--text);
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  /* A proper "cover" proportion, vertically centered in the column — not the
+     full-height strip (which read as too tall/narrow). */
+  .print-jacket__card {
+    align-self: center;
+    width: 66mm;
+    aspect-ratio: 1 / 2.05;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid var(--border);
+    background: #fcfbf9;
+    overflow: hidden;
+  }
+  .print-jacket .cover-card__brand {
+    --cover-mark-display: none;
+    --cover-combine-display: flex;
+    --cover-combine-icon-size: 9mm;
+    --cover-combine-text-size: 12pt;
+    --cover-combine-gap: 2.5mm;
+    --cover-logo-size: 9mm;
+    --cover-combine-text-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    padding: 5mm;
+    border-bottom: 0.5px solid #ece9e3;
+  }
+  .print-jacket .cover-card__brand .book-cover-logo--cursor,
+  .print-jacket .cover-card__brand .book-cover-logo--hermes,
+  .print-jacket .cover-card__brand .book-cover-logo--zhipu-glm {
+    --cover-logo-color: #1a1a1a;
+  }
+  .print-jacket .cover-card__art {
+    position: relative;
+    flex: 1;
+  }
+  /* Colophon starts a fresh final page */
+  .print-colophon {
+    min-height: 0;
+    padding: 0;
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Print-grade typography for the print-* sections */
+  .print-toc__title { font-size: 22pt; }
+  .print-toc__title-cell { font-size: 11.5pt; }
+  .print-colophon__line { font-size: 14pt; }
+
+  /* Block elements must never split across pages */
+  .v3-codeblock,
+  .v3-callout,
+  .v3-figure,
+  .v3-diagram,
+  .v3-stats,
+  .v3-pricetable,
+  .v3-timeline,
+  .v3-quadrant,
+  .v3-barcompare,
+  .v3-quote,
+  .v3-tabs,
+  .v3-table-wrap,
+  .v3-refs {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Headings must keep with the following paragraph */
+  .v3-h3,
+  .v3-section__title,
+  .v3-cover__title,
+  .print-toc__title,
+  .print-colophon__line {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Orphan / widow protection on prose */
+  .prose p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Digital-only artifacts are hidden in print */
+  .next-book { display: none !important; }
+  .print-trigger { display: none !important; }
+
+  /* Strip the on-screen cream chip from inline <code> — on paper the
+     monospace face alone carries the differentiation, and the warm
+     #F0EFEB pill clashes with the white trim. */
+  .prose code,
+  .v3-table tbody code,
+  .v3-callout__body code {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  /* <Figure> placeholder: keep the bordered outline as a visual cue,
+     but drop the cream fill (and the inner mono-label) so it doesn't
+     read as a filled card on paper. */
+  .v3-figure__img {
+    background: transparent !important;
+  }
+  .v3-figure__img .mono-label { display: none !important; }
+
+  .v3-codeblock__pre,
+  .v3-codeblock__pre code {
+    font-family: var(--print-code-font) !important;
+    font-variant-ligatures: none;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .v3-tabs {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  .v3-tabs__bar {
+    display: none !important;
+  }
+  .v3-tabs__panels {
+    padding-top: 0;
+  }
+  .v3-tabs__panel { display: block !important; }
+  .v3-tabs__panel {
+    margin: 0 0 8mm 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .v3-tabs__panel::before {
+    content: attr(data-print-label);
+    display: block;
+    margin: 0 0 3mm 0;
+    font-family: var(--mono);
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .v3-tabs__panel:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+/* ============================================================
+   Round-5 · post-port polish (v3.css above is untouched)
+   1 · .v3-cover--chapter — top padding for chapter cover pages
+       (formerly inline `paddingTop: 100px` on the JSX element).
+   2 · .book-row cover column — bumped from 120px to 144px so
+       home thumbnails render at the same proportions as library
+       (.lib-row), where the cover-art logo at 56px now matches.
+   ============================================================ */
+
+/* 1 · chapter cover top padding (replaces inline style in Cover.tsx) */
+.v3-cover--chapter {
+  padding-top: 100px;
+}
+
+/* 2 · home thumbnail column matches library (144px / 38.9% logo ratio) */
+.book-row {
+  grid-template-columns: 144px 1fr;
+}
+@media (max-width: 760px) {
+  .book-row { grid-template-columns: 88px 1fr; }
+}
+
+/* 3 · per-brand thumbnail tuning
+   The combined block is `icon + gap + wordmark`. With combined-icon-size
+   = 56px and combined-text-size = 14px, Anthropic's wide wordmark
+   (viewBox 0 0 182 24 → ~106px at 14pt) overflows the ~124px thumbnail
+   usable width. Cursor's wordmark (123/24 → ~72px) also barely fits.
+   Shrink both per-brand so the combined block stays inside the box. */
+.book-row__cover .book-cover-logo--anthropic,
+.lib-row__cover .book-cover-logo--anthropic,
+.next-book__cover .book-cover-logo--anthropic {
+  --cover-combine-icon-size: 28px;
+  --cover-combine-text-size: 10px;
+}
+.book-row__cover .book-cover-logo--cursor,
+.lib-row__cover .book-cover-logo--cursor,
+.next-book__cover .book-cover-logo--cursor {
+  --cover-combine-icon-size: 38px;
+  --cover-combine-text-size: 12px;
+}
+.book-row__cover .book-cover-logo--doubao,
+.lib-row__cover .book-cover-logo--doubao,
+.next-book__cover .book-cover-logo--doubao {
+  /* Doubao wordmark (105/24 ≈ 4.38) lands at ~61px at default 14pt
+     — combined block at 56+5+61=122 hugs the 124px usable thumb width.
+     Drop the wordmark to 12pt so the block sits at a safer ~114px. */
+  --cover-combine-text-size: 12px;
+}
+.book-row__cover .book-cover-logo--opencode,
+.lib-row__cover .book-cover-logo--opencode,
+.next-book__cover .book-cover-logo--opencode {
+  /* "OpenCode" wordmark (138/24 ≈ 5.75) is wide — at default 14pt it
+     hits ~80px and the combined block blows past 124. Shrink both
+     icon and text the same way Anthropic / Cursor were tuned. */
+  --cover-combine-icon-size: 36px;
+  --cover-combine-text-size: 11px;
+}
+.book-row__cover .book-cover-logo--hermes,
+.lib-row__cover .book-cover-logo--hermes,
+.next-book__cover .book-cover-logo--hermes {
+  /* "Hermes" wordmark (52/24 ≈ 2.17) is short — at default 14pt the
+     combined block only hits ~91px, narrower than every other brand.
+     Bump the wordmark to 22pt so it widens to ~109px and falls in
+     the same range as Anthropic / OpenAI / Cursor / Google. */
+  --cover-combine-text-size: 22px;
+}
+.book-cover-logo--hermes {
+  --cover-logo-color: var(--ink);
+  --cover-combine-text-color: var(--ink);
+}
+:root[data-theme="dark"] .book-cover-logo--hermes {
+  --cover-logo-color: #C29D3D;
+  --cover-combine-text-color: #C29D3D;
+}
+:root[data-theme="dark"] .cover-art:has(.book-cover-logo--hermes) {
+  --cover-accent: #C29D3D !important;
+}
+.book-row__cover .book-cover-logo--openclaw,
+.lib-row__cover .book-cover-logo--openclaw,
+.next-book__cover .book-cover-logo--openclaw {
+  /* "OpenClaw" wordmark (140/24 ≈ 5.83) is even wider than OpenCode —
+     same shrink pattern keeps the combined block at ~105px. */
+  --cover-combine-icon-size: 36px;
+  --cover-combine-text-size: 11px;
+}
+
+/* 6 · Workflow books (knowledge-work / developer-work / creator-work /
+   study-work) — no lobehub brand. Typographic treatment:
+   - mark area: a single CJK character (knowledge → 知, etc.)
+   - combined slot: same CJK char (smaller) + mono category code
+
+   `.book-cover-logo__char` is the CJK character; `.book-cover-logo__workmark`
+   is the all-caps mono category code. Both sized off the existing
+   --cover-logo-size / --cover-combine-* variables so big covers and
+   thumbnails get proportional treatment without per-context CSS. */
+.book-cover-logo__char {
+  font-family: var(--serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: calc(var(--cover-logo-size) * 0.78);
+  line-height: 1;
+  color: var(--cover-logo-color);
+}
+.book-cover-logo__char--combined {
+  font-size: calc(var(--cover-combine-icon-size) * 0.78);
+}
+.book-cover-logo__workmark {
+  font-family: var(--mono);
+  font-size: var(--cover-combine-text-size);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--cover-combine-text-color);
+}
+/* knowledge-work / developer-work thumbnail tuning — both wordmarks
+   ("KNOWLEDGE" / "DEVELOPER") are 9 chars and need the same shrink so
+   the combined block fits inside the 124px usable thumb width. */
+.book-row__cover .book-cover-logo--knowledge-work,
+.lib-row__cover .book-cover-logo--knowledge-work,
+.next-book__cover .book-cover-logo--knowledge-work,
+.book-row__cover .book-cover-logo--developer-work,
+.lib-row__cover .book-cover-logo--developer-work,
+.next-book__cover .book-cover-logo--developer-work {
+  --cover-combine-icon-size: 40px;
+  --cover-combine-text-size: 12px;
+}
+
+/* study-work thumbnail tuning — "STUDY" (5 chars) is the shortest
+   workmark; at default 14pt the combined block sits at only ~91px,
+   leaving the cover with obviously wider whitespace than the other
+   workflow books (which hover around 100–108px). Bump the wordmark to
+   18pt so the block widens to ~103px and falls in the same range. */
+.book-row__cover .book-cover-logo--study-work,
+.lib-row__cover .book-cover-logo--study-work,
+.next-book__cover .book-cover-logo--study-work {
+  --cover-combine-text-size: 18px;
+}
+
+/* primer thumbnail tuning — "PRIMER" (6 chars) at default 14pt only
+   reaches ~99px combined; bump the wordmark to 16pt so the block
+   lands at ~107px, in line with the other typographic books. */
+.book-row__cover .book-cover-logo--primer,
+.lib-row__cover .book-cover-logo--primer,
+.next-book__cover .book-cover-logo--primer {
+  --cover-combine-text-size: 16px;
+}
+
+/* 4 · cursor logo is theme-aware
+   Cursor's brand accent (#111111) goes invisible against the dark-mode
+   cover background. Override the logo + wordmark color to ink (which
+   already inverts with the theme) so it stays legible in both modes.
+   The accent rule line remains brand-color since it's only 1px. */
+.book-cover-logo--cursor {
+  --cover-logo-color: var(--ink);
+  --cover-combine-text-color: var(--ink);
+}
+
+/* 5 · Kimi runs in a brand-colored tile
+   Kimi/Color is a white K + small accent dot on a transparent
+   background, so it vanishes on any light surface. Wrap it in a
+   brand-colored rounded tile (the same lockup lobehub's Kimi.Combine
+   renders, minus the @lobehub/ui runtime dep) so the white K always
+   sits on a high-contrast field — works in both themes. The tile fills
+   with --cover-accent; every context that shows the mark must set it
+   (CoverArt sets it inline; bookCoverMark sets it for the detail mark —
+   without that the tile had no fill and looked washed out in light). */
+.book-cover-logo--kimi .book-cover-logo__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* MARK slot (single, hidden in current layouts but kept sane) */
+  width: var(--cover-logo-size);
+  height: var(--cover-logo-size);
+  padding: calc(var(--cover-logo-size) * 0.18);
+  background: var(--cover-accent);
+  /* Theme-aware hairline so the black tile keeps a visible edge
+     against the dark-mode cover background; in light mode it sits
+     under the high-contrast tile and is invisible. */
+  border: 0.5px solid var(--border);
+  border-radius: calc(var(--cover-logo-size) * 0.22);
+  box-sizing: border-box;
+}
+/* COMBINED slot — tile matches the brand-default icon size
+   (--cover-combine-icon-size) so it sits in the same visual slot as
+   other brands' marks. Padding is computed so the K letter inside ends
+   up ~1.2x the wordmark cap-height — proportional to "Kimi" next to it. */
+.book-cover-logo--kimi .book-cover-logo__tile--combined {
+  width: var(--cover-combine-icon-size);
+  height: var(--cover-combine-icon-size);
+  padding: calc((var(--cover-combine-icon-size) - 1.6 * var(--cover-combine-text-size)) / 2);
+  border-radius: calc(var(--cover-combine-icon-size) * 0.22);
+}
+
+/* Kimi's wordmark is just 4 letters — at the default 14px the combined
+   block lands ~40px narrower than Anthropic/OpenAI/Cursor/Google, so
+   the thumbnail cover has obviously wider whitespace on both sides.
+   Bump Kimi's thumbnail wordmark to 18px so the combined block (tile
+   + gap + wordmark) lands at ~109px, in line with the other brands. */
+.book-row__cover .book-cover-logo--kimi,
+.lib-row__cover .book-cover-logo--kimi,
+.next-book__cover .book-cover-logo--kimi {
+  --cover-combine-text-size: 18px;
+}
+
+
+/* ============================================================
+   Round-6 · draft state (v3.css above is untouched)
+   1 · .v3-chapter-draft — placeholder block that replaces the MDX
+       body when Chapter.draft === true (rendered by DraftNotice).
+   2 · .toc__row--draft / .toc__time DRAFT pill — chapter row in the
+       book TOC keeps its slot but signals the chapter isn't ready.
+   ============================================================ */
+
+/* 1 · chapter draft notice */
+.v3-chapter-draft {
+  max-width: var(--content-w);
+  margin: 80px auto 0 auto;
+  padding: 64px var(--reading-px);
+  text-align: center;
+  border-top: 0.5px solid var(--border);
+}
+.v3-chapter-draft__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 28px 0;
+}
+.v3-chapter-draft__title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 24px 0;
+  text-wrap: balance;
+}
+.v3-chapter-draft__body {
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 auto;
+  max-width: 480px;
+  text-wrap: pretty;
+}
+@media (max-width: 760px) {
+  .v3-chapter-draft { padding: 48px var(--reading-px); }
+  .v3-chapter-draft__title { font-size: 24px; }
+  .v3-chapter-draft__body { font-size: 15px; }
+}
+@media print {
+  /* PDF rendering — let the draft notice page-break-keep with its
+     chapter cover and stay compact, not centered vertically. */
+  .v3-chapter-draft {
+    margin: 12mm 0 0 0;
+    padding: 0;
+    border-top: 0;
+    page-break-inside: avoid;
+    text-align: left;
+  }
+  .v3-chapter-draft__title { font-size: 16pt; }
+  .v3-chapter-draft__body { font-size: 11pt; max-width: none; }
+}
+
+/* 2 · draft chapter row in the book TOC — keep the slot but mute the
+   row a touch and swap the read-time for a "DRAFT" pill. */
+.toc__row--draft .toc__title { color: var(--ink-3); }
+.toc__row--draft .toc__time {
+  color: var(--accent);
+}
+
+/* 3 · zh-only book notice — sits in the byline area on book detail,
+   visible only when the site is in EN mode (via [lang="en"] CSS).
+   Honest, quiet, in v3's mono editorial voice — doesn't shout. */
+.book-detail__lang-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 24px 0;
+}
+
+
+/* ============================================================
+   Round-7 · italic discipline (v3.css above is untouched)
+   Editorial preference: only titles carry italic. Body / intro /
+   lede text stays upright on the serif body font for comfortable
+   reading. Overrides v3.css verbatim defaults for the three intro
+   slots (book detail page lede, featured-book lede on home, and
+   the chapter cover lede). Title selectors stay untouched.
+   ============================================================ */
+.book-detail__lede,
+.featured__lede,
+.v3-cover__lede {
+  font-family: var(--text);
+  font-style: normal;
+}
+
+
+/* ============================================================
+   Round-8 · Syntax highlighting (rehype-pretty-code / shiki)
+
+   rehype-pretty-code emits <span> elements with inline CSS
+   custom properties --shiki-light and --shiki-dark. These rules
+   resolve the correct variable based on the active data-theme.
+   The <figure> wrapper is made layout-transparent so the
+   existing .v3-codeblock cascade is preserved.
+   ============================================================ */
+
+/* rehype-pretty-code wraps <pre> in <figure> — collapse it so
+   .v3-codeblock keeps its existing max-width / margin / padding. */
+figure[data-rehype-pretty-code-figure] {
+  display: contents;
+}
+
+/* Resolve dual-theme shiki variables */
+.v3-codeblock__pre code[data-language] span {
+  color: var(--shiki-light);
+}
+:root[data-theme="dark"] .v3-codeblock__pre code[data-language] span {
+  color: var(--shiki-dark);
+}
+
+/* Inline code with language annotation (e.g. `value{:ts}`) */
+.prose code[data-language] > span {
+  color: var(--shiki-light);
+}
+:root[data-theme="dark"] .prose code[data-language] > span {
+  color: var(--shiki-dark);
+}
+
+/* Code blocks: wrap long lines on screen (match PDF behavior)
+   and refine the left rule to the thinner 1pt print weight.
+   :root prefix defeats Lightning CSS same-selector dedup against
+   the verbatim v3.css rules above. */
+:root .v3-codeblock__pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+:root .v3-codeblock__frame {
+  border-left-width: 1pt;
+}
+
+/* Line highlighting — ```js {1,3-5} meta syntax.
+   Highlighted lines get a subtle background tint
+   that spans the full code block width via negative
+   margin + padding trick on the grid row. */
+.v3-codeblock__pre code[data-language] [data-highlighted-line] {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  margin: 0 -24px;
+  padding: 0 24px;
+  border-left: 2px solid var(--accent);
+  margin-left: -26px;
+  padding-left: 22px;
+}
+:root[data-theme="dark"] .v3-codeblock__pre code[data-language] [data-highlighted-line] {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* Word / character highlighting — ```js "word" meta syntax */
+.v3-codeblock__pre mark[data-highlighted-chars] {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-bottom: 1px solid var(--accent);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* Print: strip syntax colors to monochrome */
+@media print {
+  .v3-codeblock__pre code[data-language] span {
+    color: var(--ink) !important;
+  }
+  .v3-codeblock__pre code[data-language] [data-highlighted-line] {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-left-color: var(--ink) !important;
+  }
+  .v3-codeblock__pre mark[data-highlighted-chars] {
+    background: rgba(0, 0, 0, 0.06) !important;
+    border-bottom-color: var(--ink) !important;
+  }
+}
+
+
+/* ============================================================
+   Round-9 · New MDX vocabulary: Steps, Accordion, Badge, Dl
+
+   Four block/inline components for tutorial and reference
+   content — structured procedures, collapsible panels,
+   inline status labels, and definition lists.
+   ============================================================ */
+
+/* ── Steps ── */
+.v3-steps {
+  max-width: var(--content-w);
+  margin: 40px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-steps__item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  position: relative;
+  padding-bottom: 28px;
+}
+/* Vertical connector line between steps */
+.v3-steps__item::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 32px;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dashed var(--border);
+}
+.v3-steps__item--last::before {
+  display: none;
+}
+.v3-steps__item--last {
+  padding-bottom: 0;
+}
+.v3-steps__number {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.v3-steps__body {
+  padding-top: 5px;
+}
+.v3-steps__title {
+  font-family: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+  line-height: 1.5;
+}
+.v3-steps__desc {
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.v3-steps__desc p {
+  margin: 0 0 8px 0;
+}
+.v3-steps__desc p:last-child {
+  margin-bottom: 0;
+}
+.v3-steps__desc code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+}
+
+/* ── Accordion ── */
+.v3-accordion {
+  max-width: var(--content-w);
+  margin: 40px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-accordion__item {
+  border-bottom: 0.5px solid var(--border);
+}
+.v3-accordion__item:first-child {
+  border-top: 0.5px solid var(--border);
+}
+.v3-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+.v3-accordion__title {
+  font-family: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.v3-accordion__icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+/* Horizontal bar (always visible) */
+.v3-accordion__icon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 1px;
+  background: var(--ink-3);
+  transform: translateY(-50%);
+}
+/* Vertical bar (hidden when open → forms +/−) */
+.v3-accordion__icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  background: var(--ink-3);
+  transform: translateX(-50%);
+  transition: opacity 0.15s ease;
+}
+.v3-accordion__item.is-open .v3-accordion__icon::after {
+  opacity: 0;
+}
+/* Content hidden by default, shown via .is-open toggle */
+.v3-accordion__content {
+  display: none;
+  padding: 0 0 20px 0;
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.v3-accordion__item.is-open > .v3-accordion__content {
+  display: block;
+}
+.v3-accordion__content p {
+  margin: 0 0 8px 0;
+}
+.v3-accordion__content p:last-child {
+  margin-bottom: 0;
+}
+.v3-accordion__content code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+}
+
+/* ── Reading progress bar ── */
+.v3-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform;
+}
+@media print {
+  .v3-progress { display: none !important; }
+}
+
+/* ── Kbd (keyboard key cap) ── */
+.v3-kbd {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 3px 6px;
+  color: var(--ink);
+  background: var(--code-bg);
+  border: 0.5px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+/* ── Badge ── */
+.v3-badge {
+  display: inline;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 0.5px solid var(--border);
+  padding: 2px 6px;
+  color: var(--ink);
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.v3-badge--new,
+.v3-badge--beta {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.v3-badge--optional {
+  color: var(--ink-3);
+  border-color: var(--border);
+}
+.v3-badge--deprecated {
+  color: var(--ink-3);
+  border-color: var(--border);
+  text-decoration: line-through;
+}
+
+/* ── Compare (Before / After) ── */
+.v3-compare {
+  max-width: var(--content-w);
+  margin: 40px auto;
+  padding: 0 var(--reading-px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: 0;
+}
+.v3-compare__slot {
+  min-width: 0;
+}
+.v3-compare__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px 0;
+}
+.v3-compare__body {
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.v3-compare__body p {
+  margin: 0 0 8px 0;
+}
+.v3-compare__body p:last-child {
+  margin-bottom: 0;
+}
+.v3-compare__body code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+}
+.v3-compare__divider {
+  width: 0;
+  border-left: 0.5px solid var(--border);
+  margin: 0 20px;
+  align-self: stretch;
+}
+@media (max-width: 540px) {
+  .v3-compare {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+  .v3-compare__divider {
+    display: none;
+  }
+}
+
+/* ── Dl (Definition List) ── */
+.v3-dl {
+  max-width: var(--content-w);
+  margin: 40px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-dl__entry {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  column-gap: 24px;
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.v3-dl__entry:first-child {
+  border-top: 0.5px solid var(--border);
+}
+.v3-dl__term {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  padding-top: 2px;
+  line-height: 1.6;
+}
+.v3-dl__desc {
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+.v3-dl__desc code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+}
+@media (max-width: 540px) {
+  .v3-dl__entry {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+  }
+}
+
+/* ── Round-9 print overrides ── */
+@media print {
+  .v3-steps {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .v3-steps__item::before {
+    border-left-color: #C0BFBA !important;
+  }
+  .v3-steps__number {
+    border-color: var(--ink) !important;
+    color: var(--ink) !important;
+  }
+
+  .v3-accordion__item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* Force all panels open in print */
+  .v3-accordion__content {
+    display: block !important;
+  }
+  .v3-accordion__icon {
+    display: none !important;
+  }
+  .v3-accordion__summary {
+    cursor: default;
+  }
+
+  .v3-compare {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .v3-dl {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Round-10: Image Lightbox
+   ───────────────────────────────────────────────────────────────── */
+
+/* Clickable figure cursor hint */
+.v3-figure[data-lightbox-src] .v3-figure__img {
+  cursor: zoom-in;
+}
+
+/* Fullscreen overlay */
+.v3-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: zoom-out;
+  animation: lightbox-in 0.2s ease-out;
+  padding: 24px;
+}
+.v3-lightbox__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media print {
+  .v3-lightbox { display: none !important; }
+}
+

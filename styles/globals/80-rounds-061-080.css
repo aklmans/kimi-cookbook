@@ -1,0 +1,1356 @@
+/* Round-61 · Code filename headers.
+   Fenced code `title=` and `<CodeBlock filename>` share this single strip. */
+.v3-codeblock__title {
+  margin: 0;
+  border-left: 1pt solid var(--code-rule);
+  border-bottom: 0.5px solid color-mix(in srgb, var(--code-rule) 28%, transparent);
+  background: var(--code-surface);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  padding: 9px 16px 8px 24px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.v3-codeblock:has(> .v3-codeblock__title) .v3-codeblock__frame,
+.v3-codeblock-captioned:has(> .v3-codeblock__title) > .v3-codeblock .v3-codeblock__frame,
+.v3-codeblock-captioned:has(> .v3-codeblock__title) > figure > .v3-codeblock .v3-codeblock__frame {
+  border-top: 0;
+}
+
+.v3-codeblock-captioned > .v3-codeblock__title {
+  margin: 0;
+}
+
+.v3-codeblock-captioned > .v3-codeblock__title + .v3-codeblock,
+.v3-codeblock-captioned > .v3-codeblock__title + figure > .v3-codeblock {
+  margin-top: 0;
+}
+
+.v3-codeblock:has(> .v3-codeblock__title) > .v3-codeblock__frame,
+.v3-codeblock-captioned:has(> .v3-codeblock__title) > .v3-codeblock,
+.v3-codeblock-captioned:has(> .v3-codeblock__title) > figure {
+  margin-top: 0;
+}
+
+@media print {
+  .v3-codeblock__title {
+    border-left-color: var(--code-rule);
+    border-bottom-color: color-mix(in srgb, var(--code-rule) 32%, transparent);
+    background: var(--code-surface);
+  }
+}
+
+/* ============================================================
+   Round-62 · Chapter footer rhythm.
+   The article body now follows an 8px reading ladder; the tail should
+   not jump back to the old 96px footer gap. Keep the end sequence on
+   the same rhythm: final manifesto / refs → chapter nav → optional
+   next-book → discussion → site footer.
+   ============================================================ */
+@media screen {
+  .ch-page > .v3-kicker {
+    margin-top: var(--rhythm-xl);
+  }
+
+  .ch-page > .v3-refs {
+    margin-top: var(--rhythm-xl);
+  }
+
+  .ch-page > :is(.v3-kicker, .v3-refs) + .ch-nav,
+  .ch-page > :is(
+    .prose,
+    .v3-codeblock,
+    .v3-codeblock-captioned,
+    .v3-tabs,
+    .v3-table-wrap,
+    .v3-callout,
+    .v3-figure,
+    .v3-diagram,
+    .v3-stats,
+    .v3-pricetable,
+    .v3-timeline,
+    .v3-quadrant,
+    .v3-barcompare,
+    .v3-steps,
+    .v3-accordion,
+    .v3-compare,
+    .v3-dl,
+    .v3-checklist,
+    .v3-linkcard,
+    .v3-promptbox
+  ) + .ch-nav {
+    margin-top: var(--rhythm-xl);
+  }
+
+  .ch-page > .ch-nav {
+    padding-top: var(--rhythm-sm);
+    padding-bottom: var(--rhythm-sm);
+  }
+
+  .ch-page > .ch-nav + .next-book {
+    margin-top: var(--rhythm-lg);
+  }
+
+  .ch-page > :is(.ch-nav, .next-book) + .discussion {
+    margin-top: var(--rhythm-xl);
+    padding-top: 0;
+  }
+
+  .ch-page + .v3-footer {
+    margin-top: var(--rhythm-xl);
+  }
+}
+
+/* ============================================================
+   Round-63 · Chapter dividers.
+   Inside chapters the divider is a pause between sections, not a
+   page-level ornament. Keep the dot mark quieter and let the rhythm
+   come from Round-60's block ladder.
+   ============================================================ */
+@media screen {
+  .ch-page > .v3-divider {
+    margin-top: var(--rhythm-lg);
+    margin-bottom: var(--rhythm-lg);
+    font-size: 18px;
+    letter-spacing: 0.42em;
+    color: color-mix(in srgb, var(--accent) 78%, var(--ink-3));
+  }
+
+  .ch-page > .v3-divider::before {
+    content: ". . .";
+  }
+}
+
+/* ============================================================
+   Round-64 · Website-style chapter nav.
+   Mirrors Zhaphar website's series-nav: a quiet meta row followed by
+   two stable prev/next cells. The book TOC popover remains attached to
+   the progress link in the meta row.
+   ============================================================ */
+@media screen {
+  .ch-page > .ch-nav {
+    display: block;
+    max-width: var(--content-w);
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 var(--reading-px);
+    border-top: 0;
+    border-bottom: 0;
+    color: var(--ink-3);
+  }
+
+  .ch-nav__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 16px;
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .ch-nav__series {
+    color: var(--ink);
+  }
+
+  .ch-nav__index-wrap {
+    flex: none;
+  }
+
+  .ch-nav__index {
+    color: var(--ink-3);
+    text-align: right;
+  }
+
+  .ch-nav__links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .ch-nav__links > * {
+    display: flex;
+    min-height: 68px;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    padding: 18px 16px 18px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .ch-nav__links > :first-child {
+    border-right: 0.5px solid var(--border);
+  }
+
+  .ch-nav__link {
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background-color 120ms ease,
+      border-color 120ms ease,
+      transform 200ms ease;
+  }
+
+  .ch-nav__link--next {
+    align-items: flex-end;
+    padding: 18px 0 18px 16px;
+    text-align: right;
+  }
+
+  .ch-nav__link--prev:hover,
+  .ch-nav__link--prev:focus-visible {
+    border-color: var(--accent);
+    background: var(--row-hover);
+    transform: translateX(-4px);
+  }
+
+  .ch-nav__link--next:hover,
+  .ch-nav__link--next:focus-visible {
+    border-color: var(--accent);
+    background: var(--row-hover);
+    transform: translateX(4px);
+  }
+
+  .ch-nav__dir,
+  .ch-nav__cue {
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 120ms ease;
+  }
+
+  .ch-nav__link:hover .ch-nav__dir,
+  .ch-nav__link:focus-visible .ch-nav__dir {
+    color: var(--accent);
+  }
+
+  .ch-nav__title,
+  .ch-nav__peek {
+    position: static;
+    display: -webkit-box;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.22;
+    text-transform: none;
+    white-space: normal;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .ch-nav__link.is-empty {
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    .ch-nav__meta {
+      margin-bottom: 12px;
+    }
+
+    .ch-nav__links {
+      grid-template-columns: 1fr;
+    }
+
+    .ch-nav__links > * {
+      padding: 18px 0;
+    }
+
+    .ch-nav__links > :first-child {
+      border-right: 0;
+    }
+
+    .ch-nav__link--next {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .ch-nav__link--prev:hover,
+    .ch-nav__link--prev:focus-visible,
+    .ch-nav__link--next:hover,
+    .ch-nav__link--next:focus-visible {
+      transform: none;
+    }
+  }
+}
+
+/* ============================================================
+   Round-65 · Chapter outline rail.
+   A quiet, website-style in-page outline for long chapters. It
+   lives outside the reading column, so the 840px article measure
+   stays unchanged. Small screens keep it hidden until the `O`
+   shortcut opens a temporary panel.
+   ============================================================ */
+@media screen {
+  .chapter-outline {
+    display: none;
+  }
+
+  .chapter-outline__inner {
+    min-width: 0;
+  }
+
+  .chapter-outline__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+  }
+
+  .chapter-outline__label {
+    margin: 0;
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .chapter-outline__toggle {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin: -5px -5px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-3);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 1;
+    transition:
+      color 120ms ease,
+      transform 120ms ease;
+  }
+
+  .chapter-outline__toggle:hover,
+  .chapter-outline__toggle:focus-visible {
+    color: var(--accent);
+    outline: 0;
+    transform: translateY(-1px);
+  }
+
+  .chapter-outline__toggle:focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .chapter-outline__list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chapter-outline__item {
+    min-width: 0;
+  }
+
+  .chapter-outline__item--level-3 {
+    padding-left: 14px;
+  }
+
+  .chapter-outline__link {
+    display: block;
+    padding: 8px 0 8px 12px;
+    border-left: 1.5px solid transparent;
+    color: var(--ink-3);
+    font-family: var(--text);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.35;
+    text-decoration: none;
+    text-wrap: balance;
+    transition:
+      border-color 120ms ease,
+      color 120ms ease,
+      background-color 120ms ease;
+  }
+
+  .chapter-outline__item--level-3 .chapter-outline__link {
+    font-size: 13px;
+  }
+
+  .chapter-outline__link:hover,
+  .chapter-outline__link:focus-visible {
+    border-left-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    color: var(--accent);
+    outline: 0;
+  }
+
+  .chapter-outline__link:focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .chapter-outline__link.is-active {
+    border-left-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  body.is-clean .chapter-outline {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  body:not(.is-outline-hidden) .chapter-outline {
+    position: fixed;
+    z-index: 35;
+    top: 104px;
+    right: max(18px, calc((100vw - var(--content-w)) / 2 - 240px));
+    display: block;
+    width: 196px;
+    max-height: calc(100vh - 136px);
+    padding: 18px 0 0;
+    overflow-y: auto;
+    border-top: 0.5px solid var(--ink);
+    color: var(--ink-3);
+  }
+}
+
+@media screen and (max-width: 1279px) {
+  body.is-outline-open .chapter-outline {
+    position: fixed;
+    z-index: 160;
+    top: 76px;
+    right: 18px;
+    display: block;
+    width: min(304px, calc(100vw - 36px));
+    max-height: calc(100vh - 104px);
+    padding: 18px 18px 16px;
+    overflow-y: auto;
+    border: 0.5px solid var(--border);
+    border-top-color: var(--ink);
+    background: color-mix(in srgb, var(--bg) 94%, var(--code-bg));
+    box-shadow: 0 18px 58px rgba(0, 0, 0, 0.14);
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.is-outline-open .chapter-outline {
+    top: 66px;
+    right: 12px;
+    width: min(304px, calc(100vw - 24px));
+    max-height: calc(100vh - 84px);
+  }
+}
+
+@media print {
+  .chapter-outline {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   Round-66 · Discussion explicit state.
+   Keep the loaded announcement available to assistive tech and
+   debugging state attributes without adding visual noise after
+   the Giscus iframe has rendered.
+   ============================================================ */
+@media screen {
+  .discussion__ready {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ============================================================
+   Round-67 · Print page footnote overflow guard.
+   Inline footnote hover tips are useful while reading chapters, but on
+   the full-book print source they can extend beyond the viewport while
+   hidden and create horizontal scroll. The print page already carries a
+   normal references section, so hide the popovers there.
+   ============================================================ */
+.print-book .v3-fn-tip {
+  display: none !important;
+}
+
+/* ============================================================
+   Round-68 · Mobile chapter overflow guards.
+   Footnote hover cards are desktop affordances, and wide tables should
+   scroll inside their own frame instead of widening the whole chapter.
+   ============================================================ */
+@media screen and (max-width: 760px) {
+  .ch-page .v3-fn-tip {
+    display: none !important;
+  }
+
+  .ch-nav__index-wrap .ch-toc {
+    display: none !important;
+  }
+
+  .ch-page .v3-table-wrap {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* ============================================================
+   Round-69 · Stats insights panel.
+   Audience / engagement / funnel readouts for /internal/stats.
+   ============================================================ */
+.an-header .an-tabs {
+  grid-template-columns: repeat(4, minmax(92px, 1fr));
+}
+
+.an-section__heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 16px;
+  padding: 0 0 8px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.an-section__heading .an-section__title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.an-section__note {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.an-cards--insights {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.an-funnel {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.an-funnel__step,
+.an-funnel__agent,
+.an-audience__group {
+  min-width: 0;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+}
+
+.an-funnel__step,
+.an-funnel__agent {
+  display: grid;
+  gap: 5px;
+  padding: 14px 12px;
+}
+
+.an-funnel__label,
+.an-funnel__rate,
+.an-funnel__agent span,
+.an-audience__title {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.an-funnel__value,
+.an-funnel__agent strong {
+  font-family: var(--mono);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.an-funnel__agent {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.an-audience {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.an-audience__group {
+  padding: 14px 12px;
+}
+
+.an-audience__title {
+  margin: 0 0 12px;
+  color: var(--ink-2);
+}
+
+.an-audience__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.an-audience__row {
+  display: grid;
+  grid-template-columns: minmax(80px, 1fr) minmax(56px, 96px) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.an-audience__label {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.an-audience__bar {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.an-audience__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.an-audience__count {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.an-empty--tight {
+  padding: 8px 0 2px;
+}
+
+@media screen and (max-width: 900px) {
+  .an-funnel,
+  .an-audience {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .an-header .an-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .an-section__heading {
+    display: block;
+  }
+
+  .an-section__note {
+    margin-top: 8px;
+  }
+
+  .an-funnel,
+  .an-audience {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Round-analytics+1 · Zhipu cover logo
+   Use the Z.ai international mark with Zhipu's official text logo,
+   keeping it monochrome and theme-aware like the rest of the cover.
+   ============================================================ */
+.book-cover-logo--zhipu-glm {
+  --cover-logo-color: var(--ink);
+  --cover-combine-text-color: var(--ink);
+}
+
+.featured__cover .book-cover-logo--zhipu-glm,
+.book-detail__cover .book-cover-logo--zhipu-glm {
+  --cover-combine-icon-size: 44px;
+  --cover-combine-text-size: 24px;
+}
+
+.book-row__cover .book-cover-logo--zhipu-glm,
+.lib-row__cover .book-cover-logo--zhipu-glm {
+  --cover-combine-icon-size: 44px;
+  --cover-combine-text-size: 18px;
+}
+
+.next-book__cover .book-cover-logo--zhipu-glm {
+  --cover-combine-icon-size: 36px;
+  --cover-combine-text-size: 14px;
+}
+
+/* ============================================================
+   Round-70 · Zhaphar typography sync.
+   The verbatim v3 block keeps the old Playfair / Source Serif /
+   Noto Serif SC stack. Override the composed tokens here so the
+   site uses the newer Zhaphar reading system without editing the
+   imported prototype CSS: TsangerJinKai02 for all editorial reading
+   across zh / en / ja / ko, Inter for rare UI, and JetBrains Mono
+   with CJK fallback for labels / code.
+   ============================================================ */
+:root,
+:root[data-theme="light"],
+:root[data-theme="dark"] {
+  --font-charter-stack: Charter, "Bitstream Charter", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-tsanger-stack: var(--font-tsanger), "TsangerJinKai02", "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, var(--font-charter-stack);
+  --font-inter-stack: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", var(--font-tsanger), "TsangerJinKai02", "Noto Serif SC", sans-serif;
+  --font-jetbrains-stack: var(--font-jetbrains), "JetBrains Mono", "SF Mono", Consolas, var(--font-tsanger), "TsangerJinKai02", "Noto Serif SC", monospace;
+  --serif: var(--font-tsanger-stack);
+  --text: var(--font-tsanger-stack);
+  --sans: var(--font-inter-stack);
+  --mono: var(--font-jetbrains-stack);
+  --print-code-font: var(--font-jetbrains-stack);
+}
+
+:root[data-lang="zh"] body {
+  letter-spacing: 0;
+  line-height: 1.78;
+}
+
+:root[data-lang="zh"] :is(
+  .v3-cover__title,
+  .v3-section__title,
+  .v3-h3,
+  .book-detail__title,
+  .discussion__title,
+  .section-head__title,
+  .v3-help__title,
+  .v3-search__item-title,
+  .v3-search__empty-title,
+  .ch-toc__title,
+  .v3-refs__title,
+  .next-book__title,
+  .home-hero__statement,
+  .featured__title,
+  .book-row__title,
+  .lib-row__title,
+  .lib-empty__text,
+  .nf__title,
+  .index-hero__title,
+  .nav-card__title,
+  .tokens__title
+) {
+  font-family: var(--font-tsanger-stack);
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+:root[data-lang="zh"] :is(
+  .v3-cover__lede,
+  .home-hero__lede,
+  .featured__lede,
+  .v3-kicker__text,
+  .v3-quote__text,
+  .v3-pullquote__text
+) {
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   Round-71 · Zhaphar scale and hover sync.
+   Bring the remaining ebook surfaces closer to the website's current
+   reading rhythm: quieter title scale, predictable zh/en wrapping,
+   and static list / TOC hover states. Rows no longer jump on hover;
+   the accent rail and title color carry interaction state.
+   ============================================================ */
+@media screen {
+  .v3-cover__title {
+    max-width: 18ch;
+    font-size: clamp(1.85rem, 4.2vw, 2.55rem);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  :root[data-lang="en"] .v3-cover__title {
+    max-width: 22ch;
+    font-size: clamp(1.85rem, 4.2vw, 2.55rem);
+    line-height: 1.12;
+  }
+
+  .book-detail__title {
+    max-width: 18ch;
+    font-size: clamp(1.95rem, 4.1vw, 2.85rem);
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  :root[data-lang="en"] .book-detail__title {
+    max-width: 23ch;
+    font-size: clamp(1.95rem, 4.1vw, 2.85rem);
+  }
+
+  .home-hero__statement {
+    max-width: 19ch;
+    font-size: clamp(2.05rem, 4.6vw, 2.9rem);
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .featured__title {
+    max-width: 19ch;
+    font-size: clamp(1.85rem, 3.6vw, 2.35rem);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .book-row__title,
+  .lib-row__title,
+  .next-book__title {
+    max-width: 28ch;
+    font-size: clamp(1.32rem, 2vw, 1.55rem);
+    line-height: 1.18;
+    text-wrap: balance;
+  }
+
+  :root[data-lang="en"] :is(.book-row__title, .lib-row__title, .next-book__title) {
+    max-width: 32ch;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .v3-cover__title,
+  :root[data-lang="en"] .v3-cover__title {
+    max-width: 100%;
+    font-size: clamp(1.9rem, 10vw, 2.45rem);
+    line-height: 1.12;
+  }
+
+  .book-detail__title,
+  :root[data-lang="en"] .book-detail__title {
+    max-width: 100%;
+    font-size: clamp(2rem, 11vw, 2.65rem);
+    line-height: 1.1;
+  }
+
+  .home-hero__statement {
+    max-width: 100%;
+    font-size: clamp(1.9rem, 9vw, 2.35rem);
+    line-height: 1.14;
+  }
+
+  .featured__title,
+  .book-row__title,
+  .lib-row__title,
+  .next-book__title {
+    max-width: 100%;
+    font-size: 1.18rem;
+    line-height: 1.22;
+  }
+}
+
+@media (hover: hover) {
+  .book-row,
+  .lib-row,
+  .toc__row,
+  .next-book__card,
+  .ch-nav__link {
+    position: relative;
+    transform: none;
+    transition: color 120ms ease;
+  }
+
+  .book-row::before,
+  .lib-row::before,
+  .toc__row::before,
+  .next-book__card::before,
+  .ch-nav__link:not(.is-empty)::before {
+    content: "";
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: -16px;
+    width: 1.5px;
+    background: var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease;
+  }
+
+  .ch-nav__link:not(.is-empty)::before {
+    top: 23px;
+    bottom: auto;
+    width: 1px;
+    height: 40px;
+  }
+
+  .ch-nav__link--next:not(.is-empty)::before {
+    right: -16px;
+    left: auto;
+  }
+
+  .book-row:hover,
+  .book-row:focus-visible,
+  .lib-row:hover,
+  .lib-row:focus-visible,
+  .toc__row:hover,
+  .toc__row:focus-visible,
+  .next-book__card:hover,
+  .next-book__card:focus-visible,
+  .ch-nav__link:hover,
+  .ch-nav__link:focus-visible {
+    background: transparent;
+    border-color: var(--border);
+    transform: none;
+  }
+
+  .book-row:hover::before,
+  .book-row:focus-visible::before,
+  .lib-row:hover::before,
+  .lib-row:focus-visible::before,
+  .toc__row:hover::before,
+  .toc__row:focus-visible::before,
+  .next-book__card:hover::before,
+  .next-book__card:focus-visible::before,
+  .ch-nav__link:hover::before,
+  .ch-nav__link:focus-visible::before {
+    opacity: 1;
+  }
+
+  .toc__row:hover .toc__title,
+  .toc__row:focus-visible .toc__title,
+  .toc__row:hover .toc__num,
+  .toc__row:focus-visible .toc__num {
+    color: var(--accent);
+  }
+
+  .ch-nav__title {
+    transition: color 120ms ease;
+  }
+
+  .ch-nav__link:hover .ch-nav__title,
+  .ch-nav__link:focus-visible .ch-nav__title {
+    color: var(--accent);
+  }
+
+  .ch-toc__link {
+    background: transparent;
+    transition: border-color 120ms ease, color 120ms ease;
+  }
+
+  a.ch-toc__link:hover,
+  a.ch-toc__link:focus-visible,
+  .ch-toc__item.is-current .ch-toc__link {
+    background: transparent;
+    border-left-color: var(--accent);
+  }
+
+  .ch-toc__link:focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .chapter-outline__toggle:hover,
+  .chapter-outline__toggle:focus-visible {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Round-74 · Chapter outline final override.
+   This must live after the legacy Round-65 outline rules: desktop uses
+   a right-side marker rail plus floating panel; mobile keeps the O-key
+   overlay behavior.
+   ============================================================ */
+@media screen {
+  .chapter-outline-shell {
+    --chapter-outline-width: 196px;
+    --chapter-outline-gap: 16px;
+    --chapter-outline-right: max(18px, calc((100vw - var(--content-w)) / 2 - 240px));
+  }
+
+  .chapter-outline-rail,
+  .chapter-outline__pin {
+    display: none;
+  }
+
+  .chapter-outline__actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .chapter-outline__pin,
+  .chapter-outline__toggle {
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin: -5px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: color 120ms ease;
+  }
+
+  .chapter-outline__toggle {
+    display: grid;
+  }
+
+  .chapter-outline__pin:hover,
+  .chapter-outline__pin:focus-visible,
+  .chapter-outline__toggle:hover,
+  .chapter-outline__toggle:focus-visible {
+    color: var(--accent);
+    outline: 0;
+    transform: none;
+  }
+
+  .chapter-outline__pin:focus-visible,
+  .chapter-outline__toggle:focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .chapter-outline__pin svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .chapter-outline-shell::before {
+    content: "";
+    position: fixed;
+    z-index: 34;
+    top: 104px;
+    right: var(--chapter-outline-right);
+    display: none;
+    width: calc(var(--chapter-outline-width) + var(--chapter-outline-gap) + 2.5rem);
+    height: calc(100vh - 136px);
+    pointer-events: auto;
+  }
+
+  .chapter-outline-rail {
+    position: fixed;
+    z-index: 36;
+    top: 104px;
+    right: calc(var(--chapter-outline-right) + var(--chapter-outline-width) + var(--chapter-outline-gap));
+    display: grid;
+    gap: 9px;
+    margin: 0;
+    padding: 2px 0;
+    list-style: none;
+    pointer-events: auto;
+  }
+
+  .chapter-outline-rail__item {
+    margin: 0;
+    padding: 0;
+  }
+
+  .chapter-outline-marker {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 24px;
+    height: 12px;
+    border: 0;
+    color: var(--border);
+    text-decoration: none;
+  }
+
+  .chapter-outline-marker::before {
+    display: block;
+    width: 14px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+    opacity: 0.55;
+    transition:
+      width 120ms ease,
+      background-color 120ms ease,
+      opacity 120ms ease;
+  }
+
+  .chapter-outline-marker[data-depth="3"]::before {
+    width: 9px;
+  }
+
+  .chapter-outline-rail__item:hover .chapter-outline-marker,
+  .chapter-outline-marker:focus-visible {
+    color: var(--accent);
+  }
+
+  .chapter-outline-rail__item:hover .chapter-outline-marker::before,
+  .chapter-outline-marker:focus-visible::before {
+    opacity: 1;
+  }
+
+  .chapter-outline-marker.is-active::before {
+    width: 18px;
+    background: var(--accent);
+    opacity: 1;
+  }
+
+  body:not(.is-outline-hidden) .chapter-outline.chapter-outline {
+    position: fixed;
+    z-index: 35;
+    top: 104px;
+    right: var(--chapter-outline-right);
+    display: block;
+    width: var(--chapter-outline-width);
+    max-height: calc(100vh - 136px);
+    padding: 14px 16px 12px;
+    overflow-y: auto;
+    border: 0.5px solid var(--border);
+    border-top-color: var(--ink);
+    background: color-mix(in srgb, var(--bg) 94%, var(--code-bg));
+    box-shadow: none;
+    color: var(--ink-3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(4px);
+    pointer-events: none;
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease,
+      visibility 120ms ease;
+  }
+
+  .chapter-outline__head {
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 0 16px;
+  }
+
+  .chapter-outline__list {
+    gap: 2px;
+  }
+
+  .chapter-outline__link {
+    padding: 9px 10px 9px 14px;
+    border-left: 1.5px solid transparent;
+    background: transparent;
+    color: var(--ink-3);
+  }
+
+  .chapter-outline__item--level-3 {
+    padding-left: 12px;
+  }
+
+  .chapter-outline-shell:hover .chapter-outline.chapter-outline,
+  .chapter-outline-shell:focus-within .chapter-outline.chapter-outline,
+  body.is-outline-open .chapter-outline.chapter-outline,
+  body.is-outline-pinned .chapter-outline.chapter-outline {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  /* Corridor is a hover-bridge only — shown while the pointer travels
+     rail→gap→panel, NOT when pinned. A pinned panel stays open regardless of
+     hover, so the corridor has no job then; left on, its pointer-events overhang
+     (~12px past the content's right edge) would sit permanently over the text as
+     a click / selection dead-zone. Hovering while pinned still shows it via
+     :hover, which is transient and harmless. */
+  .chapter-outline-shell:hover::before,
+  .chapter-outline-shell:focus-within::before,
+  body.is-outline-open .chapter-outline-shell::before {
+    display: block;
+  }
+
+  body.is-outline-hover-suppressed .chapter-outline-shell:hover .chapter-outline.chapter-outline,
+  body.is-outline-hover-suppressed .chapter-outline-shell:focus-within .chapter-outline.chapter-outline {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(4px);
+    pointer-events: none;
+  }
+
+  .chapter-outline__pin {
+    display: grid;
+  }
+
+  body.is-outline-pinned .chapter-outline__pin,
+  .chapter-outline__pin[aria-pressed="true"] {
+    color: var(--accent);
+  }
+
+  body.is-clean .chapter-outline-shell::before,
+  body.is-clean .chapter-outline-rail,
+  body.is-clean .chapter-outline {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   Round-75 · Chapter cover title wrapping.
+   Chapter cover H1s use the full reading column. List/card/detail
+   title width limits still apply elsewhere; rare long cover titles
+   should use Chapter.coverTitle / coverTitleEn instead of forced wraps.
+   ============================================================ */
+@media screen {
+  .v3-cover--chapter .v3-cover__title,
+  :root[data-lang="en"] .v3-cover--chapter .v3-cover__title {
+    max-width: 100%;
+    overflow-wrap: normal;
+    hyphens: manual;
+    text-wrap: pretty;
+  }
+}
+
+/* ============================================================
+   Round-76 · About title scale sync.
+   About keeps its colophon layout, but the H1 should sit on the same
+   display scale as library / license / chapter covers instead of the
+   oversized early hero scale.
+   ============================================================ */
+@media screen {
+  .about-library__title,
+  :root[data-lang="en"] .about-library__title {
+    max-width: 18ch;
+    font-size: clamp(1.85rem, 4.2vw, 2.55rem);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  :root[data-lang="en"] .about-library__title {
+    max-width: 22ch;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .about-library__title,
+  :root[data-lang="en"] .about-library__title {
+    max-width: 100%;
+    font-size: clamp(1.9rem, 10vw, 2.45rem);
+    line-height: 1.12;
+  }
+}
+
+/* ============================================================
+   Round-77 · PDF chapter title sync.
+   The early print sheet fixed chapter cover titles at 28pt and did
+   not carry the newer Tsanger / coverTitle rules into generated PDFs.
+   Keep printed chapter openings on the current editorial title system:
+   upright Tsanger, full text measure, and a slightly quieter 24pt scale.
+   ============================================================ */
+@media print {
+  :root,
+  :root[data-theme="light"],
+  :root[data-theme="dark"] {
+    --serif: var(--font-tsanger-stack);
+    --text: var(--font-tsanger-stack);
+    --mono: var(--font-jetbrains-stack);
+    --print-code-font: var(--font-jetbrains-stack);
+  }
+
+  .print-book .v3-cover--chapter .v3-cover__title,
+  :root[data-lang="en"] .print-book .v3-cover--chapter .v3-cover__title {
+    max-width: 100% !important;
+    font-family: var(--font-tsanger-stack);
+    font-size: 24pt;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.14;
+    overflow-wrap: normal;
+    hyphens: manual;
+    text-wrap: pretty;
+  }
+}
+
+/* ============================================================
+   Round-78 · retired. It uprighted the old `.print-cover__title` /
+   `.print-cover__subtitle` (the duplicate meta column beside the print
+   cover). Direction A (版心网格) removed that column — the cover title is
+   now `.cover-art__title`, which is upright by default (globals.css:708),
+   so no override is needed. Kept as a numbering breadcrumb.
+   ============================================================ */
+
+/* ============================================================
+   Round-79 · Chapter-nav "In This Book" popover — right-anchor.
+   Round-64 moved the index trigger (.ch-nav__index) to the right of the
+   meta row, but the verbatim popover (globals.css:1734) is still centered
+   on its trigger (`left: 50%; transform: translateX(-50%)`, width 440px).
+   Centered on a right-edge trigger the 440px popover pokes past the right
+   viewport edge at ~900-1140px (tablet / small laptop); because it is
+   `visibility: hidden` (not `display: none`) it adds to page scrollWidth
+   even while closed → a stray horizontal scrollbar on every chapter page,
+   and the popover itself would open partly off-screen. Right-anchor it to
+   the trigger so it stays inside the reading column at all widths; the
+   existing `max-width: calc(100vw - 32px)` still guards its width.
+   ============================================================ */
+@media screen {
+  .ch-toc {
+    left: auto;
+    right: 0;
+    transform: translateY(4px);
+  }
+
+  .ch-nav__index-wrap:hover .ch-toc,
+  .ch-nav__index-wrap:focus-within .ch-toc {
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Round-80 · Book cover + detail intro discipline.
+   The cover and the detail page now render the short `lede` (the field
+   the home / library cards already use) as the tagline / intro, instead
+   of the paragraph-length `subtitle` / full `description`. The full text
+   still ships in OG / RSS / search / llms.md. Cap the decorative cover
+   title at 2 lines (the verbatim book-detail rule allowed 3); genuinely
+   long titles carry a shorter `coverTitle` / `coverTitleEn` so the detail
+   H1 and the cover both sit in ~2 lines instead of sprawling to three.
+   ============================================================ */
+@media screen {
+  .featured__cover .cover-art__title {
+    -webkit-line-clamp: 2;
+  }
+}
+

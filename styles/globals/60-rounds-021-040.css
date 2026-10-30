@@ -1,0 +1,827 @@
+/* ============================================================
+   Round-21  Stats readable table labels
+   ============================================================ */
+
+.an-table__primary {
+  display: block;
+  margin: 0 0 3px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Round-22  Stats account status
+   ============================================================ */
+
+.an-account__status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.an-account__status div {
+  padding: 14px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+}
+
+.an-account__status span,
+.an-account__status strong {
+  display: block;
+}
+
+.an-account__status span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+@media (max-width: 600px) {
+  .an-account__status {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Round-23  UX & visual polish
+   1 · Header backdrop-filter — increase blur for better frosted
+       glass effect on scroll
+   2 · Reading progress bar — thicker (3px)
+   3 · Hide "? Shortcuts" hint on mobile
+   4 · Book detail CTA hierarchy — primary filled button
+   5 · Reduce hero-to-books divider gap on book detail
+   6 · Back-to-top button
+   7 · Footer enhancement — subtle top border, better spacing
+   ============================================================ */
+
+/* 1 · Header frosted glass — bump blur from 8px to 12px */
+.v3-header.is-scrolled {
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+}
+
+/* 2 · Reading progress bar — 3px for better visibility */
+.v3-progress {
+  height: 3px;
+}
+
+/* 3 · Hide floating shortcuts hint on mobile */
+@media (max-width: 768px) {
+  .v3-help-hint {
+    display: none;
+  }
+}
+
+/* 4 · CTA hierarchy — first button (Start Reading) gets filled style */
+.book-detail__btn--primary {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 20px;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  letter-spacing: 0.18em;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.book-detail__btn--primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  text-decoration: none;
+  text-decoration-thickness: initial;
+}
+
+/* 5 · Tighter divider between hero and TOC on book detail */
+.book-detail + .v3-divider {
+  margin: 56px 0;
+}
+
+/* 6 · Back-to-top button */
+.back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 80;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  color: var(--ink-3);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease, color 120ms ease, border-color 120ms ease;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+/* When the shortcuts hint is also visible (desktop), stack above it */
+@media (min-width: 769px) {
+  .back-to-top {
+    bottom: 70px;
+  }
+}
+@media print {
+  .back-to-top { display: none !important; }
+}
+
+/* 7 · Chapter nav center — accent on current number */
+.ch-nav__index .accent {
+  color: var(--accent);
+}
+
+/* 8 · Language-only chapter notice — visible when the user switches
+   to the other language on a monolingual book. Uses the same
+   [lang="en"] / [lang^="zh"] CSS visibility mechanism as <T>. */
+.ch-lang-notice {
+  max-width: var(--content-w);
+  margin: 0 auto 32px auto;
+  padding: 14px 20px;
+  border: 0.5px solid var(--accent);
+  border-left: 3px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 6%, var(--bg));
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.ch-lang-notice p { margin: 0; }
+.ch-lang-notice strong { color: var(--accent); }
+@media print { .ch-lang-notice { display: none !important; } }
+
+/* 9 · Footer polish — link hover */
+.v3-footer__right a {
+  transition: color 120ms ease;
+}
+
+/* ============================================================
+   Round-24  Footnote marker visibility + anchor scroll fix
+   ============================================================ */
+
+/* Global scroll offset — accounts for the sticky header so that
+   anchor-link targets (#fn-1, #fnref-1, h3 anchors, etc.) land
+   below the header instead of behind it. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+/* Reset per-element scroll-margin that was set in v3.css — the
+   global scroll-padding-top handles the header offset now.
+   Keep a small extra margin so targets don't stick right at the
+   header edge. */
+.v3-refs__item {
+  scroll-margin-top: 12px;
+}
+.v3-h3 {
+  scroll-margin-top: 12px;
+}
+
+/* Bump inline footnote markers from 0.62em → 0.88em so they're
+   readable without squinting. Add a slight background tint and
+   padding so the number doesn't disappear into surrounding text. */
+.v3-fn-ref {
+  font-size: 0.88em;
+  padding: 1px 4px;
+  margin: 0 2px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+}
+/* Keep footnote marker attached to preceding word — prevent it
+   from wrapping to its own line. */
+.v3-fn {
+  white-space: nowrap;
+}
+
+/* Checklist inline code — matches the same pattern used in
+   .v3-steps__desc code, .v3-dl__desc code, etc. */
+.v3-checklist__body code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+@media print {
+  html { scroll-behavior: auto; }
+}
+
+/* ============================================================
+   Round-25  Bilingual covers + action button wrap
+   Cover shows same-language title + subtitle; tags & sig swap.
+   Logo bumped up slightly; subtitle uses 3 lines on large covers.
+   ============================================================ */
+
+/* --- Book-detail cover (large, ~480px wide) --- */
+.book-detail__cover .cover-art {
+  --cover-logo-size: 72px;
+  --cover-logo-width: min(100%, 340px);
+  --cover-combine-icon-size: 72px;
+  --cover-combine-text-size: 28px;
+  --cover-combine-gap: 12px;
+}
+.book-detail__cover .cover-art__subtitle {
+  -webkit-line-clamp: 3;
+}
+
+/* --- Featured hero cover (homepage) — hide subtitle for a cleaner,
+   more spacious look. Title alone is enough at this size. --- */
+.featured__cover .cover-art {
+  --cover-subtitle-display: none;
+}
+/* Chinese subtitle should not be italicised — CJK has no real italic
+   cut, so synthetic italic leans the glyphs awkwardly. Keep English
+   italic via the base rule; override only for zh spans. */
+.cover-art__subtitle [lang="zh"] {
+  font-style: normal;
+}
+
+/* Print cover — match book-detail proportions. */
+.print-cover__art .cover-art {
+  --cover-logo-size: 72px;
+  --cover-logo-width: min(100%, 340px);
+  --cover-combine-icon-size: 72px;
+  --cover-combine-text-size: 28px;
+  --cover-combine-gap: 12px;
+}
+.print-cover__art .cover-art__subtitle {
+  -webkit-line-clamp: 3;
+}
+
+/* Single-column layout: cap cover width so it doesn't stretch
+   to full viewport and create a tall empty lower half. */
+@media (max-width: 1080px) {
+  .book-detail__cover {
+    max-width: 400px;
+  }
+}
+
+/* --- Action buttons — wrap instead of squish on narrow screens --- */
+.book-detail__actions {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.book-detail__btn {
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Round-26  Library filter recovery controls
+   ============================================================ */
+
+.lib-search {
+  margin-bottom: 12px;
+}
+.lib-search__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.lib-search__input {
+  min-width: 0;
+  flex: 1;
+}
+.lib-empty__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-bottom: 0.5px solid color-mix(in oklab, var(--ink-3) 55%, transparent);
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0 0 4px 0;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.lib-empty__action:hover,
+.lib-empty__action:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  outline: 0;
+}
+.lib-results-count {
+  margin: 0 0 22px 0;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.lib-empty__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+/* ============================================================
+   Round-27  Stats refresh status + keyboard row focus
+   ============================================================ */
+
+.an-header__status {
+  margin: 10px 0 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.an-header__status.is-updating {
+  color: var(--accent);
+}
+.an-table__clickable:focus-visible {
+  outline: 0;
+}
+.an-table__clickable:focus-visible td {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.an-table__clickable:focus-visible td:first-child {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* ============================================================
+   Round-27  Reduced-motion support
+   ============================================================ */
+
+/* Honor the OS "reduce motion" setting. The site leans on hover
+   colour fades, the chapter-nav peek slide, the reading-progress
+   bar, and smooth anchor scroll — collapse all of them to
+   near-instant while keeping every final state and affordance
+   intact (elements still appear/hide, just without the motion). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Round-28  Chapter nav — touch-readable prev/next titles
+   ============================================================ */
+
+/* On touch devices there's no hover, so the prev/next chapter title
+   in the hover popover (.ch-nav__peek, see Round-3) is unreachable —
+   only the "← 03" cue shows. Surface the title inline beneath the
+   cue instead. Desktop hover behaviour is untouched (it lives in a
+   @media (hover: hover) block). */
+@media (hover: none) {
+  .ch-nav__peek {
+    position: static;
+    display: block;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    width: auto;
+    max-width: none;
+    margin-top: 6px;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    font-size: 12px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink-3);
+  }
+}
+
+/* ============================================================
+   Round-29  Search shortcut hint (keyboard devices only)
+   Overrides the verbatim .v3-header__search width via later
+   same-specificity rule — the verbatim block stays untouched.
+   ============================================================ */
+
+.v3-header__search {
+  width: auto;
+  gap: 7px;
+}
+.v3-header__search-kbd {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-3);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.5;
+}
+/* Hide the hint on the mobile header breakpoint and on any coarse
+   (touch) pointer — no physical keyboard, and the narrow header
+   stays compact. Icon-only there. Two single-condition blocks
+   instead of a comma media list (the comma form gets mangled by
+   the CSS minifier). */
+@media (max-width: 760px) {
+  .v3-header__search { gap: 0; }
+  .v3-header__search-kbd { display: none; }
+}
+@media (pointer: coarse) {
+  .v3-header__search { gap: 0; }
+  .v3-header__search-kbd { display: none; }
+}
+
+/* ============================================================
+   Round-30  Touch target sizing (coarse pointers only)
+   The header controls paint at ~22px to keep the editorial header
+   compact — fine for a mouse, below a comfortable tap target on
+   touch. Expand the *hit area* with a centered overlay pseudo-element
+   so the glyphs and the desktop layout stay pixel-identical; only the
+   clickable region grows. Height runs vertically (no neighbours there);
+   width is capped at the icon box so the controls — 14px apart on the
+   small-screen header — never overlap into ambiguous targets. */
+
+@media (pointer: coarse) {
+  .v3-header__search,
+  .v3-header__lang,
+  .v3-header__theme {
+    position: relative;
+  }
+  .v3-header__search::after,
+  .v3-header__lang::after,
+  .v3-header__theme::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 30px);
+    height: 44px;
+  }
+}
+
+/* ============================================================
+   Round-31  Home + Library mobile layout rework
+   The page-local block shrinks the hero copy at <=760px but leaves the
+   featured / row TITLES at desktop sizes, and keeps the list rows in a
+   cover-left / text-right grid that squeezes the description + metadata
+   into a ~215px column on a phone. This block (a) brings every title
+   down for small screens and (b) on phones stacks a compact cover above
+   a full-width body so the copy can breathe. Page-local block stays
+   verbatim above; these later same-specificity rules win the cascade.
+   ============================================================ */
+
+/* Tablet / large phone: the titles the existing <=760 block didn't touch. */
+@media (max-width: 760px) {
+  .home-hero__statement { font-size: 33px; }
+  .featured__title { font-size: 30px; }
+  .book-row__title { font-size: 23px; }
+  .lib-row__title { font-size: 23px; }
+}
+
+/* Phones: tighten the hero rhythm and rework the list rows. */
+@media (max-width: 600px) {
+  /* Home hero — tighten the top padding and vertical rhythm for phones. */
+  .home-hero { padding-top: 46px; }
+  .home-hero__eyebrow { margin: 0 0 18px 0; }
+  .home-hero__statement { font-size: 30px; line-height: 1.14; margin: 0 0 22px 0; }
+  .home-hero__lede { font-size: 17px; line-height: 1.5; margin: 0 0 30px 0; }
+
+  /* Section dividers carry a desktop 96px rhythm that opens a ~235px gap
+     on a phone; pull them in so the hero, the featured pick and the list
+     sit closer together. (Verbatim v3.css sets 96px — overridden here.) */
+  .v3-divider { margin: 42px 0; }
+
+  /* Featured (the home hero book) — a centred poster over a left-aligned
+     blurb, replacing the 240px cover + untrimmed ~9-line description that
+     ran the block to ~720px tall. The cover centres at 176px so it leads
+     without owning the screen; the lede clamps to three lines — one more
+     than a list row, keeping the featured a clear step above. */
+  .featured__link { gap: 20px; }
+  .featured__cover { max-width: 176px; margin: 0 auto; }
+  /* At 176px the desktop-sized poster (56px logo + 28px 3-line title +
+     subtitle) overflows the cover and clips. Show just the centred brand
+     mark — the title is right below in .featured__meta — mirroring the
+     thumbnail treatment. */
+  .featured__cover .cover-art {
+    --cover-logo-top: 0;
+  }
+  .featured__cover .cover-art__title,
+  .featured__cover .cover-art__subtitle,
+  .featured__cover .cover-art__sig {
+    display: none;
+  }
+  .featured__cover .cover-art__inner {
+    align-items: center;
+    justify-content: center;
+  }
+  .featured__meta { padding-top: 0; }
+  .featured__eyebrow { margin: 0 0 12px 0; }
+  .featured__title { font-size: 26px; line-height: 1.14; margin: 0 0 12px 0; }
+  .featured__lede {
+    font-size: 16px; line-height: 1.5; margin: 0 0 18px 0;
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; overflow: hidden;
+  }
+  .featured__stats { margin: 0 0 16px 0; }
+
+  /* List rows (home + library) — a compact horizontal card: cover left,
+     copy right. The desktop grid squeezed the copy into a ~215px sliver,
+     and the first phone pass stacked an orphaned 88px thumbnail above a
+     ~6-line wall of text (≈430px per row — under two books on screen).
+     Here the cover holds at 76px, the copy takes the rest, the lede
+     clamps to two lines, and the rhythm tightens so four to five books
+     sit on screen at once — scannable, not a wall of text. */
+  .book-row,
+  .lib-row {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    column-gap: 16px;
+    align-items: center;
+    padding: 20px 0;
+  }
+  .book-row__cover,
+  .lib-row__cover { width: 76px; margin: 0; }
+  .book-row__body,
+  .lib-row__body { padding-top: 1px; min-width: 0; }
+  .book-row__eyebrow,
+  .lib-row__eyebrow { margin: 0 0 6px 0; }
+  .book-row__title,
+  .lib-row__title {
+    font-size: 18px;
+    line-height: 1.22;
+    margin: 0 0 6px 0;
+  }
+  .book-row__lede,
+  .lib-row__lede {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  /* Library header — match the tighter phone rhythm. */
+  .lib-cover { padding-top: 56px; }
+}
+
+/* ============================================================
+   Round-32  About · "Elsewhere" rows on phones
+   The page-local `.elsewhere__row` is a `144px 1fr` two-column grid —
+   fine on a wide reading column, but on a phone the fixed 144px label
+   eats ~44% of the width and the longest value (github.com/aklmans)
+   overflows its cell, forcing ~2px of horizontal scroll at 375px.
+   Stack label-over-value at phone width so each gets the full measure.
+   Page-local block stays verbatim above; this later same-specificity
+   rule wins the cascade.
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .elsewhere__row {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 6px;
+    align-items: start;
+  }
+}
+
+/* ============================================================
+   Round-33  Diagram — inline themed SVG (free-form diagrams)
+   <Diagram> renders an inline <svg> whose elements carry .dgm-*
+   classes; colors resolve here from the v3 tokens, so the diagram
+   follows light/dark and prints — unlike an <img src=".svg"> which
+   is CSS-isolated and stuck on one palette.
+   ============================================================ */
+.v3-diagram {
+  max-width: var(--content-w);
+  margin: 40px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-diagram__frame {
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  padding: 16px 18px;
+}
+.v3-diagram__frame svg { width: 100%; height: auto; display: block; }
+.v3-diagram svg { font-family: var(--sans); }
+.v3-diagram svg text { fill: var(--ink); }
+.v3-diagram svg .dgm-muted  { fill: var(--ink-3); }
+.v3-diagram svg .dgm-ink-2  { fill: var(--ink-2); }
+.v3-diagram svg .dgm-accent { fill: var(--accent); }
+.v3-diagram svg .dgm-card   { fill: var(--code-bg); stroke: var(--border); stroke-width: 1.5; }
+.v3-diagram svg .dgm-tint   { fill: var(--accent); fill-opacity: 0.12; stroke: var(--accent); stroke-width: 1.5; }
+.v3-diagram svg .dgm-dot    { fill: var(--ink-3); }
+.v3-diagram svg .dgm-line     { fill: none; stroke: var(--border); stroke-width: 1.5; }
+.v3-diagram svg .dgm-rule     { fill: none; stroke: var(--rule); stroke-width: 1.5; stroke-dasharray: 5 6; }
+.v3-diagram svg .dgm-arrow    { fill: var(--ink-2); }
+.v3-diagram svg .dgm-arrowline { fill: none; stroke: var(--ink-2); stroke-width: 2; }
+.v3-diagram__caption {
+  margin: 14px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   Round-34  Stats — headline metric strip
+   <Stats><Stat value label unit? sub?/>…</Stats>. Token-driven
+   hairline grid; print-safe (grid bg relies on the global
+   print-color-adjust:exact in the @media print reset).
+   ============================================================ */
+.v3-stats {
+  max-width: var(--content-w);
+  margin: 32px auto;
+  padding: 0 var(--reading-px);
+}
+.v3-stats__grid {
+  display: grid;
+  gap: 0.5px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+}
+.v3-stats__item { background: var(--bg); padding: 16px 18px; }
+.v3-stats__value {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.12;
+  color: var(--ink);
+}
+.v3-stats__unit { font-size: 0.85rem; font-weight: 400; color: var(--ink-3); margin-left: 4px; }
+.v3-stats__label { margin: 7px 0 0; font-family: var(--sans); font-size: 0.8rem; color: var(--ink-2); }
+.v3-stats__sub { margin: 2px 0 0; font-size: 0.72rem; color: var(--ink-3); }
+.v3-stats__caption {
+  margin: 12px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+@media (max-width: 600px) {
+  .v3-stats__grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ============================================================
+   Round-35  PriceTable — model | input | cached | output | context
+   <PriceTable asOf unit caption><Price model note? … highlight?/>…>.
+   Numeric columns right-aligned + tabular-nums; recommended row gets a
+   subtle highlight + accent model name. Token-driven; print-safe.
+   ============================================================ */
+.v3-pricetable { max-width: var(--content-w); margin: 32px auto; padding: 0 var(--reading-px); }
+.v3-pricetable__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.v3-pricetable__label { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-2); }
+.v3-pricetable__asof { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); border: 0.5px solid var(--border); border-radius: 0; padding: 1px 6px; white-space: nowrap; }
+.v3-pricetable__wrap { overflow-x: auto; border: 0.5px solid var(--border); border-radius: 0; }
+.v3-pricetable__table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.86rem; }
+.v3-pricetable__table th, .v3-pricetable__table td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--border); }
+.v3-pricetable__table thead th { background: var(--code-bg); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.03em; color: var(--ink-3); }
+.v3-pricetable__th-model, .v3-pricetable__model { text-align: left; }
+.v3-pricetable__num { font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.v3-pricetable__model code { font-family: var(--mono); font-size: 0.82rem; color: var(--ink); background: none; padding: 0; }
+.v3-pricetable__note { display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--ink-3); margin-top: 2px; }
+.v3-pricetable__table tbody tr:last-child td { border-bottom: none; }
+.v3-pricetable__table tbody tr.is-highlight td { background: var(--row-hover); }
+.v3-pricetable__table tbody tr.is-highlight .v3-pricetable__model code { color: var(--accent); font-weight: 600; }
+.v3-pricetable__caption { margin: 10px 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--ink-3); }
+.v3-pricetable__unit { font-family: var(--mono); }
+
+/* ============================================================
+   Round-36  Timeline — vertical version/model lineage
+   <Timeline><Milestone date label note? current?/>…</Timeline>.
+   Steps-style rail + dots; current milestone gets the accent.
+   Token-driven; print-safe.
+   ============================================================ */
+.v3-timeline { max-width: var(--content-w); margin: 32px auto; padding: 0 var(--reading-px); }
+.v3-timeline__list { list-style: none; margin: 0; padding: 0; }
+.v3-timeline__item { position: relative; padding: 0 0 22px 30px; }
+.v3-timeline__item:last-child { padding-bottom: 0; }
+.v3-timeline__item::before {
+  content: ""; position: absolute; left: 5px; top: 5px; bottom: -5px;
+  width: 1.5px; background: var(--border);
+}
+.v3-timeline__item:last-child::before { display: none; }
+.v3-timeline__dot {
+  position: absolute; left: 0; top: 3px; width: 12px; height: 12px;
+  border-radius: 50%; border: 2px solid var(--rule); background: var(--bg);
+}
+.v3-timeline__item.is-current .v3-timeline__dot { background: var(--accent); border-color: var(--accent); }
+.v3-timeline__body { display: flex; flex-direction: column; }
+.v3-timeline__date { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--ink-3); }
+.v3-timeline__label { font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--ink); }
+.v3-timeline__item.is-current .v3-timeline__label { color: var(--accent); }
+.v3-timeline__note { font-size: 0.82rem; color: var(--ink-2); margin-top: 1px; }
+.v3-timeline__caption { margin: 12px 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--ink-3); }
+
+/* ============================================================
+   Round-37  Quadrant — 2×2 matrix
+   <Quadrant><Cell label highlight?>…</Cell>×4</Quadrant>, row-major.
+   Hairline 2×2 grid; highlighted cell gets the accent. Token-driven;
+   print-safe (grid bg relies on the global print-color-adjust:exact).
+   ============================================================ */
+.v3-quadrant { max-width: var(--content-w); margin: 32px auto; padding: 0 var(--reading-px); }
+.v3-quadrant__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+}
+.v3-quadrant__cell { background: var(--bg); padding: 16px 18px; min-height: 88px; }
+.v3-quadrant__cell.is-highlight { background: var(--row-hover); }
+.v3-quadrant__cell-label {
+  display: block; font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 5px;
+}
+.v3-quadrant__cell.is-highlight .v3-quadrant__cell-label { color: var(--accent); }
+.v3-quadrant__cell-body { display: block; font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); }
+.v3-quadrant__caption {
+  margin: 12px auto 0; max-width: 60ch; text-align: center;
+  font-family: var(--sans); font-size: 0.8rem; line-height: 1.6; color: var(--ink-3);
+}
+
+/* ============================================================
+   Round-38  BarCompare — small horizontal comparison bars
+   <BarCompare unit caption><Bar label value accent? note?/>…</BarCompare>.
+   2–6 bars; fills are background-painted (rely on the global
+   print-color-adjust:exact). Token-driven.
+   ============================================================ */
+.v3-barcompare { max-width: var(--content-w); margin: 32px auto; padding: 0 var(--reading-px); }
+.v3-barcompare__rows { display: flex; flex-direction: column; gap: 10px; }
+.v3-barcompare__row { display: grid; grid-template-columns: minmax(0, 8em) 1fr auto; align-items: center; gap: 12px; }
+.v3-barcompare__label { font-family: var(--sans); font-size: 0.82rem; color: var(--ink-2); text-align: right; }
+.v3-barcompare__track { height: 14px; background: var(--code-bg); border-radius: 0; overflow: hidden; }
+.v3-barcompare__fill { display: block; height: 100%; min-width: 2px; background: var(--ink-3); border-radius: 0; }
+.v3-barcompare__fill.is-accent { background: var(--accent); }
+.v3-barcompare__value { font-family: var(--sans); font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.v3-barcompare__note { color: var(--ink-3); font-size: 0.75rem; margin-left: 5px; }
+.v3-barcompare__caption { margin: 12px 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--ink-3); }
+.v3-barcompare__unit { font-family: var(--mono); }
+
+/* ============================================================
+   Round-39  Callout kind="key" — the one screenshot-able takeaway
+   Strongest accent emphasis (distinct from --note's lighter wash).
+   The Round-N print callout rule already strips the bg, keeps the border.
+   ============================================================ */
+.v3-callout--key .v3-callout__inner {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  border-left-color: var(--accent);
+}
+.v3-callout--key .v3-callout__label { color: var(--accent); }
+.v3-callout--key .v3-callout__body { font-weight: 500; }
+
+/* ============================================================
+   Round-40  Code surface — warm editorial palette (sync to the
+   newer website design language §17). Syntax colors come from the
+   zhaphar-editorial shiki theme (lib/code-theme.ts) via the Round-8
+   --shiki-* rules; this block sets the warm code surface + the accent
+   left rule + base text. Same-specificity overrides win over the
+   verbatim .v3-codeblock base.
+   ============================================================ */
+:root {
+  --code-surface: #eee8dd;
+  --code-surface-soft: #f3efe7;
+  --code-text: #2d2926;
+  --code-rule: #b65a43;
+}
+:root[data-theme="dark"] {
+  --code-surface: #111413;
+  --code-surface-soft: #171918;
+  --code-text: #e7dfd4;
+  --code-rule: #e18a6f;
+}
+.v3-codeblock__frame {
+  border-left-color: var(--code-rule);
+  background: var(--code-surface-soft);
+  padding: 18px 22px;
+}
+.v3-codeblock__pre { color: var(--code-text); }
+.v3-codeblock__pre code[data-language] { color: var(--code-text); }
+
