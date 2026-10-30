@@ -25,8 +25,8 @@
 - **数据纪律**:每个关键事实带一手来源 + 「截至 YYYY-MM」;
   不新增无来源数字,不改动既有 references 结构;
 - **组件词汇**:只使用现有 MDX 组件(Cover / SectionTitle / H3 /
-  Callout / PromptBox / CodeBlock / Steps / Checklist / Dl / Stats /
-  PriceTable / Timeline / Tabs),不发明新写法;
+  Callout / PromptBox / BuilderPrompt / CodeBlock / Steps / Checklist / Dl / Stats /
+  PriceTable / Timeline / Tabs),不发明新写法;共享工法改 `content/prompts/builders.ts`;
 - **无「免费」字样**(用「开源」「公开」),内引号用「」,
   半角逗号 + 空格,破折号 ——,中英之间留空;
 - **门禁**:`npm test && npm run lint && npx tsc --noEmit && npm run build && npm run test:release`
@@ -35,7 +35,7 @@
 **协议**:你的 PR 一经合并,即视为同意以 **CC BY-NC-SA 4.0** 授权该贡献
 (署名 Zhaphar,同协议共享,非商业)。
 
-**评审**:涉及 `content/books/**` 的 PR 一律由作者本人终审;
+**评审**:涉及 `content/books/**` 或 `content/prompts/**` 的 PR 一律由作者本人终审;
 新章节、结构调整请先开 Issue 讨论,别直接写。
 
 ## 翻译

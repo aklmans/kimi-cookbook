@@ -7,9 +7,9 @@ differently, on purpose.
 
 ## Book content
 
-Everything under `content/books/` (book metadata, chapter MDX,
-illustrations, code samples embedded in chapters) plus the `.md` files
-served at `/books/<slug>/llms.md` are licensed under
+Everything under `content/books/` and `content/prompts/` (book metadata,
+chapter MDX, shared prompt assets, illustrations, code samples embedded in
+chapters) plus the `.md` files served at `/books/<slug>/llms.md` are licensed under
 
 **Creative Commons Attribution-NonCommercial-ShareAlike 4.0
 International** (CC BY-NC-SA 4.0)

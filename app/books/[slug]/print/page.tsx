@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
+import { getChapterSource } from "@/lib/chapter-content";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -15,7 +13,7 @@ import {
   getBook,
   chapterNumber,
 } from "@/lib/books";
-import { getMdxComponents, type Reference } from "@/components/mdx";
+import { getMdxComponents } from "@/components/mdx";
 import { DraftNotice } from "@/components/mdx/DraftNotice";
 import { formatReadTime } from "@/lib/format";
 import QRCode from "qrcode";
@@ -93,15 +91,6 @@ export default async function PrintBookPage({
         };
       }
 
-      const filePath = path.join(
-        process.cwd(),
-        "content",
-        "books",
-        slug,
-        "chapters",
-        `${chapter.slug}.mdx`,
-      );
-
       // Surface render failures instead of silently dropping the
       // chapter. A null return here used to produce a 200 PDF that was
       // quietly missing a chapter; build-pdfs.mjs only checks HTTP
@@ -109,16 +98,15 @@ export default async function PrintBookPage({
       // 500. Log the book + chapter slug first so the server log points
       // straight at the broken file, then re-throw.
       try {
-        const raw = await fs.readFile(filePath, "utf-8");
-        const { data, content: body } = matter(raw);
+        const { body, references } = await getChapterSource(
+          book.slug,
+          chapter.slug,
+        );
         // CJK character count for the "字数" stat on the covers. Counting Han
         // characters in the raw MDX body isolates the Chinese content (the en
         // strings in <T en="…"> are Latin), so it stands in for the book's
         // length without parsing the bilingual component tree.
         const chars = (body.match(/[一-鿿㐀-䶿]/g) ?? []).length;
-        const references: Reference[] = Array.isArray(data.references)
-          ? (data.references as Reference[])
-          : [];
 
         const { content } = await compileMDX({
           source: body,

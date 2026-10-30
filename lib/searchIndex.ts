@@ -1,7 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
+import { getChapterSource } from "./chapter-content";
 import { getAllBooks, bookDateShort, chapterNumber } from "./books";
+import { getAllMonthlyIssues } from "./monthly";
 
 /* Build-time data collection for the ⌘K palette. */
 
@@ -83,7 +82,6 @@ export function buildSearchIndex(): Promise<SearchItem[]> {
 
 async function computeSearchIndex(): Promise<SearchItem[]> {
   const items: SearchItem[] = [];
-  const root = process.cwd();
 
   for (const b of getAllBooks()) {
     items.push({
@@ -119,23 +117,15 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       ];
       let bodyText = "";
       try {
-        const raw = fs.readFileSync(
-          path.join(root, "content", "books", b.slug, "chapters", `${c.slug}.mdx`),
-          "utf-8",
-        );
-        // Frontmatter reference bodies are prime search anchors ("会员套餐
-        // 价格", product names) — parse them out instead of stripping.
-        const { data: frontmatter, content } = matter(raw);
-        const refs = (frontmatter as { references?: { body?: string; bodyEn?: string }[] })
-          .references;
-        if (refs?.length) {
+        const { body, references } = await getChapterSource(b.slug, c.slug);
+        if (references.length) {
           shortParts.push(
-            refs.map((r) => [r.body, r.bodyEn].filter(Boolean).join(" ")).join(" · "),
+            references.map((r) => [r.body, r.bodyEn].filter(Boolean).join(" ")).join(" · "),
           );
         }
-        const h3s = extractH3s(content);
+        const h3s = extractH3s(body);
         if (h3s.length) shortParts.push(h3s.join(" · "));
-        bodyText = extractComponentText(content);
+        bodyText = extractComponentText(body);
       } catch {
         /* chapter file missing — use meta-only fallback */
       }
@@ -163,15 +153,6 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
     },
     {
       type: "page",
-      titleZh: "Builders 月刊",
-      titleEn: "Builders Monthly",
-      href: "/monthly",
-      meta: "Monthly Dispatch · Universal Builders · 进化指南",
-      shortText: "月刊 Monthly Builders 学习 思考 构建 转型 资产包 提示词 Prompt",
-      bodyText: "泛 Builder 时代：从敲代码到放大个人终极杠杆，用 AI 学习、思考、构建、转型与协同一切。",
-    },
-    {
-      type: "page",
       titleZh: "RSS 订阅",
       titleEn: "RSS Feed",
       href: "/feed.xml",
@@ -180,6 +161,24 @@ async function computeSearchIndex(): Promise<SearchItem[]> {
       bodyText: "",
     },
   );
+
+  for (const [index, issue] of getAllMonthlyIssues().entries()) {
+    items.push({
+      type: "page",
+      titleZh: issue.title,
+      titleEn: issue.titleEn,
+      href: `/monthly/${issue.slug}`,
+      meta: `${index === 0 ? "最新 · " : ""}Builders 月刊 · ${issue.month}`,
+      shortText: [
+        "月刊 Monthly Builders 学习 思考 构建 转型 资产包 提示词 Prompt",
+        issue.title,
+        issue.titleEn,
+        issue.subtitle,
+        issue.subtitleEn,
+      ].join(" · "),
+      bodyText: `${issue.lede} ${issue.ledeEn}`,
+    });
+  }
 
   return items;
 }

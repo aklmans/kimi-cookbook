@@ -71,7 +71,8 @@ Agent 与 Agent Swarm、Deep Research、Kimi Code 与开放 API、泛 Builder �
 - **一本书**(`content/books/kimi/`): 10 章 MDX + 结构化 meta
   (标题、引文、修订记录、海报摘要、Universal Builders 全维工法速查), 含引用脚注;
 - **一份月刊**(`app/monthly/`): 面向 Universal Builders 的月度场景雷达与进化指南
-  (认知范式跃迁 + 真实场景案例拆解 + 开箱即用 Prompt 资产包 + 工具避坑审计);
+  (认知范式跃迁 + 情景案例拆解 + 共享 Prompt 资产包 + 工具避坑审计);
+  `/monthly` 是最新一期, `/monthly/[issue]` 是永久归档;
 - **一个网站**(Next.js 16 App Router): **ChapterOutline 章节大纲轨**、
   阅读辅助栏、giscus 评论、中英文 `<T>` 双语组件;
   **Bilingual PDF exports** —— 整书 PDF 跟随当前语言模式导出,不串味;
@@ -109,6 +110,7 @@ npm run test:release
 | --- | --- |
 | `app/` | 路由:书籍页、章节页、打印页、`llms.md`、MP API、分析 API、OG/海报图 |
 | `content/books/kimi/` | 书:`meta.ts` + 章节 MDX + `about.ts`(关于页内容模块) |
+| `content/prompts/` | 书籍与月刊共享的 Prompt 资产,网页 / MP / `llms.md` 同源渲染 |
 | `components/` | 站点组件;`components/mdx/` 是章节 MDX 词汇表 |
 | `lib/` | 书籍/分析/渲染/字体等核心库;`lib/db.ts` 是多后端分析存储 |
 | `ops/` | 部署脚本(release 切换、rollup、PM2 配置) |
@@ -148,7 +150,7 @@ GitHub Actions 构建 → rsync 不可变 release → PM2 切换 → 三层健�
 
 ## License
 
-- **书籍内容**(`content/books/**` 与 `llms.md` 镜像):**CC BY-NC-SA 4.0** —
+- **书籍内容**(`content/books/**`、`content/prompts/**` 与 `llms.md` 镜像):**CC BY-NC-SA 4.0** —
   可读、可引、AI 可摘读,**欢迎纠错 / 更新 / 翻译**([CONTRIBUTING.md](./CONTRIBUTING.md)),
   衍生作品须署名 Zhaphar 并同协议共享;禁止商业再发布;
 - **源码**(其余一切):**MIT**,见 [LICENSE.md](./LICENSE.md);

@@ -191,6 +191,10 @@ Chapter MDX files use these v3 vocabulary components (from
 - `<Tabs caption="…"><Tab label="…">…</Tab>…</Tabs>`
 - `<Figure label="…" caption="…" ratio="16 / 9" src="…" alt="…" />`
 - `<Callout kind="note|tip|warn" zh="…" en="…" />`
+- `<BuilderPrompt id="artifact-learn|artifact-think|artifact-build|artifact-transform" />`
+  — shared Builder prompt from `content/prompts/builders.ts`; the same data
+  drives the monthly cards, MP copy payload, and `llms.md` expansion. Do not
+  inline a second copy of these prompts in MDX.
 - `<Footnote n={1} />` + frontmatter `references: [{id, body, bodyEn,
   tip?, tipEn?, url?, urlLabel?}]`
 - `<References />` (renders frontmatter `references` at chapter end)
@@ -218,6 +222,13 @@ content that needs to switch on language toggle.
 metas — keeps it client-component importable and keeps the routing
 deterministic. Adding a book requires updating the array. Don't
 replace with a dynamic `fs.readdirSync` scan.
+
+Chapter MDX reads and frontmatter parsing go through
+`lib/chapter-content.ts` (`getChapterSource`), which caches per release and
+fails loudly on read errors. Web, print, search, MP, posters, and `llms.md`
+must not reopen their own file-reading path. Agent Markdown uses
+`lib/markdown-response.ts` (`public, no-cache` + ETag) so every request can be
+tracked at origin without re-downloading unchanged content.
 
 ---
 
@@ -460,19 +471,19 @@ Co-authored-by: Moonshot Agent <307365324+moonshot-agent@users.noreply.github.co
   route accepts `poster_download` at both surfaces, and
   `shareTopChaptersSql` filters `chapter_slug != ''` so book downloads
   never pollute the chapter ranking.
-- **monthly dispatch (Round-106)**: `/monthly` — the Builders 月刊 page,
-  backed by the static manifest `lib/monthly.ts`
-  (`getLatestMonthlyIssue` reads the SORTED list, so appending an issue
-  never strands the page on an old one). The page reuses the about-page
-  skeleton (`about-library` hero, `about-section`, `about-routes`,
-  `.v3-table`). Deliberate style calls: case studies are borderless
-  hairline-separated ROWS (not boxed cards — a page of boxes reads as a
-  spreadsheet); block labels are mono kickers (no 【】 brackets);
-  prompt artifacts show a fixed-height fade-masked preview (never an
-  inner scrollbar) with the copy button as the primary action; the
-  insights grid uses explicit column counts (auto-fit orphaned the
-  third card). Registered everywhere a page belongs: search index,
-  sitemap, `STATIC_PAGE_SLUGS` + `analytics-display`, header/footer nav.
+- **monthly dispatch (Round-106)**: `/monthly` is the latest Builders 月刊;
+  `/monthly/[issue]` is the permanent archive for every entry in the static
+  manifest `lib/monthly.ts` (`getLatestMonthlyIssue` reads the SORTED list).
+  Both render `app/monthly/_components/MonthlyIssue.tsx` and the shared
+  `components/MonthlyArchive.tsx`; issue URLs are registered in search, RSS,
+  and sitemap. The page reuses the about-page skeleton (`about-library` hero,
+  `about-section`, `about-routes`, `.v3-table`). Deliberate style calls: case
+  studies are borderless hairline-separated ROWS (not boxed cards); block
+  labels are mono kickers (no 【】 brackets); prompt artifacts show a
+  fixed-height fade-masked preview (never an inner scrollbar) with copy as the
+  primary action; the insights grid uses explicit column counts. Prompt text
+  lives once in `content/prompts/builders.ts` and is shared with chapter 10.
+  `STATIC_PAGE_SLUGS` + `analytics-display` keep the aggregate `monthly` slug.
 - **Kimi-official data-viz roles (Round-108)**: the analytics dashboard
   (`/internal/stats`, `AnalyticsDashboard.tsx`) follows the official chart
   semantics from kimi-brand — one electric-blue focus on a neutral-gray

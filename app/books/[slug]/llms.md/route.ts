@@ -1,6 +1,5 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
+import { getChapterSource } from "@/lib/chapter-content";
+import { markdownResponse } from "@/lib/markdown-response";
 import { notFound } from "next/navigation";
 import {
   getAllBooks,
@@ -11,6 +10,7 @@ import {
 import { absoluteUrl } from "@/lib/site";
 import { trackAgentRead } from "@/lib/analytics-server";
 import { cleanMdx } from "@/lib/llms-clean-mdx";
+import { BUILDER_PROMPTS } from "@/content/prompts/builders";
 import type { BookMeta } from "@/lib/types";
 
 /* Markdown view of a whole book, for AI agents.
@@ -27,6 +27,8 @@ export function generateStaticParams() {
   return getAllBooks().map((b) => ({ slug: b.slug }));
 }
 
+const bookMarkdownCache = new Map<string, Promise<string>>();
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ slug: string }> },
@@ -37,15 +39,16 @@ export async function GET(
 
   trackAgentRead(slug, req.headers.get("user-agent"));
 
-  const body = await buildBookMarkdown(book);
+  let body = bookMarkdownCache.get(slug);
+  if (!body) {
+    body = buildBookMarkdown(book);
+    bookMarkdownCache.set(slug, body);
+    body.catch(() => {
+      if (bookMarkdownCache.get(slug) === body) bookMarkdownCache.delete(slug);
+    });
+  }
 
-  return new Response(body, {
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-      "Content-Location": `/books/${slug}/llms.md`,
-      "Cache-Control": "no-store",
-    },
-  });
+  return markdownResponse(req, await body, `/books/${slug}/llms.md`);
 }
 
 async function buildBookMarkdown(book: BookMeta): Promise<string> {
@@ -123,42 +126,22 @@ async function buildBookMarkdown(book: BookMeta): Promise<string> {
       lines.push("(草稿: 本章节正文还在撰写中。)");
       lines.push("");
     } else {
-      const filePath = path.join(
-        process.cwd(),
-        "content",
-        "books",
-        book.slug,
-        "chapters",
-        `${c.slug}.mdx`,
-      );
-      let raw: string;
-      try {
-        raw = await fs.readFile(filePath, "utf-8");
-      } catch (error) {
-        console.error(`[llms] Failed to read ${book.slug}/${c.slug}`, error);
-        throw error;
-      }
-      const { data: fm, content: body } = matter(raw);
-      const cleaned = cleanMdx(body);
+      const { body, references } = await getChapterSource(book.slug, c.slug);
+      const cleaned = cleanMdx(body, { prompts: BUILDER_PROMPTS });
       if (cleaned) {
         lines.push(cleaned);
         lines.push("");
       }
 
-      // References table at chapter end (if any in frontmatter).
-      const refs = Array.isArray(fm.references) ? fm.references : [];
-      if (refs.length > 0) {
+      if (references.length > 0) {
         lines.push("### 引用与参考");
         lines.push("");
-        for (const r of refs as Array<{
-          id: number;
-          body?: string;
-          url?: string;
-          urlLabel?: string;
-        }>) {
-          const id = String(r.id ?? "?").padStart(2, "0");
-          const url = r.url ? `  (${r.urlLabel ?? r.url})` : "";
-          lines.push(`${id} · ${r.body ?? ""}${url}`);
+        for (const reference of references) {
+          const id = String(reference.id ?? "?").padStart(2, "0");
+          const url = reference.url
+            ? `  (${reference.urlLabel ?? reference.url})`
+            : "";
+          lines.push(`${id} · ${reference.body ?? ""}${url}`);
         }
         lines.push("");
       }

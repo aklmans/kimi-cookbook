@@ -8,8 +8,23 @@
    can't resolve). This module is pure: no Node fs, no `@/` aliases, no
    React — only string transforms. */
 
-export function cleanMdx(body: string): string {
-  return tidyMarkdown(cleanMdxFragment(body));
+export type CleanMdxPrompt = {
+  id: string;
+  model: string;
+  prompt: string;
+  example?: string;
+};
+
+export function cleanMdx(
+  body: string,
+  options: { prompts?: CleanMdxPrompt[] } = {},
+): string {
+  const expanded = replaceSelfClosingComponent(
+    body,
+    "BuilderPrompt",
+    (tag) => builderPromptMarkdown(tag, options.prompts ?? []),
+  );
+  return tidyMarkdown(cleanMdxFragment(expanded));
 }
 
 function cleanMdxFragment(fragment: string): string {
@@ -373,6 +388,21 @@ function promptBoxMarkdown(tag: string, content?: string): string {
   parts.push(`\n**提示词${model ? ` · ${model}` : ""}**`);
   if (text) parts.push(`\`\`\`text\n${text}\n\`\`\``);
   if (example) parts.push(`**示例**\n\n\`\`\`text\n${example}\n\`\`\``);
+  return `${parts.join("\n\n")}\n`;
+}
+
+function builderPromptMarkdown(
+  tag: string,
+  prompts: CleanMdxPrompt[],
+): string {
+  const id = readProp(tag, "id")?.replace(/[{}'\"`]/g, "").trim();
+  const prompt = prompts.find((item) => item.id === id);
+  if (!prompt) throw new Error(`Unknown Builder prompt in MDX: ${id ?? "missing id"}`);
+  const parts = [`\n**提示词 · ${prompt.model}**`];
+  parts.push(`\`\`\`text\n${prompt.prompt}\n\`\`\``);
+  if (prompt.example) {
+    parts.push(`**示例**\n\n\`\`\`text\n${prompt.example}\n\`\`\``);
+  }
   return `${parts.join("\n\n")}\n`;
 }
 

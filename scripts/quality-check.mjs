@@ -165,14 +165,23 @@ assertExists(
   "The monthly issue manifest must exist.",
 );
 assertIncludes(
-  "app/monthly/page.tsx",
+  "app/monthly/_components/MonthlyIssue.tsx",
   "CopyPromptButton",
   "The monthly page should mount the prompt copy buttons.",
 );
 assertIncludes(
-  "app/monthly/page.tsx",
+  "app/monthly/_components/MonthlyIssue.tsx",
   "v3-table",
   "The monthly audit section should reuse the v3 table.",
+);
+assertExists(
+  "app/monthly/[issue]/page.tsx",
+  "Every monthly issue must have a permanent archive route.",
+);
+assertIncludes(
+  "app/monthly/_components/MonthlyIssue.tsx",
+  "MonthlyArchive",
+  "Latest and archived issues should both expose the issue archive.",
 );
 assertIncludes(
   "lib/monthly.ts",
@@ -2061,9 +2070,9 @@ assertNotIncludes(
   "Public RSS cache misses should not be counted as feed/agent reads.",
 );
 assertIncludes(
-  "app/books/[slug]/llms.md/route.ts",
-  '"Cache-Control": "no-store"',
-  "Agent markdown routes should use no-store so each read can be tracked at origin.",
+  "lib/markdown-response.ts",
+  '"Cache-Control": "public, no-cache"',
+  "Agent markdown should revalidate at origin and reuse ETag-validated content.",
 );
 assertIncludes(
   "lib/types.ts",
@@ -3150,30 +3159,24 @@ assertIncludes(
   "Chapter pages should advertise their markdown twin via alternates.types text/markdown.",
 );
 
-/* ── llms.md route hardening ──
-   The route must not silently swallow a missing chapter file. A previous
-   regression did `catch { raw = "" }` which produced a 200 response with
-   an empty chapter body. We now log and throw so the route 500s, and we
-   guard against the regression coming back. */
+/* ── Chapter source hardening ──
+   Every reading surface must fail loudly when a chapter cannot be read.
+   The shared loader logs the slug and re-throws; no route should reintroduce
+   an empty-body fallback that returns a plausible but incomplete document. */
 assertNotIncludes(
   "app/books/[slug]/llms.md/route.ts",
   "catch {\n        raw = \"\";\n      }",
   "llms.md route must not silently swallow a missing chapter file with an empty fallback.",
 );
 assertIncludes(
-  "app/books/[slug]/llms.md/route.ts",
-  '[llms] Failed to read',
-  "llms.md route should log the book and chapter slug when a chapter file read fails.",
+  "lib/chapter-content.ts",
+  '[content] Failed to read',
+  "The shared chapter loader should log the book and chapter slug on failure.",
 );
 assertIncludes(
-  "app/books/[slug]/llms.md/route.ts",
+  "lib/chapter-content.ts",
   "throw error;",
-  "llms.md route must re-throw after logging so a missing file results in a 500, not an empty chapter.",
-);
-assertIncludes(
-  "app/books/[slug]/[chapter]/llms.md/route.ts",
-  "throw error;",
-  "Chapter llms.md route must re-throw after logging so a missing file results in a 500, not an empty chapter.",
+  "The shared chapter loader must re-throw so no surface ships an empty chapter.",
 );
 assertIncludes(
   "app/books/[slug]/[chapter]/llms.md/route.ts",

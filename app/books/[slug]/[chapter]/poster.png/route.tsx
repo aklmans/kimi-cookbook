@@ -6,6 +6,7 @@ import { getAllBooks, getBook, getChapter, chapterNumber } from "@/lib/books";
 import { chineseNum } from "@/lib/format";
 import { ogText } from "@/lib/og-text";
 import { absoluteUrl, SITE_HOST, SITE_NAME } from "@/lib/site";
+import { getChapterSource } from "@/lib/chapter-content";
 
 /* Share poster for a chapter — THE SAME poster the Mini Program draws
    (miniapp utils/poster.js, "Zhaphar poster grammar"), re-implemented
@@ -104,19 +105,12 @@ function fitTitle(
    vocabulary), so take the LAST match — the manifesto is the chapter's
    closing beat by convention. Both `zh={"…"}` and `zh="…"` prop forms
    are accepted. */
-function extractKicker(bookSlug: string, chapterSlug: string): string {
+async function extractKicker(
+  bookSlug: string,
+  chapterSlug: string,
+): Promise<string> {
   try {
-    const raw = fs.readFileSync(
-      path.join(
-        process.cwd(),
-        "content",
-        "books",
-        bookSlug,
-        "chapters",
-        `${chapterSlug}.mdx`,
-      ),
-      "utf8",
-    );
+    const { raw } = await getChapterSource(bookSlug, chapterSlug);
     const matches = [
       ...raw.matchAll(
         /<Kicker[\s\S]*?zh=(?:\{"((?:[^"\\]|\\.)*)"\}|"((?:[^"\\]|\\.)*)")/g,
@@ -159,7 +153,7 @@ export async function GET(
   const chapterTitle = ogText(ch.title);
   const lede = ogText(ch.lede);
   const summary = ogText(ch.posterSummary);
-  const kicker = ogText(extractKicker(book.slug, ch.slug));
+  const kicker = ogText(await extractKicker(book.slug, ch.slug));
 
   /* Layout — mirrors the MP poster's coordinate grammar. The text stack
      (kicker → lede → summary → footer) FLOWS in a flex column, so its

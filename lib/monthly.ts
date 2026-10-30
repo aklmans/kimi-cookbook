@@ -1,3 +1,5 @@
+import { BUILDER_PROMPTS } from "@/content/prompts/builders";
+
 export type MonthlyArtifact = {
   id: string;
   category: "学习" | "思考" | "构建" | "转型" | "综合";
@@ -175,87 +177,17 @@ export const MONTHLY_ISSUES: MonthlyIssue[] = [
         ],
       },
     ],
-    artifacts: [
-      {
-        id: "artifact-learn",
-        category: "学习",
-        categoryEn: "Learn",
-        title: "苏格拉底式极速跨学科精通链（Socratic Mastery Prompt）",
-        titleEn: "Socratic Mastery Prompt Chain",
-        bestMode: "Thinking",
-        description: "拒绝死记硬背。让 Kimi 扮演严谨的苏格拉底导师，通过渐进式提问与反例测试，在 1 小时内透彻理解任何复杂的全新学科或技术概念。",
-        descriptionEn: "Reject passive cramming. Turn Kimi into a demanding Socratic coach who guides your conceptual breakthrough through guided questions and counterexamples.",
-        prompt: `你现在是世界顶尖的跨学科认知教练兼苏格拉底学者。我的目标是透彻理解【输入你要学习的复杂主题/技术概念】的核心机制，并能向没有任何专业背景的人解释清楚。
-
-请遵守以下教学协议：
-1. 不要一上来就输出整段教科书式的定义或长篇大论。
-2. 请用一个极具启发性的现实生活物理比喻作为切入点，引出该主题试图解决的核心矛盾。
-3. 每次对话只向我提出一个递进式的问题，等待我的回答。
-4. 如果我的理解有偏差或含糊，请给出反例或极端情况进行挑刺（Socratic Irony），逼迫我修正逻辑漏洞。
-5. 只有当我通过了三层递进验证后，才进入下一个子模块，并在最后让我用费曼法进行综合复述。
-
-现在请开始：用第一个生活比喻和你的第一道问题迎接我。`,
-      },
-      {
-        id: "artifact-think",
-        category: "思考",
-        categoryEn: "Think",
-        title: "商业与重大决策红蓝军对抗推演（Red Teaming Decision Sparring）",
-        titleEn: "Adversarial Red-Team Decision Sparring",
-        bestMode: "Thinking",
-        description: "在做重要商业、产品或个人职业抉择前，用严苛的对抗视角排查所有幸存者偏差与隐蔽风险，防患于未然。",
-        descriptionEn: "Stress-test critical business, product, or career decisions against brutal adversarial scrutiny before execution.",
-        prompt: `你现在是我最严苛、最洞察人性的战略顾问兼红队指挥官（Red Teamer）。我即将做出一个重大决定，需要你在我出发前把方案彻底撕碎，找出所有致命漏洞。
-
-我的决策与计划如下：
-【详细输入你的背景、目标、具体行动方案、预期收益与你认为可能存在的风险】
-
-请分三步对我发起冷酷审查：
-第一步【预检死亡（Pre-mortem）】：假定这个计划在 12 个月后彻底崩盘、所有资源消耗殆尽。请列出最可能导致这一惨剧的 3 个隐蔽原因（排除不可抗力，专注于我假设错误或盲目乐观的地方）。
-第二步【二阶效应与反常识挑战】：我的计划中，哪一个核心假设最经不起逻辑推敲？如果竞争对手或利益相关方采取非理性反制，我的脆弱点在哪里？
-第三步【红线加固与最小验证】：不要泛泛而谈建议。给我设计一个「成本不超过现有 5%、耗时不超过 7 天」的最小真实压力测试，证明我的核心假设是否成立。`,
-      },
-      {
-        id: "artifact-build",
-        category: "构建",
-        categoryEn: "Build",
-        title: "自然语言成品交付指令模板（Artifact Ship Spec）",
-        titleEn: "Natural Language Artifact Ship Spec",
-        bestMode: "Agent",
-        description: "让 Kimi Agent 模式不再产生半成品或跑偏。通过标准的前置验收规约，直接获得排版精美、逻辑闭环的高质量报告、网页或演示。",
-        descriptionEn: "Force Kimi Agent to ship complete, polished deliverables by front-loading acceptance criteria and negative constraints.",
-        prompt: `请以资深全栈系统架构师与交付总监的标准，为我交付一份完整的【成品类型：如交互式行业分析单页 HTML / 战略汇报 PPT / 多维财务模型】。
-
-【目标主题】：【填写具体要完成的事项】
-【核心输入材料与硬性事实】：【粘贴必要背景、数据、不可更改的数据底稿】
-
-【不可妥协的交付标准】：
-1. 完整性：禁止提供「待填充占位符」、「TODO」或伪代码。必须是开箱即用、内容丰满的完整成品。
-2. 边界红线：文中所有关键论断与数值，必须严格限制在我给出的材料范围内，严禁幻觉脑补。
-3. 审美规范：排版采用现代极简设计语言，层次分明，重要对比使用表格呈现，核心指标必须有高亮卡片。
-4. 交付形式：直接输出完整的代码或文档文件，并在开头提供 3 句话的核心执行摘要（Executive Summary）。`,
-      },
-      {
-        id: "artifact-transform",
-        category: "转型",
-        categoryEn: "Transform",
-        title: "超级个体职业杠杆审计（Solopreneur Leverage Audit）",
-        titleEn: "Solopreneur Leverage & Workflow Audit",
-        bestMode: "Deep Research",
-        description: "梳理你日常工作中 80% 的机械劳动，设计 Agent 托管闭环，把个人时间全部释放给高价值战略与人际连接。",
-        descriptionEn: "Audit and automate 80% of repetitive workflows to liberate time for high-leverage strategic creation.",
-        prompt: `你是一位专注于「超级个体转型与高杠杆生产力重塑」的商业教练。我希望在不增加团队成员的前提下，将我个人的业务产能提升 5 倍，完成从时间出售者到杠杆拥有者的跃迁。
-
-【我的当前职业/业务角色】：【填写你的行业与岗位】
-【我每周花费时间最多的 5 项重复性任务】：【详细列举具体事务与耗时】
-【我的核心专业壁垒与最热爱的事】：【填写你的不可替代优势】
-
-请为我制定一份切实的「AI 杠杆置换战略」：
-1. 任务剥离矩阵：将我上述 5 项任务按「完全可交给 Agent 托管」、「需人机协同」、「必须由我亲力亲为」三档分类。
-2. 自动化工具链设计：针对完全可托管的任务，用现有的 Kimi 工具栈（Chat / Agent / Deep Research / Swarm / API）给出具体的串联方案。
-3. 个人商业护城河加固：释放出的 50% 时间，我应该如何构建专属于我个人的数字化知识资产或专有 Agent？给出 90 天行动路线图。`,
-      },
-    ],
+    artifacts: BUILDER_PROMPTS.map((prompt) => ({
+      id: prompt.id,
+      category: prompt.category,
+      categoryEn: prompt.categoryEn,
+      title: prompt.title,
+      titleEn: prompt.titleEn,
+      bestMode: prompt.bestMode,
+      description: prompt.description,
+      descriptionEn: prompt.descriptionEn,
+      prompt: prompt.prompt,
+    })),
     audit: {
       title: "本月工具与功能取舍实测审计",
       titleEn: "Monthly No-Hype Tool Audit & Trade-off Assessment",

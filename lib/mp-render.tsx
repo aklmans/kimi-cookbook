@@ -5,9 +5,8 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
+import { getChapterSource } from "@/lib/chapter-content";
+import { getBuilderPrompt } from "@/content/prompts/builders";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -1137,6 +1136,14 @@ function mpComponents(ctx: {
       });
       return <MpPromptBox {...props} promptId={id} />;
     },
+    BuilderPrompt: ({ id }: { id: string }) => {
+      const artifact = getBuilderPrompt(id);
+      return components.PromptBox({
+        model: artifact.model,
+        text: artifact.prompt,
+        example: artifact.example,
+      });
+    },
     Gallery: MpGallery,
     GalleryItem: MpGalleryItem,
     ShowcaseCard: () => note,
@@ -1189,19 +1196,10 @@ export async function renderChapterToMpHtml(
   chapter: Chapter,
   index: number,
 ): Promise<MpChapterPayload> {
-  const filePath = path.join(
-    process.cwd(),
-    "content",
-    "books",
+  const { body, references } = await getChapterSource(
     book.slug,
-    "chapters",
-    `${chapter.slug}.mdx`,
+    chapter.slug,
   );
-  const raw = await fs.readFile(filePath, "utf-8");
-  const { data, content: body } = matter(raw);
-  const references: Reference[] = Array.isArray(data.references)
-    ? (data.references as Reference[])
-    : [];
 
   // Same outline injection as the web chapter page: SectionTitle / H3 /
   // markdown ### all gain stable ids, so the MP's in-chapter outline can

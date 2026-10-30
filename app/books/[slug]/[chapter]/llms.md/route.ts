@@ -1,6 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import {
   getAllBooks,
@@ -12,15 +9,18 @@ import {
 import { absoluteUrl } from "@/lib/site";
 import { trackAgentRead } from "@/lib/analytics-server";
 import { cleanMdx } from "@/lib/llms-clean-mdx";
+import { BUILDER_PROMPTS } from "@/content/prompts/builders";
+import { getChapterSource } from "@/lib/chapter-content";
+import { markdownResponse } from "@/lib/markdown-response";
+import type { BookMeta, Chapter } from "@/lib/types";
 
-/* Per-chapter markdown view for AI agents.
-   `/books/<slug>/<chapter>/llms.md` serves exactly one chapter as clean
-   markdown — the focused fetch target for chapter-scoped agent prompts
-   (the whole-book mirror stays at /books/<slug>/llms.md). Same routing
-   model as the rest of the site: dynamicParams=false +
-   generateStaticParams over published chapters. */
+/* Per-chapter markdown view for AI agents. Content is immutable within a
+   release, so the cleaned document is cached per process; no-cache + ETag
+   still lets agents revalidate without downloading an unchanged body. */
 
 export const dynamicParams = false;
+
+const chapterMarkdownCache = new Map<string, Promise<string>>();
 
 export function generateStaticParams() {
   return getAllBooks().flatMap((b) =>
@@ -40,12 +40,37 @@ export async function GET(
 
   trackAgentRead(slug, req.headers.get("user-agent"), chapterSlug);
 
+  const key = `${slug}/${chapterSlug}`;
+  let body = chapterMarkdownCache.get(key);
+  if (!body) {
+    body = buildChapterMarkdown(book, chapter, index);
+    chapterMarkdownCache.set(key, body);
+    body.catch(() => {
+      if (chapterMarkdownCache.get(key) === body) {
+        chapterMarkdownCache.delete(key);
+      }
+    });
+  }
+
+  return markdownResponse(
+    req,
+    await body,
+    `/books/${slug}/${chapterSlug}/llms.md`,
+  );
+}
+
+async function buildChapterMarkdown(
+  book: BookMeta,
+  chapter: Chapter,
+  index: number,
+): Promise<string> {
   const number = chapterNumber(index);
-  const bookUrl = absoluteUrl(`/books/${slug}`);
-  const chapterUrl = `${bookUrl}/${chapterSlug}`;
+  const bookUrl = absoluteUrl(`/books/${book.slug}`);
+  const chapterUrl = `${bookUrl}/${chapter.slug}`;
   const prev = index > 0 ? book.chapters[index - 1] : null;
-  const next =
-    index < book.chapters.length - 1 ? book.chapters[index + 1] : null;
+  const next = index < book.chapters.length - 1
+    ? book.chapters[index + 1]
+    : null;
 
   const lines: string[] = [];
   lines.push(`# ${chapter.title} · ${book.title}`);
@@ -74,41 +99,25 @@ export async function GET(
     lines.push("(草稿: 本章节正文还在撰写中。)");
     lines.push("");
   } else {
-    const filePath = path.join(
-      process.cwd(),
-      "content",
-      "books",
-      slug,
-      "chapters",
-      `${chapterSlug}.mdx`,
+    const { body, references } = await getChapterSource(
+      book.slug,
+      chapter.slug,
     );
-    let raw: string;
-    try {
-      raw = await fs.readFile(filePath, "utf-8");
-    } catch (error) {
-      console.error(`[llms] Failed to read ${slug}/${chapterSlug}`, error);
-      throw error;
-    }
-    const { data: fm, content: body } = matter(raw);
-    const cleaned = cleanMdx(body);
+    const cleaned = cleanMdx(body, { prompts: BUILDER_PROMPTS });
     if (cleaned) {
       lines.push(cleaned);
       lines.push("");
     }
 
-    const refs = Array.isArray(fm.references) ? fm.references : [];
-    if (refs.length > 0) {
+    if (references.length > 0) {
       lines.push("## 引用与参考");
       lines.push("");
-      for (const r of refs as Array<{
-        id: number;
-        body?: string;
-        url?: string;
-        urlLabel?: string;
-      }>) {
-        const id = String(r.id ?? "?").padStart(2, "0");
-        const url = r.url ? `  (${r.urlLabel ?? r.url})` : "";
-        lines.push(`${id} · ${r.body ?? ""}${url}`);
+      for (const reference of references) {
+        const id = String(reference.id ?? "?").padStart(2, "0");
+        const url = reference.url
+          ? `  (${reference.urlLabel ?? reference.url})`
+          : "";
+        lines.push(`${id} · ${reference.body ?? ""}${url}`);
       }
       lines.push("");
     }
@@ -120,12 +129,5 @@ export async function GET(
     `*${chapter.title} · ${book.title} · ${book.author} 著 · CC BY-NC-SA 4.0 · ${chapterUrl}*`,
   );
   lines.push("");
-
-  return new Response(lines.join("\n"), {
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-      "Content-Location": `/books/${slug}/${chapterSlug}/llms.md`,
-      "Cache-Control": "no-store",
-    },
-  });
+  return lines.join("\n");
 }

@@ -1,5 +1,6 @@
 import type { BookMeta, Chapter } from "@/lib/types";
 import { T } from "@/components/T";
+import { BuilderPrompt } from "./BuilderPrompt";
 import { StopPunct } from "./StopPunct";
 import { Cover } from "./Cover";
 import { SectionTitle, H3, Divider, Kicker } from "./structure";
@@ -110,6 +111,7 @@ export function getMdxComponents(ctx: ChapterCtx) {
     Check,
     LinkCard,
     PromptBox,
+    BuilderPrompt,
     Gallery,
     GalleryItem,
     ShowcaseCard,

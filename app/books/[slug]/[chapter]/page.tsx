@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
+import { getChapterSource } from "@/lib/chapter-content";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -19,7 +17,7 @@ import {
   chapterModifiedAt,
 } from "@/lib/books";
 import { absoluteUrl } from "@/lib/site";
-import { getMdxComponents, type Reference } from "@/components/mdx";
+import { getMdxComponents } from "@/components/mdx";
 import { DraftNotice } from "@/components/mdx/DraftNotice";
 import { extractChapterOutline } from "@/lib/chapter-outline";
 import { ChapterShell } from "./ChapterShell";
@@ -99,25 +97,10 @@ export default async function ChapterPage({
     );
   }
 
-  const filePath = path.join(
-    process.cwd(),
-    "content",
-    "books",
+  const { body, references } = await getChapterSource(
     slug,
-    "chapters",
-    `${chapterSlug}.mdx`,
-  );
-  let raw = "";
-  try {
-    raw = await fs.readFile(filePath, "utf-8");
-  } catch {
-    notFound();
-  }
-
-  const { data, content: body } = matter(raw);
-  const references: Reference[] = Array.isArray(data.references)
-    ? (data.references as Reference[])
-    : [];
+    chapterSlug,
+  ).catch(() => notFound());
   const { body: bodyWithOutlineIds, outline } = extractChapterOutline(body);
 
   const { content } = await compileMDX({

@@ -2,6 +2,7 @@ import { Feed } from "feed";
 import { getAllBooks, chapterPublishedAt } from "@/lib/books";
 import { absoluteUrl, SITE_YEAR } from "@/lib/site";
 import { trackFeedRead } from "@/lib/analytics-server";
+import { getAllMonthlyIssues } from "@/lib/monthly";
 
 /* RSS 2.0 Route Handler (source: rss.html preview).
    Cache-Control keeps CDN freshness at 1 hour. */
@@ -46,6 +47,18 @@ export function GET(req: Request) {
         category: [{ name: book.category }],
       });
     }
+  }
+
+  for (const issue of getAllMonthlyIssues()) {
+    const url = absoluteUrl(`/monthly/${issue.slug}`);
+    feed.addItem({
+      title: `Builders 月刊 ${issue.month} · ${issue.title}`,
+      id: url,
+      link: url,
+      description: issue.lede,
+      date: nextUniqueDate(issue.date),
+      category: [{ name: "MONTHLY" }],
+    });
   }
 
   trackFeedRead(req.headers.get("user-agent"));

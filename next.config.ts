@@ -18,9 +18,9 @@ const nextConfig: NextConfig = {
   // A source-tree `next start` already has the files on disk; standalone
   // needs the trace in order to copy them into its minimal output.
   //
-  // /search-index.json        — lib/searchIndex.ts fs.readFileSync
-  // /books/[slug]/llms.md     — app/books/[slug]/llms.md/route.ts fs.readFile
-  // /books/[slug]/[chapter]/llms.md — app/books/[slug]/[chapter]/llms.md/route.ts fs.readFile
+  // All four consumers read through lib/chapter-content.ts:
+  // /search-index.json, /books/[slug]/llms.md,
+  // /books/[slug]/[chapter]/llms.md, and /api/mp/v1/chapters/[slug].
   //
   // meta.ts files are imported statically via lib/books.ts and are
   // already part of the bundle, so they do not need to be listed.

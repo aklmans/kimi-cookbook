@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllBooks, chapterModifiedAt } from "@/lib/books";
 import { absoluteUrl } from "@/lib/site";
+import { getAllMonthlyIssues, getLatestMonthlyIssue } from "@/lib/monthly";
 
 /* Sitemap — only published reading surfaces. Drafts are excluded
    because getAllBooks() filters them out and draft chapters are
@@ -20,10 +21,12 @@ function atMidnightUtc(date: string): Date {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const books = getAllBooks();
+  const monthlyIssues = getAllMonthlyIssues();
   const newest = books[0];
   const lastSiteUpdate = newest
     ? atMidnightUtc(newest.date)
     : new Date();
+  const lastMonthlyUpdate = atMidnightUtc(getLatestMonthlyIssue().date);
 
   const entries: MetadataRoute.Sitemap = [
     {
@@ -40,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: absoluteUrl("/monthly"),
-      lastModified: lastSiteUpdate,
+      lastModified: lastMonthlyUpdate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
@@ -57,6 +60,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
   ];
+
+  for (const issue of monthlyIssues) {
+    entries.push({
+      url: absoluteUrl(`/monthly/${issue.slug}`),
+      lastModified: atMidnightUtc(issue.date),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    });
+  }
 
   for (const book of books) {
     entries.push({

@@ -75,6 +75,7 @@ async function main() {
     "/about",
     "/license",
     "/monthly",
+    "/monthly/2026-09",
     "/internal/stats",
   ];
   for (const path of status200) {
@@ -87,6 +88,7 @@ async function main() {
     "/books/warp/llms.md",
     "/library",
     "/books/not-real",
+    "/monthly/not-real",
   ];
   for (const path of status404) {
     const status = await fetchStatus(`${BASE_URL}${path}`);
@@ -120,6 +122,23 @@ async function main() {
     "/monthly renders prompt cards and the audit golden rule",
     monthlyHtml.includes("monthly-prompt-card") &&
       monthlyHtml.includes("本月核心铁律"),
+  );
+  const monthlyIssueHtml = await fetchText(`${BASE_URL}/monthly/2026-09`);
+  check(
+    "/monthly links the permanent issue archive",
+    monthlyHtml.includes("/monthly/2026-09") &&
+      monthlyHtml.includes("monthly-archive"),
+  );
+  check(
+    "/monthly/2026-09 renders the issue and its canonical URL",
+    monthlyIssueHtml.includes("monthly-prompt-card") &&
+      monthlyIssueHtml.includes('rel="canonical"') &&
+      monthlyIssueHtml.includes("/monthly/2026-09"),
+  );
+  check(
+    "RSS and sitemap include the permanent monthly issue",
+    feed.includes("/monthly/2026-09") &&
+      sitemap.includes("/monthly/2026-09"),
   );
   check(
     "/sitemap.xml does NOT contain /books/warp",
@@ -168,6 +187,30 @@ async function main() {
   );
   const chLlms404 = await fetchStatus(`${BASE_URL}/books/kimi/not-real/llms.md`);
   check("/books/kimi/not-real/llms.md returns 404", chLlms404 === 404);
+
+  const playbookResponse = await fetch(
+    `${BASE_URL}/books/kimi/10-playbook/llms.md`,
+  );
+  const playbookLlms = await playbookResponse.text();
+  check(
+    "shared Builder prompts expand in chapter and whole-book markdown",
+    playbookLlms.includes("分布式共识算法 Paxos") &&
+      playbookLlms.includes("AI 杠杆置换战略") &&
+      kimiLlms.includes("AI 杠杆置换战略") &&
+      !playbookLlms.includes("<BuilderPrompt"),
+  );
+  const playbookEtag = playbookResponse.headers.get("etag");
+  check(
+    "chapter markdown supports revalidation and returns 304 for a matching ETag",
+    playbookResponse.status === 200 &&
+      (playbookResponse.headers.get("cache-control") ?? "").includes("no-cache") &&
+      Boolean(playbookEtag) &&
+      (
+        await fetch(`${BASE_URL}/books/kimi/10-playbook/llms.md`, {
+          headers: { "if-none-match": playbookEtag ?? "" },
+        })
+      ).status === 304,
+  );
 
   // whole-book llms.md: truncation fallback + completeness surfaces
   check(
@@ -306,7 +349,19 @@ async function main() {
     "/api/mp/v1/chapters/08-code ships the chapter kicker quote",
     !!mpCode && typeof mpCode.kicker === "string" && mpCode.kicker.length > 0,
   );
-  const mpHtmlSafe = [mpIntro, mpCode].every(
+
+  const mpPlaybook = await fetchJson(`${BASE_URL}/api/mp/v1/chapters/10-playbook`);
+  check(
+    "/api/mp/v1/chapters/10-playbook ships the four shared prompts and examples",
+    !!mpPlaybook &&
+      mpPlaybook.prompts?.length === 4 &&
+      mpPlaybook.prompts[0].template.includes("【教学规则】") &&
+      mpPlaybook.prompts[0].example.includes("Paxos") &&
+      mpPlaybook.prompts.some((p) => p.template.includes("AI 杠杆置换战略")) &&
+      mpPlaybook.html.includes("AI 杠杆置换战略") &&
+      mpPlaybook.html.includes('href="#kc-prompt-0"'),
+  );
+  const mpHtmlSafe = [mpIntro, mpCode, mpPlaybook].every(
     (c) =>
       c &&
       !c.html.toLowerCase().includes("<script") &&
