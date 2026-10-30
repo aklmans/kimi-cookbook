@@ -45,3 +45,13 @@ test("the public chapter spot-check is registered in the book manifest", () => {
     `workflow spot-checks chapter "${chapterSlug}" outside ${bookSlug}/meta.ts`,
   );
 });
+
+test("CI and production deployment both smoke test the built release", () => {
+  const workflow = readWorkflow();
+
+  assert.equal(workflow.match(/run: npm run test:release/g)?.length, 2);
+  assert.equal(
+    workflow.match(/run: npx playwright install --with-deps chromium/g)?.length,
+    2,
+  );
+});

@@ -10,7 +10,8 @@ Every push to `main` (or a manual `workflow_dispatch`) runs
 `.github/workflows/deploy.yml`:
 
 1. Quality gates — `npm test`, `npm run lint`, `npx tsc --noEmit`,
-   `npm run build`.
+   `npm run build`, then `npm run test:release` against the production build
+   (endpoint + Playwright smoke, with automatic server cleanup).
 2. Build a standalone release (Next.js `output: "standalone"`) and stamp it
    with the commit SHA as `DEPLOYMENT_VERSION`.
 3. Generate a SHA256 manifest, rsync the release to the server into

@@ -155,12 +155,12 @@ export default function MonthlyPage() {
 
         <div className="v3-divider" aria-hidden="true" />
 
-        {/* Section II: 真实场景工法拆解 (Builder Case Studies) */}
+        {/* Section II: 情景案例工法拆解 (Hypothetical Builder Case Studies) */}
         <section className="about-section" aria-labelledby="cases-title">
           <header className="about-section__head">
-            <p className="about-section__label">— II · 实战案例</p>
+            <p className="about-section__label">— II · 情景案例</p>
             <h2 className="about-section__title" id="cases-title">
-              <T zh="真实场景工法拆解：非程序员如何做出高杠杆成果" en="Builder Case Studies: Real Deliverables without Code" />
+              <T zh="情景案例工法拆解：把方法放进具体工作流" en="Hypothetical Workflows: Applying the Methods in Context" />
               <span className="stop">.</span>
             </h2>
           </header>
@@ -183,7 +183,7 @@ export default function MonthlyPage() {
 
                 <div className="monthly-case-card__block">
                   <span className="monthly-case-card__label">
-                    <T zh="真实痛点" en="Challenge" />
+                    <T zh="情景痛点" en="Scenario" />
                   </span>
                   <p>
                     <T zh={cs.challenge} en={cs.challengeEn} />

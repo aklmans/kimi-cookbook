@@ -9,6 +9,7 @@
     "test:static": "node scripts/quality-check.mjs",
     "test:unit": "tsx --test \"tests/**/*.test.ts\"",
     "test:smoke": "node scripts/smoke.mjs",
+    "test:release": "node scripts/release-check.mjs",
     "start": "next start",
     "lint": "eslint",
     "pdf": "node scripts/build-pdfs.mjs",

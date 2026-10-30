@@ -230,11 +230,15 @@ npm test          # quality-check.mjs — meta consistency, footnote refs, place
 npm run lint
 npx tsc --noEmit
 npm run build
+npm run test:release
 ```
 
-`quality-check` should pass clean — single book with `nextBook`
-unset, so the old nextBook-chain warnings are gone. Any failure must
-be fixed before commit.
+`test:release` starts the production build on an isolated local port, runs the
+existing endpoint + Playwright smoke suite, and stops the server. Install
+Chromium once locally with `npx playwright install chromium`; CI installs it
+before this gate. `quality-check` should pass clean — single book with `nextBook`
+unset, so the old nextBook-chain warnings are gone. Any failure must be fixed
+before commit.
 
 Commit messages: `<type>(<scope>): <subject>`, e.g.:
 

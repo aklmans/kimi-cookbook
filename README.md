@@ -89,17 +89,19 @@ npm ci
 npm run dev        # http://localhost:3000
 ```
 
-提交前门禁(CI 同样跑这四条):
+提交前门禁(CI 同样跑这五条):
 
 ```bash
 npm test           # quality-check.mjs(元数据/脚注/契约钉住)+ 单元测试
 npm run lint
 npx tsc --noEmit
 npm run build
+npm run test:release
 ```
 
-可选:`SMOKE_BASE_URL=http://localhost:3000 npm run test:smoke`
-(起服务后跑 70+ 端点与浏览器断言)。
+`test:release` 会启动刚构建的生产服务, 跑 70+ 端点与浏览器断言后自动停服;
+首次在本机运行前执行 `npx playwright install chromium`。若要检查已有服务,
+可用 `SMOKE_BASE_URL=http://localhost:3000 npm run test:smoke`。
 
 ## 目录速览
 

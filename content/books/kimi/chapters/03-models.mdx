@@ -1,145 +1,137 @@
 ---
 references:
   - id: 1
-    body: "Kimi K3 官方博客(2026-07-16)—— 2.8 万亿参数 MoE(896 专家、每 token 激活 16)、1M token 上下文、原生视觉;思考固定 max 档,low / high 档后续上线;「full model weights will be released by July 27, 2026」,协议随技术报告公布;自评整体仍「trails the most powerful proprietary models」(点名 Claude Fable 5 与 GPT 5.6 Sol),Limitations 承认用户体验有明显差距、可能替用户做意料外的决定;建议 64 张以上加速卡部署;编码负载缓存命中率超九成(厂商口径)。激活参数量官方未公布。"
-    url: "https://www.kimi.com/blog/kimi-k3"
-    urlLabel: "Kimi K3 官方博客"
+    body: "Kimi 开放平台 · K3.1 Pro 模型指南 —— 3 万亿级参数、1M token 上下文, 思考始终开启, 顶层 reasoning_effort 支持 low / high / max（API 默认 max）; 高速版输出速度约为标准版 2–3 倍。官方自评 Terminal-Bench 4.0 为 65.7%, Kimi Code Bench 3.0 Long-horizon 为 61.2%; 完整权重承诺 2026 年 11 月 4 日前发布。截至 2026-10。"
+    url: "https://platform.kimi.com/docs/guide/kimi-k3-1-pro-quickstart"
+    urlLabel: "Kimi 开放平台 · K3.1 Pro 指南"
   - id: 2
-    body: "Kimi 开放平台 · 模型列表 —— kimi-k3 为「迄今能力最强的模型」;kimi-k2.7-code-highspeed 输出约 180 tokens/s(短上下文可达 260);kimi-k2 全系 2026-05-25 已下线;kimi-k2.5 与 moonshot-v1 系列停止向新用户开放,2026-08-31 全平台下线。截至 2026-07-17。"
+    body: "Kimi 开放平台 · 模型列表 —— kimi-k3.1-pro 为当前旗舰, kimi-k3 为上一代旗舰; kimi-k2.7-code 与 kimi-k2.6 仍在列表。K2 系列自 2026-10-31 起停止向新注册用户开放, 已注册用户暂不受影响, 官方计划 12 月底全部下线; kimi-k2.5 与 moonshot-v1 系列已于 2026-08-31 下线。截至 2026-10。"
     url: "https://platform.kimi.com/docs/models"
     urlLabel: "Kimi 开放平台 · 模型列表"
   - id: 3
-    body: "Kimi 开放平台 · 定价(chat-k3 及 chat-k27-code / chat-k26 / chat-k25 同路径各页)—— 每百万 token(缓存命中 / 缓存未命中输入 / 输出):kimi-k3 ¥2.00 / ¥20.00 / ¥100.00,国际站 $0.30 / $3.00 / $15.00;kimi-k2.7-code ¥1.30 / ¥6.50 / ¥27.00,高速版 ¥2.60 / ¥13.00 / ¥54.00;kimi-k2.6 ¥1.10 / ¥6.50 / ¥27.00;kimi-k2.5 ¥0.70 / ¥4.00 / ¥21.00。截至 2026-07-17。"
-    url: "https://platform.kimi.com/docs/pricing/chat-k3"
-    urlLabel: "Kimi 开放平台 · 定价"
+    body: "Kimi 开放平台 · 模型推理定价 —— 每百万 token（缓存命中 / 未命中输入 / 输出）: kimi-k3.1-pro ¥1.30 / ¥13.00 / ¥68.00, 高速版 ¥1.30 / ¥26.00 / ¥136.00; kimi-k3 ¥2.00 / ¥20.00 / ¥100.00; kimi-k2.7-code ¥1.30 / ¥6.50 / ¥27.00, 高速版 ¥2.60 / ¥13.00 / ¥54.00; kimi-k2.6 ¥1.10 / ¥6.50 / ¥27.00。K3 系列的缓存写入另按 TTL 档位计费。截至 2026-10。"
+    url: "https://platform.kimi.com/docs/pricing/chat"
+    urlLabel: "Kimi 开放平台 · 模型定价"
   - id: 4
-    body: "Kimi 开放平台 · Batch API 定价 —— 批量为标准价六折,仅支持 kimi-k2.7-code / kimi-k2.6 / kimi-k2.5;kimi-k3 不在 Batch 内。截至 2026-07-17。"
+    body: "Kimi 开放平台 · Batch API 定价 —— 批量为标准价六折, 当前仅支持 kimi-k2.7-code 与 kimi-k2.6; K3 系列不在 Batch 内。截至 2026-10。"
     url: "https://platform.kimi.com/docs/pricing/batch"
     urlLabel: "Kimi 开放平台 · Batch 定价"
   - id: 5
-    body: "Hugging Face · moonshotai/Kimi-K2.7-Code 模型卡 —— 1 万亿参数 MoE、激活约 320 亿,256K 上下文,仅思考模式(不可关闭),权重 Modified MIT 开源。Kimi-K2.6 卡同规模同协议、思考可选。截至 2026-07-17,moonshotai org 下无任何 K3 权重。"
-    url: "https://huggingface.co/moonshotai/Kimi-K2.7-Code"
-    urlLabel: "Hugging Face · Kimi-K2.7-Code"
+    body: "Hugging Face · moonshotai/Kimi-K3 模型卡 —— K3 完整权重已经发布, 采用 Kimi K3 License; 2.8 万亿总参数、1,040 亿激活参数、1M 上下文, reasoning_effort 支持 low / high / max。K3.1 Pro 的权重仍需以官方后续上架为准。截至 2026-10。"
+    url: "https://huggingface.co/moonshotai/Kimi-K3"
+    urlLabel: "Hugging Face · Kimi-K3"
   - id: 6
-    body: "Kimi 开放平台 · API 总览 —— 思考经 SDK 的 extra_body 传 thinking 参数:kimi-k2.6 可选关闭,kimi-k2.7-code 恒为 enabled(传 disabled 报错);kimi-k3 不使用 thinking 参数,走顶层 reasoning_effort(当前仅 max 一档)。截至 2026-07-17。"
+    body: "Kimi 开放平台 · API 总览 —— 同一国内端点支持 OpenAI Chat Completions、OpenAI Responses 与 Anthropic Messages 三种协议; K2.6 可用 extra_body 传 thinking 参数关闭思考, K2.7-Code 强制思考。K3.1 Pro 使用顶层 reasoning_effort, 不支持关闭思考。截至 2026-10。"
     url: "https://platform.kimi.com/docs/api/overview"
     urlLabel: "Kimi 开放平台 · API 总览"
   - id: 7
-    body: "DeepSWE 官方榜单(页面标注更新于 2026-07-17,113 个任务、16 个模型,统一 mini-swe-agent harness)—— kimi-k3[max] 69%±5%,第 4(榜首 gpt-5.6-sol[max] 73%±3%,单任务成本 $4.65 为前五中第二低);kimi-k2.7-code 31%±1%,第 14。独立第三方实测,这是独立榜首个收录 K3 的成绩。"
+    body: "DeepSWE 官方榜单（2026-09-22 更新, 113 个任务, 统一 mini-SWE-agent harness）—— kimi-k3[max] 为 69%±5%, 榜首多个模型为 74%, K3 单任务平均成本 $4.65。榜单当前未收录 K3.1 Pro, 不能把 K3 的成绩直接过户给 K3.1 Pro。独立第三方实测, 截至 2026-10。"
     url: "https://deepswe.datacurve.ai/"
     urlLabel: "DeepSWE 官方榜"
-  - id: 8
-    body: "SWE-bench Verified 官方榜单数据(官方 GitHub 原始 JSON)—— Kimi 最佳条目为 mini-SWE-agent + Kimi K2.5(high reasoning)70.8%(2026-02-17),同期榜首 79.2%;K2.6 与 K2.7-Code 从未提交;K3 发布不足 48 小时,截至 2026-07-17 无任何条目。"
-    url: "https://github.com/swe-bench/swe-bench.github.io"
-    urlLabel: "SWE-bench 官方榜"
-  - id: 9
-    body: "Code Arena(WebDev)官方榜单(Arena Intelligence 运营,2026-07-17 亲见)—— Kimi K3 以 1679 分居首(约 48 万票)。人类盲投的 Elo 偏好榜,比执行类基准软;偏好不等于正确性,本书仅作参照。"
-    url: "https://arena.ai/leaderboard/code/webdev"
-    urlLabel: "Code Arena · WebDev 榜"
 ---
 
 <Cover />
 
-<T zh="输入框那个模型名, 我自己也很久没点开换过。多数时候确实不用换 —— Kimi 默认就给你当前最强那颗脑子。但 2026 年 7 月 16 日之后, 那颗脑子换了: K3 发布, 旗舰易主。" />
+<T zh="输入框那个模型名, 我自己也很久没点开换过。多数时候确实不用换 —— 默认给当前旗舰就好。但 2026 年 10 月, K3.1 Pro 接手旗舰, K3 退到上一代, K2 系列也进入迁移期, 这张选择表该重画了。" />
 
-<T zh={<>这章不做参数党。先花两分钟认清三颗在列的脑子各管哪段 —— 然后我把四个典型任务放上解剖台, 一笔一笔算出各自该用哪颗、花多少钱。<strong>读完你应该能对任何一件活, 说出「它配哪颗、为什么、大概多少钱」。</strong></>} />
+<T zh={<>这章不做参数党。先认清当前几颗在列的模型各管哪段 —— 然后我把四个典型任务放上解剖台, 一笔一笔算出各自该用哪颗、花多少钱。<strong>读完你应该能对任何一件活, 说出「它配哪颗、为什么、大概多少钱」。</strong></>} />
 
-<SectionTitle number="I"><T zh="三颗在列的脑子, 各管一段" /></SectionTitle>
+<SectionTitle number="I"><T zh="先认当前旗舰, 再看 K2 迁移线" /></SectionTitle>
 
-<T zh={<>重活归 <strong>kimi-k3</strong>: 2.8 万亿参数 MoE、1M 上下文、思考永远开(顶层 <C>reasoning_effort</C> 目前只有 <C>max</C> 一档, 关不掉)—— 长链路编码、百万 token 长料、反复推的知识工作归它, 它也最贵。<Footnote n={1} /><Footnote n={6} />编码专线归 <strong>kimi-k2.7-code</strong>: 1 万亿参数、256K, 思考强制开启; 高速变体 <C>kimi-k2.7-code-highspeed</C> 输出约 180 tokens/s、价格翻倍, 适合交互式结对。<Footnote n={2} /><Footnote n={5} />日常归 <strong>kimi-k2.6</strong>: 同样 256K、多模态, 思考可选可关, 还能走 Batch 批量(六折)—— K3 反而不在 Batch 内。<Footnote n={3} /><Footnote n={4} />至于 kimi-k2.5: 新用户已经用不了, 老用户也只能用到 2026 年 8 月 31 日, 别把新活再绑上去。<Footnote n={2} /></>} />
+<T zh={<>重活归 <strong>kimi-k3.1-pro</strong>: 3 万亿级参数、1M 上下文, 思考始终开启, <C>reasoning_effort</C> 可选 <C>low</C> / <C>high</C> / <C>max</C> —— 长链路编码、百万 token 长料、反复推的知识工作归它。高速版贵一倍输入输出价, 换约 2–3 倍输出速度。<Footnote n={1} /><Footnote n={3} /><strong>kimi-k3</strong> 是上一代旗舰: 2.8 万亿参数、1M 上下文, 仍有存在价值, 尤其是权重已经开放、需要自托管的场景。<Footnote n={2} /><Footnote n={5} /></>} />
 
-<T zh="K2.6 时代, 我给的原则是「活简单就关思考」。这个开关在 K2.6 上还在, 写法没变:" />
+<T zh={<>编码与预算线还有 <strong>kimi-k2.7-code</strong> 和 <strong>kimi-k2.6</strong>: 都是 256K 上下文, 前者强制思考、有高速变体, 后者思考可关、能走 Batch 六折。<Footnote n={2} /><Footnote n={4} /><Footnote n={6} />但这条线已经不是长期答案: K2 自 2026-10-31 起不再向新注册用户开放, 官方计划 12 月底全部下线; K2.5 已经在 8 月 31 日下线。现有工作流可以边用边迁移, 新系统别再绑死 K2 模型名。<Footnote n={2} /></>} />
 
-<CodeBlock caption={<T zh="关掉思考的最小调用(仅 kimi-k2.6 支持;K3 与 K2.7-Code 的思考关不掉, 传 disabled 会报错)" />}>
+<T zh="迁移期里, K2.6 的「简单活关思考」仍然可用, 最小写法如下:" />
+
+<CodeBlock caption={<T zh="关掉思考的最小调用（仅适合仍在迁移期的 kimi-k2.6 工作流;K3.1 Pro 与 K2.7-Code 不能这样关)" />}>
 
 ```python
 from openai import OpenAI
 
 client = OpenAI(api_key="YOUR_KIMI_API_KEY",
-                base_url="https://api.moonshot.cn/v1")  # 与 OpenAI 兼容
+                base_url="https://api.moonshot.cn/v1")
 
 resp = client.chat.completions.create(
     model="kimi-k2.6",
     messages=[{"role": "user", "content": "把这段会议纪要按议题归类, 列出待办"}],
-    extra_body={"thinking": {"type": "disabled"}},  # 关思考: 活简单、要秒回时
+    extra_body={"thinking": {"type": "disabled"}},
 )
 print(resp.choices[0].message.content)
 ```
 
 </CodeBlock>
 
-<T zh={<>「开源」这一条顺带说清。K2 系列的权重早就挂在 Hugging Face 上(Modified MIT, 可下载、可商用); K3 官方自称「全球首个开放 3T 级模型」, 但截至 2026-07-17 权重还没放出 —— 官方承诺 7 月 27 日前发布。<Footnote n={1} /><Footnote n={5} />承诺不是现货: 现在就要数据不出门的读者, 能搬回家的仍是 K2.6 和 K2.7-Code。何况官方建议的部署配置是 64 张以上加速卡 —— 这颗脑子本来也不是给一张消费级显卡准备的。<Footnote n={1} /></>} />
+<T zh={<>「开源」这一条也要按现货与承诺分开。K3 的完整权重已经挂在 Hugging Face 上, 使用 Kimi K3 License; K3.1 Pro 官方承诺 11 月 4 日前发布完整权重, 本章复核时还不能把承诺写成现货。<Footnote n={1} /><Footnote n={5} />现在就要数据不出门的读者, 先按实际模型卡评估 K3 或 K2 系; 无论哪一颗, 3 万亿级模型都不是一张消费级显卡能轻松搬回家的。</>} />
 
 <Divider />
 
 <SectionTitle number="II"><T zh="我把四件典型活放上解剖台" /></SectionTitle>
 
-<T zh={<>下面四个任务, 我把 token 画像全摆出来, 价格用开放平台标准价逐笔算(每百万: K3 输入 ¥20 / 命中 ¥2 / 输出 ¥100;K2.7-Code 与 K2.6 输入 ¥6.5 / 命中 ¥1.1–1.3 / 输出 ¥27;高速版输入 ¥13 / 输出 ¥54)。<Footnote n={3} />你自己任务的账, 照这个格式套就行。</>} />
+<T zh={<>下面四个任务, 我把 token 画像全摆出来, 价格用开放平台标准价逐笔算。K3.1 Pro 每百万输入 ¥13 / 命中 ¥1.3 / 输出 ¥68; K3 为 ¥20 / ¥2 / ¥100; K2.7-Code 与 K2.6 输入 ¥6.5 / 输出 ¥27。<Footnote n={3} />为让算式可读, 以下暂不计 K3 系列另计的缓存写入费, 实账单要把它加回去。</>} />
 
 <H3 id="task-pdf"><T zh="任务一 · 通读 300 页 PDF, 出一份结构化纪要" /></H3>
 
-<T zh={<>画像: 300 页中文约 20 万 token 输入, 纪要约 3 千 token 输出, 一次过。<strong>K3: 输入 20×0.2 + 输出 100×0.003 ≈ ¥4.3</strong>(追问时前缀走缓存, 再砍到 ¥0.7)。<strong>K2.6 / K2.7-Code: 6.5×0.2 + 27×0.003 ≈ ¥1.4</strong>。</>} />
+<T zh={<>画像: 300 页中文约 20 万 token 输入, 纪要约 3 千 token 输出, 一次过。<strong>K3.1 Pro: 13×0.2 + 68×0.003 ≈ ¥2.8</strong>（追问时前缀若命中缓存, 同口径约 ¥0.5）。<strong>K3 约 ¥4.3; K2.6 / K2.7-Code 约 ¥1.4</strong>。</>} />
 
-<T zh={<>差价三倍, 但别急着选便宜的: 256K 的两颗塞 200K 材料只剩一成的余量, 提示词和输出再一挤, 要么砍料要么分段 —— 分段丢的是「贯穿三百页的主线」这类全局判断。我的结论很直接: <strong>10 万 token 以内的料, K2.6 上;逼近或超过 20 万, 这 ¥3 是买「一次吃完不丢全局」, 值。</strong></>} />
+<T zh={<>别急着选便宜的: 256K 的两颗塞 200K 材料后, 余量要留给提示词、工具输出和最终回答, 往往还是得分段 —— 分段丢的是「贯穿三百页的主线」这类全局判断。我的结论: <strong>10 万 token 以内且仍在迁移期, 可以先算 K2.6; 逼近或超过 20 万, K3.1 Pro 一次吃完更省心, 标价还低于 K3。</strong></>} />
 
 <H3 id="task-coding"><T zh="任务二 · 编码 agent 跑一个跨 10 文件的功能改动" /></H3>
 
-<T zh={<>画像: agent 长链路, 20 轮迭代, 每轮平均 3 万 token 输入(仓库上下文, 前缀大量重复 —— 厂商称编码负载缓存命中率超九成, 按九成算)、2 千输出。合计输入 60 万(54 万命中 + 6 万未命中)、输出 4 万。<Footnote n={1} />按百万 token 计: <strong>K3: 0.06×20 + 0.54×2 + 0.04×100 ≈ ¥6.3;K2.7-Code: 0.06×6.5 + 0.54×1.3 + 0.04×27 ≈ ¥2.2;高速版同口径约 ¥4.3。</strong></>} />
+<T zh={<>画像: 20 轮迭代, 每轮平均 3 万 token 输入、2 千输出。合计输入 60 万（假设九成命中缓存, 即 54 万命中 + 6 万未命中）、输出 4 万。按百万 token 计: <strong>K3.1 Pro: 0.06×13 + 0.54×1.3 + 0.04×68 ≈ ¥4.2; K3 约 ¥6.3; K2.7-Code 约 ¥2.2</strong>。九成命中只是演算假设, 不是给你的缓存承诺。</>} />
 
-<T zh={<>单看标价 K3 贵三倍, 但编码活要算的是「做对一次的成本」。独立 DeepSWE 榜(统一 harness): K3 修复率 69%, K2.7-Code 31% —— 把币值除以修复率, K3 约 ¥9 一次成功, K2.7-Code 约 ¥7。<Footnote n={7} />差距远没有标价悬殊, 而且还没算你盯着返工的时间。<strong>我的结论: 日常小改 K2.7-Code;一改错就要重来好几轮的难活, K3 买的是「一次过」。赶时间的结对场景换高速版 —— 翻倍的价格买的是你不等, 后台任务别碰它。</strong></>} />
+<T zh={<>质量账不能拿旧榜硬凑。K3 在独立 DeepSWE 上是 69%±5%, K3.1 Pro 尚未被该榜收录; 官方虽然给出了更高的一代成绩, 但测试集和 harness 不同, 不能直接换算成「一次过的成本」。<Footnote n={1} /><Footnote n={7} /><strong>我的结论: 新增长链路任务先用 K3.1 Pro 做基线; 仍在 K2.7-Code 上的任务, 用同一件真活比较质量、返工和账单, 再决定何时迁。</strong>交互赶时间才考虑高速版, 后台批量别为速度多付钱。</>} />
 
 <H3 id="task-batch"><T zh="任务三 · 一千条评论打标签(批量、可等)" /></H3>
 
-<T zh={<>画像: 每条 500 输入 + 50 输出, 共 50 万输入、5 万输出, 走 Batch 六折(仅 K2.7-Code / K2.6 / K2.5)。<Footnote n={4} /><strong>K2.6 Batch: (6.5×0.5 + 27×0.05) × 0.6 ≈ ¥2.8, 单条不到 0.3 分钱。</strong>K3 不在 Batch 内, 标准价跑这批要 ¥15 —— 五倍多的钱, 买的是根本不会用的旗舰推理。</>} />
+<T zh={<>画像: 每条 500 输入 + 50 输出, 共 50 万输入、5 万输出, 走 Batch 六折（当前仅 K2.7-Code / K2.6）。<Footnote n={4} /><strong>K2.6 Batch: (6.5×0.5 + 27×0.05) × 0.6 ≈ ¥2.8, 单条不到 0.3 分钱。</strong>K3.1 Pro 不在 Batch 内, 标准价跑这批约 ¥9.9, 买的是这项机械活未必需要的旗舰推理。</>} />
 
-<T zh={<>打标签这种「答错一眼能看出来」的活, 顺手把 K2.6 的思考也关了, 又快又便宜。<strong>我的结论: 能批量的活永远先想 Batch + K2.6, 这是整张价目表上性价比最高的一格。</strong></>} />
+<T zh={<>打标签这种「答错一眼能看出来」的活, 迁移期里用 K2.6 关思考确实便宜。但 Batch 当前只支持 K2 模型, 而 K2 已有下线时间表, 所以不要再把「永远 Batch + K2.6」当长期架构。<strong>短期按现有支持跑, 同步准备 K3.1 Pro 低推理档或普通实时接口的替代测算。</strong></>} />
 
 <H3 id="task-chat"><T zh="任务四 · 日常问答与文档小修(高频、零碎)" /></H3>
 
-<T zh={<>画像: 每次 2 千输入 + 5 百输出, 一天几十次。这种量级下三颗模型的单答成本都在一分钱上下 —— 价格在这里根本不构成决策变量。<strong>我的结论: 日常零碎活, 默认 K2.6 关思考;只有答案质量连续几次不满意, 才把这一类活升档。</strong>升档的触发器是「连续不满意」, 不是「万一这次难呢」。</>} />
+<T zh={<>画像: 每次 2 千输入 + 5 百输出。按标准价粗算, K2.6 约 3 分钱, K3.1 Pro 约 6 分钱, 高频之后差价仍会积起来。<strong>我的结论: 简单、重复、容易验收的活先测低推理档; 只有答案质量连续几次不满意, 才升模型或升 effort。</strong>升档的触发器是「连续不满意」, 不是「万一这次难呢」。</>} />
 
 <T zh={<>我把四个任务收成一张表, 下次对着活直接找行:</>} />
 
 | 你的活 | 用哪颗 | 单次成本量级 | 一句话边界 |
 | --- | --- | --- | --- |
-| 10 万 token 内的摘要 / 翻译 / 归类 | kimi-k2.6(关思考) | 几毛 | 答错一眼能看出的活, 不配旗舰 |
-| 20 万 token 级长料一次吃完 | kimi-k3 | 几元 | 分段会丢全局判断的活 |
-| 编码 agent · 日常小改 | kimi-k2.7-code | 几元 | 修复率 31% 档, 简单活够使 |
-| 编码 agent · 难活一次过 | kimi-k3 | ~¥6 | 「做对一次的成本」反而接近 |
-| 交互结对 · 赶时间 | k2.7-code-highspeed | 翻倍 | 买的是人不等, 后台别用 |
-| 批量千级条目的处理 | kimi-k2.6 · Batch | 单条几厘 | 六折, 性价比最高的一格 |
+| 10 万 token 内的摘要 / 翻译 / 归类 | K2.6（迁移期）或 K3.1 Pro low | 几分到几毛 | 新系统别把 K2 当长期依赖 |
+| 20 万 token 级长料一次吃完 | kimi-k3.1-pro | 几元 | 分段会丢全局判断的活 |
+| 编码 agent · 新增长链路任务 | kimi-k3.1-pro | 几元 | 独立榜尚未收录, 用自己的活验收 |
+| 编码 agent · 现有 K2 工作流 | kimi-k2.7-code | 几元 | 边用边迁, 别新增长期绑定 |
+| 交互结对 · 赶时间 | K3.1 Pro Highspeed | 约标准版两倍输入输出价 | 买的是人不等, 后台别用 |
+| 批量千级条目的处理 | K2.6 · Batch（迁移期） | 单条几厘 | 六折仍香, 但要准备替代路线 |
 
 <Divider />
 
 <SectionTitle number="III"><T zh="价格与跑分, 都分两摞看" /></SectionTitle>
 
-<T zh="解剖台之外, 还有两条宏观线要拎清: 标价说明它把自己摆在哪; 而跑分, 你得先分成两摞, 再决定信不信。" />
+<T zh={<>先看价格。K3 曾把旗舰未缓存输入 / 输出推到 ¥20 / ¥100, K3.1 Pro 又降到 ¥13 / ¥68, 同时官方宣称能力继续提升。<Footnote n={1} /><Footnote n={3} />所以别用「新一代一定更贵」或「Kimi 只靠涨价对标」这种单线故事做预算; 价格会随代际重排, 每次选型都要按当前页面重算。</>} />
 
-<T zh={<>先看价格。两年前 K2.5 卖 ¥4 / ¥21 的那个 Kimi 已经走远了: 从 K2.6 涨价六成, 到 K3 直接定在 frontier 价位(国际站 $3 / $15)—— 它要抢的从来不是「便宜」那张货架。<Footnote n={3} />冲省钱该看 DeepSeek 那本; 选 Kimi, 是冲这套栈和这颗脑子。</>} />
-
-<PriceTable asOf="2026-07" unit={<T zh="¥ / 百万 token" />} caption={<T zh="官方 platform.kimi.com 定价; K3 不在 Batch 批量折扣内。" />}>
-  <Price model="kimi-k3" note={<T zh="旗舰 · 思考永远开" />} input="20.00" cached="2.00" output="100.00" context="1M" highlight />
-  <Price model="kimi-k2.7-code" note={<T zh="编码专线 · 强制思考" />} input="6.50" cached="1.30" output="27.00" context="256K" />
-  <Price model="kimi-k2.7-code-highspeed" note={<T zh="编码高速版 · 约 180 tokens/s" />} input="13.00" cached="2.60" output="54.00" context="256K" />
+<PriceTable asOf="2026-10" unit={<T zh="¥ / 百万 token" />} caption={<T zh="官方 platform.kimi.com 定价; K3 系列缓存写入另计, 均不在 Batch 内。" />}>
+  <Price model="kimi-k3.1-pro" note={<T zh="当前旗舰 · 1M · 思考始终开" />} input="13.00" cached="1.30" output="68.00" context="1M" highlight />
+  <Price model="kimi-k3.1-pro-highspeed" note={<T zh="旗舰高速版 · 约 2–3 倍速" />} input="26.00" cached="1.30" output="136.00" context="1M" />
+  <Price model="kimi-k3" note={<T zh="上代旗舰 · 权重已开放" />} input="20.00" cached="2.00" output="100.00" context="1M" />
+  <Price model="kimi-k2.7-code" note={<T zh="编码专线 · 强制思考 · 迁移期" />} input="6.50" cached="1.30" output="27.00" context="256K" />
   <Price model="kimi-k2.6" note={<T zh="平价通用 · 思考可关 · Batch 六折" />} input="6.50" cached="1.10" output="27.00" context="256K" />
-  <Price model="kimi-k2.5" note={<T zh="上代 · 2026-08-31 下线" />} input="4.00" cached="0.70" output="21.00" context="256K" />
 </PriceTable>
 
-<T zh={<>再看跑分 —— 先分两摞。<strong>第一摞, 厂商自评</strong>: K3 发布博客里的数字, 多数是官方用自家 harness 跑出、未经第三方榜单收录; 而官方在同一篇博客里写明, 整体表现仍「trails the most powerful proprietary models」, 点名 Claude Fable 5 和 GPT 5.6 Sol, 并在 Limitations 里承认与这两家有「a noticeable gap in user experience」, 还警告 K3 有过度自主倾向。<Footnote n={1} /><strong>第二摞, 独立实测</strong>: 发稿时刚开始落地 —— DeepSWE 官方榜(2026-07-17 更新, 全榜统一 mini-swe-agent harness)已收录 K3: 69%±5%、16 个模型第 4, 距榜首 73% 只差 4 个点、误差棒与二三位重叠, 单任务成本 $4.65 在前五里第二低; 同一张榜上 K2.7-Code 是 31%±1、第 14。SWE-bench Verified 则仍无 K3 条目, Kimi 最好成绩还是 K2.5 的 70.8%。<Footnote n={7} /><Footnote n={8} /><strong>第三摞, 偏好榜</strong>: Code Arena(WebDev)榜上 K3 以 1679 分登顶(约 48 万票)—— 但它是人类盲投的 Elo 偏好榜, 偏好不等于正确性。<Footnote n={9} /></>} />
+<T zh={<>再看跑分 —— 先分两摞。<strong>第一摞, 厂商自评</strong>: K3.1 Pro 官方报 Terminal-Bench 4.0 为 65.7%, 略低于 Claude Opus 5.5 的 66.4%; 官方内部 Kimi Code Bench 3.0 Long-horizon 则从 K3 的 55.95% 提到 61.2%。这些数字值得看, 但测试条件与自有基准不能替你做独立验收。<Footnote n={1} /><strong>第二摞, 独立实测</strong>: DeepSWE（2026-09-22 更新, 统一 mini-SWE-agent harness）里 K3 是 69%±5%, 榜首多个模型为 74%; K3.1 Pro 尚未收录, 所以目前不能说它在这张榜上已经超过谁。<Footnote n={7} /></>} />
 
-<T zh={<>所以「什么时候回 frontier」这条线没变, 只是更好说了: 一锤定音的最难活(架构级的编码、多跳推理、不能错的输出)回 Claude / GPT —— 这不是我替它谦虚, 是 Moonshot 自己写在发布博客里的。<Footnote n={1} />K3 值得付钱的场景同样清楚: 百万 token 一次吃完的长料、要跑很久的 agent 任务、国内直连的顺手, 以及(7 月 27 日之后)可自托管的开放权重。中间的日常活, K2.6 依旧够用。</>} />
+<T zh={<>所以「什么时候回 frontier」不该写成固定品牌名单。最难的架构编码、多跳推理、不能错的输出, 把 K3.1 Pro 与你手头其他前沿模型放到同一件真活上, 比质量、返工、延迟和总账; 需要自托管, 再把 K3 已开放的权重列进候选。模型名称会换, 这套比较方法不用换。</>} />
 
-<Callout kind="warn" zh={<>别在发布第一周拿跑分做决定。厂商自评用自家 harness, 独立执行类榜单刚收录一家, 偏好榜又偏软 —— 三摞证据现在都单薄。你自己最棘手的那件活, 才是唯一算数的基准; 下面三步就是帮你把它跑出来的。</>} />
+<Callout kind="warn" zh={<>别把首发跑分当长期结论。厂商自评、独立执行类榜单和人类偏好榜回答的不是同一个问题; 新模型尚未被独立榜收录时, 最诚实的写法就是「暂无同口径成绩」。你自己最棘手的那件活, 才是最终算数的基准。</>} />
 
 <Steps>
   <Step title={<T zh="把你最近卡住的一件活, 按解剖台格式算一遍" />}>
-    <T zh="拆出输入 / 输出 / 轮数, 套第二节的单价, 算出 K3 与 K2.6 各自多少钱 —— 十分钟, 这张账比任何跑分都懂你。" />
+    <T zh="拆出输入 / 输出 / 轮数与缓存命中, 套第二节的单价, 别漏 K3 系列缓存写入费 —— 十分钟, 这张账比任何跑分都懂你。" />
   </Step>
-  <Step title={<T zh="同一提示词, 在 K3 和 K2.6 上各跑一遍" />}>
-    <T zh="就拿那件卡住你的活当考题, 两边各跑一次, 记下质量差和账单差 —— 这才是替你定制的那张榜。" />
+  <Step title={<T zh="同一提示词, 在候选模型上各跑一遍" />}>
+    <T zh="就拿那件卡住你的活当考题, 记下质量差、返工次数和账单差 —— 这才是替你定制的那张榜。" />
   </Step>
-  <Step title={<T zh="给自己写一条「什么活才配 K3」" />}>
-    <T zh="按算出来的账定线, 贴在看得见的地方。挡位是最后 10% 的微调, 不是把活说清楚的替代。" />
+  <Step title={<T zh="给 K2 工作流写一条迁移触发线" />}>
+    <T zh="别等下线当天才换模型名。先确定替代模型、验收用例和回滚方案, 再用真实流量逐步切。" />
   </Step>
 </Steps>
 

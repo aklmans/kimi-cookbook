@@ -5,7 +5,7 @@
 - [ ] 每个关键事实都有**一手来源链接** + 「截至 YYYY-MM」标注
 - [ ] 没有用「免费」字样;内引号用「」;半角逗号 + 空格
 - [ ] 只用了现有 MDX 组件,没发明新写法
-- [ ] `npm test` / `npm run lint` / `npx tsc --noEmit` / `npm run build` 全绿
+- [ ] `npm test` / `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test:release` 全绿
 - [ ] 我同意本贡献以 **CC BY-NC-SA 4.0** 授权(署名 Zhaphar,同协议共享)
 
 ## 改了什么(一段话)

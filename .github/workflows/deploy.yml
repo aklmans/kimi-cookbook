@@ -55,6 +55,12 @@ jobs:
           DEPLOYMENT_VERSION: ${{ github.sha }}
         run: npm run build
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke test production build
+        run: npm run test:release
+
   deploy:
     name: Deploy production
     if: >-
@@ -137,6 +143,12 @@ jobs:
         env:
           DEPLOYMENT_VERSION: ${{ github.sha }}
         run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke test production build
+        run: npm run test:release
 
       - name: Package release
         run: |

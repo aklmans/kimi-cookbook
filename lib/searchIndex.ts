@@ -45,8 +45,8 @@ function cleanMdxText(text: string): string {
 /** Extract every H3 heading from a markdown body. */
 function extractH3s(md: string): string[] {
   const headings: string[] = [];
-  for (const m of md.matchAll(/^### (.+)$/gm)) {
-    const heading = cleanMdxText(m[1]);
+  for (const m of md.matchAll(/(?:^### (.+)$)|(?:<H3\b[^>]*>([\s\S]*?)<\/H3>)/gm)) {
+    const heading = cleanMdxText(m[1] ?? m[2] ?? "");
     if (heading) headings.push(heading);
   }
   return headings;

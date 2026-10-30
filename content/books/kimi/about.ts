@@ -42,8 +42,8 @@ export const about: BookAbout = {
       no: "II",
       title: "这本书写什么",
       paragraphs: [
-        "十章, 从全景到取舍: 先给整套栈画张图, 再逐面讲清 —— K3、K2.7-Code 与 K2.6 三颗脑子怎么分工; Instant / Thinking / Agent / Agent Swarm 四个模式怎么挑; Agent 什么时候能直接做出成品; 大活该不该动用集群; Deep Research 什么活值得等; Kimi Code 与双兼容 API 怎么接进你的工具链。",
-        "最后两章收束成判断: 五档会员摆开, 说清订阅不含 API, 什么活该回 Claude / GPT、什么活交给 DeepSeek; 再用一张速查表, 把常见的活对到该用的那一面。厂商自评与独立实测, 分开算账。",
+        "十章, 从全景到取舍: 先给整套栈画张图, 再逐面讲清 —— K3.1 Pro、K3 与 K2 迁移线怎么选; Instant / Thinking / Agent / Agent Swarm 四个模式怎么挑; Agent 什么时候能直接做出成品; 大活该不该动用集群; Deep Research 什么活值得等; Kimi Code 与多协议 API 怎么接进你的工具链。",
+        "最后两章收束成判断: 新老会员套餐怎么选, 订阅、加油包与 API 三笔账怎么分, 什么活该换工具; 再用一张速查表, 把常见的活对到该用的那一面。厂商自评与独立实测, 分开算账。",
       ],
     },
     {

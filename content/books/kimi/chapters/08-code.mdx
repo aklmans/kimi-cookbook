@@ -1,86 +1,94 @@
 ---
 references:
   - id: 1
-    body: "Kimi Code CLI 官方文档 —— 安装:curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash(macOS / Linux)或 npm install -g @moonshot-ai/kimi-code(需 Node.js ≥ 22.19.0);/login 支持「Kimi Code(OAuth)」会员授权与「Kimi Platform API 密钥」两种方式;可用模型 k3 / kimi-for-coding / kimi-for-coding-highspeed,k3 需 Moderato 档及以上会员、1M 上下文需 Allegretto 档及以上;会员额度约 300–1200 次请求 / 5 小时窗口、并发上限 30。截至 2026-07-17。"
+    body: "Kimi Code CLI 官方文档 —— macOS / Linux 可用官方安装脚本或 npm install -g @moonshot-ai/kimi-code（Node.js ≥ 22.19.0）; /login 支持 Kimi Code（OAuth）会员授权与 Kimi Platform API 密钥。复核于 2026-10。"
     url: "https://www.kimi.com/code/docs/kimi-code-cli/guides/getting-started.html"
     urlLabel: "Kimi Code CLI 官方文档"
   - id: 2
-    body: "Kimi 帮助中心 · Kimi Code CLI 常见问题 —— 会员专用端点:OpenAI 兼容 https://api.kimi.com/coding/v1,Anthropic 兼容 https://api.kimi.com/coding/,计费走 Kimi 会员订阅额度;官方逐字声明「api.kimi.com 和 api.moonshot.cn 是两个完全独立的账号体系,API Key 互不通用」。截至 2026-07-17。"
+    body: "Kimi 帮助中心 · Kimi Code —— 会员专用端点为 OpenAI 兼容 https://api.kimi.com/coding/v1 与 Anthropic 兼容 https://api.kimi.com/coding/, 走会员订阅额度; api.kimi.com 与 api.moonshot.cn 是独立账号体系, API Key 互不通用。"
     url: "https://www.kimi.com/zh-cn/help/kimi-code/cli-getting-started"
     urlLabel: "Kimi 帮助中心 · Kimi Code"
   - id: 3
-    body: "Kimi 开放平台 · 快速开始与常见问题 —— 国内控制台 platform.kimi.com(人民币、微信 / 支付宝充值),国际控制台 platform.kimi.ai(美元);官方 FAQ 逐字:「两个平台的账户和 key 完全独立,不能混用」,混用报 401 invalid_authentication_error;「中国境内建议使用 platform.kimi.com 平台,境外建议使用 platform.kimi.ai 平台」。截至 2026-07-17。"
+    body: "Kimi 开放平台 · 快速开始与常见问题 —— 国内控制台 platform.kimi.com 与国际控制台 platform.kimi.ai 的账户和 Key 完全独立, 混用会报 401; 国内与海外应使用各自端点。"
     url: "https://platform.kimi.com/docs/overview"
     urlLabel: "Kimi 开放平台 · 快速开始"
   - id: 4
-    body: "Kimi 开放平台 · API 总览 —— 兼容 OpenAI Chat Completions,base_url 国内 https://api.moonshot.cn/v1、国际 https://api.moonshot.ai/v1;鉴权 Authorization: Bearer,环境变量 MOONSHOT_API_KEY;max_tokens 已弃用,改用 max_completion_tokens。截至 2026-07-17。"
+    body: "Kimi 开放平台 · API 总览 —— 当前兼容三种格式: OpenAI Chat Completions（/v1/chat/completions）、OpenAI Responses（/v1/responses）与 Anthropic Messages（/anthropic/v1/messages）; 国内 base_url 分别为 https://api.moonshot.cn/v1 与 https://api.moonshot.cn/anthropic, 鉴权为 Authorization: Bearer。复核于 2026-10。"
     url: "https://platform.kimi.com/docs/api/overview"
     urlLabel: "Kimi 开放平台 · API 总览"
   - id: 5
-    body: "Kimi 开放平台 · 充值与限速 —— 按账户累计充值分档:tier0(¥0)并发 1、3 RPM、50 万 TPM;tier1(¥50)并发 50、200 RPM;最高 tier5(¥20,000)1000 并发、10,000 RPM。官方 FAQ 提醒:OpenAI SDK 默认重试 2 次会放大 RPM 消耗,tier0 一次错误请求即可耗尽全部 RPM;代金券不计入累计充值。国际站档位 $1–$3,000。截至 2026-07-17。"
+    body: "Kimi 开放平台 · 充值与限速 —— 速率按账户累计充值为档位, 代金券不计入累计充值; 实际并发、RPM、TPM、TPD 与联网搜索 QPS 以当前表格为准。复核于 2026-10。"
     url: "https://platform.kimi.com/docs/pricing/limits"
     urlLabel: "Kimi 开放平台 · 充值与限速"
   - id: 6
-    body: "Kimi 开放平台 · 在 Claude Code 中使用 Kimi —— Anthropic 兼容端点 https://api.moonshot.cn/anthropic(国际站 https://api.moonshot.ai/anthropic);官方环境变量:ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_MODEL=kimi-k3[1m] 及 OPUS / SONNET / HAIKU / FABLE 各档模型变量、CLAUDE_CODE_SUBAGENT_MODEL、ENABLE_TOOL_SEARCH=false、CLAUDE_CODE_AUTO_COMPACT_WINDOW=1048576、CLAUDE_CODE_EFFORT_LEVEL=max;须删除旧 ANTHROPIC_API_KEY 防冲突;/model 菜单不显示 Kimi 模型,以 /status 为准;kimi-k2.7-code 需按 Tab 开启 Thinking,否则 400 invalid thinking;WebFetch 暂不可用。截至 2026-07-17。"
+    body: "Kimi 开放平台 · 在 Claude Code 中使用 Kimi —— 当前示例将主模型与 OPUS / SONNET / FABLE 配为 kimi-k3[1m], HAIKU 配为 kimi-k2.7-code, 并设置 CLAUDE_CODE_SUBAGENT_MODEL、CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000 与 CLAUDE_CODE_EFFORT_LEVEL=max; 当前指南不再要求 ENABLE_TOOL_SEARCH=false。settings.json 的 env 会覆盖 shell 同名变量, 修改后需重启。复核于 2026-10。"
     url: "https://platform.kimi.com/docs/guide/claude-code-kimi"
     urlLabel: "Kimi 开放平台 · Claude Code 指南"
   - id: 7
-    body: "Anthropic 官方文档 · Claude Code 环境变量 —— ANTHROPIC_AUTH_TOKEN 走 Authorization: Bearer 头,ANTHROPIC_API_KEY 走 X-Api-Key 头,二者同时存在会冲突;ANTHROPIC_SMALL_FAST_MODEL 已废弃,由 ANTHROPIC_DEFAULT_HAIKU_MODEL 等档位变量取代。截至 2026-07-17。"
+    body: "Anthropic 官方文档 · Claude Code 环境变量 —— ANTHROPIC_AUTH_TOKEN 走 Authorization: Bearer 头, ANTHROPIC_API_KEY 走 X-Api-Key 头, 二者同时存在会冲突; 旧 ANTHROPIC_SMALL_FAST_MODEL 已由各档位模型变量取代。"
     url: "https://code.claude.com/docs/en/env-vars"
     urlLabel: "Claude Code · 环境变量"
   - id: 8
-    body: "OpenAI 官方文档 · Codex 配置参考 —— 自定义 model_providers 支持 name / base_url / env_key / wire_api 等键;wire_api 原文「responses is the only supported value」,即只支持 Responses 一档。Kimi 开放平台提供的是 Chat Completions,协议接不上,故 Codex 无法直连,需协议转换层。截至 2026-07-17(该页自 developers.openai.com 迁至 learn.chatgpt.com)。"
+    body: "OpenAI 官方文档 · Codex 配置参考 —— 自定义 model_providers 支持 name / base_url / env_key / wire_api 等键, wire_api 使用 responses。复核于 2026-10。"
     url: "https://learn.chatgpt.com/docs/config-file/config-reference"
     urlLabel: "Codex · 配置参考"
   - id: 9
-    body: "Kimi 开放平台 · 在 Codex CLI 中使用 Kimi K3 —— 官方路径:经 CC Switch 本地路由把 Codex 的 Responses API 请求转换为 Kimi 的 Chat Completions;步骤为开启路由总开关与 Codex 路由、添加 Kimi 供应商(Base URL https://api.moonshot.cn/v1、默认模型 kimi-k3、上游格式 Chat Completions、上下文窗口 1048576)、启用并重启 Codex。官方提示 CC Switch 为第三方工具,API Key 与请求响应由其本地路由处理。截至 2026-07-17。"
+    body: "Kimi 开放平台 · 在 Codex 中使用 Kimi K3.1 Pro —— Kimi 已原生支持 Responses API, Codex 可通过自定义 provider 直连 kimi-k3.1-pro, 无需协议转换或本地代理; base_url 为 https://api.moonshot.cn/v1, wire_api 为 responses, model_context_window 为 1048576。复核于 2026-10。"
     url: "https://platform.kimi.com/docs/guide/codex-kimi"
     urlLabel: "Kimi 开放平台 · Codex 指南"
   - id: 10
-    body: "OpenCode 官方文档与 Kimi 官方 OpenCode 指南 —— 内置 Moonshot AI(国际)与 Moonshot AI (China)(中国区)两个供应商,/connect 粘贴 Key 即可;自定义供应商走 opencode.json,npm 包 @ai-sdk/openai-compatible,options.baseURL / options.apiKey(支持 {env:VAR} 引用)/ models 逐字键名。截至 2026-07-17。"
+    body: "OpenCode 官方文档与 Kimi 官方 OpenCode 指南 —— 内置 Moonshot AI（国际）与 Moonshot AI (China) 两个供应商; 自定义供应商走 opencode.json 与 @ai-sdk/openai-compatible。"
     url: "https://opencode.ai/docs/providers/"
     urlLabel: "OpenCode · Providers"
   - id: 11
-    body: "Pi 官方文档(earendil-works/pi,原 badlogic/pi-mono)—— 终端编码 agent;安装 npm install -g @earendil-works/pi-coding-agent;自定义供应商写在 ~/.pi/agent/models.json,支持 api: openai-completions / anthropic-messages 等,apiKey 可填环境变量名;另内置 Kimi For Coding 供应商(环境变量 KIMI_API_KEY)。截至 2026-07-17。"
+    body: "Pi 官方文档（earendil-works/pi）—— 自定义供应商写在 ~/.pi/agent/models.json, 支持 openai-completions / anthropic-messages 等协议, apiKey 可填环境变量名; 另内置 Kimi For Coding 供应商。"
     url: "https://github.com/earendil-works/pi"
     urlLabel: "Pi · GitHub"
   - id: 12
-    body: "Cline 官方文档 —— 内置 Moonshot 供应商(下拉直选、粘贴 Key);或选 OpenAI Compatible,逐字字段 Base URL / API Key / Model ID。社区 issue(cline#10544)报告:kimi-k2.6 走 OpenAI Compatible 会因 temperature 校验报 400,建议优先用内置 Moonshot 供应商(社区反馈,非官方结论)。截至 2026-07-17。"
+    body: "Cline 官方文档 —— 内置 Moonshot 供应商, 也可选 OpenAI Compatible 填 Base URL / API Key / Model ID; 早期社区 issue 曾报告 K2.6 的 temperature 校验问题, 优先使用内置供应商并以当前版本实测为准。"
     url: "https://docs.cline.bot/provider-config/moonshot"
     urlLabel: "Cline · Moonshot"
   - id: 13
-    body: "Roo Code 官方文档 —— 内置 Moonshot 供应商(下拉直选);或选 OpenAI Compatible(Base URL / API Key / Model);Roo Code 仅使用原生 tool calling,模型须支持 OpenAI 风格工具调用。截至 2026-07-17。"
+    body: "Roo Code 官方文档 —— 内置 Moonshot 供应商, 也可选 OpenAI Compatible; Roo Code 使用原生 tool calling, 模型须支持 OpenAI 风格工具调用。"
     url: "https://docs.roocode.com/providers/moonshot"
     urlLabel: "Roo Code · Moonshot"
   - id: 14
-    body: "Aider 官方文档 · OpenAI 兼容端点 —— export OPENAI_API_BASE 与 OPENAI_API_KEY 后以 aider --model openai/模型名 启动;.aider.conf.yml 对应键 openai-api-base / openai-api-key / model。无 Moonshot 专页,走通用 OpenAI 兼容路径。截至 2026-07-17。"
+    body: "Aider 官方文档 · OpenAI 兼容端点 —— export OPENAI_API_BASE 与 OPENAI_API_KEY 后以 aider --model openai/模型名 启动; .aider.conf.yml 对应 openai-api-base / openai-api-key / model。"
     url: "https://aider.chat/docs/llms/openai-compat.html"
     urlLabel: "Aider · OpenAI Compatible"
   - id: 15
-    body: "Cursor 官方文档 · API Keys —— 自带 Key(BYOK)仅支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家,无任意第三方 OpenAI 兼容端点;自定义 Key 只覆盖标准聊天模型,Tab 补全等仍走 Cursor 内置模型。截至 2026-07-17,Kimi 无法经官方支持的方式接入 Cursor。"
+    body: "Cursor 官方文档 · API Keys —— BYOK 仍只列 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock, 自定义 Key 只覆盖标准聊天模型, Tab 补全继续使用 Cursor 内置模型。复核于 2026-10。"
     url: "https://docs.cursor.com/en/settings/api-keys"
     urlLabel: "Cursor · API Keys"
   - id: 16
-    body: "CC-Switch(farion1231/cc-switch,官网 ccswitch.io)—— v3.17.0(2026-07-13),约 12 万 star(GitHub API 118,315),Tauri 桌面应用(macOS 可 brew install --cask cc-switch);管理 Claude Code / Codex / Gemini CLI / OpenCode 等 8 个工具的供应商配置;配置存于 ~/.cc-switch/cc-switch.db(SQLite),切换时原子写入 ~/.claude/settings.json 的 env 块与 ~/.codex/auth.json + config.toml;Claude Code 支持热切换,Codex 需重开终端;自动检测 shell 环境变量冲突;内置 Kimi(api.moonshot.cn/anthropic,预设模型 kimi-k2.7-code)与 Kimi For Coding(api.kimi.com/coding/)预设;Codex 侧本地路由默认 127.0.0.1:15721。截至 2026-07-17。"
+    body: "CC-Switch（farion1231/cc-switch）—— 第三方多供应商配置管理工具, 可维护 Claude Code / Codex 等工具的配置; 它不是 Kimi 官方产品, 也不再是 Codex 接 Kimi 的必经层。旧路由可能改写 Codex 配置, 直连前应检查并关闭。"
     url: "https://github.com/farion1231/cc-switch"
     urlLabel: "CC-Switch · GitHub"
   - id: 17
-    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— 为 AI Agent 设计的 Chrome / Edge 浏览器扩展: 跑在你正在用的浏览器里、直接继承登录态, 让 agent 像真人一样点击、填表、提取、跨站整合; 本地优先, 网页数据不出设备; 扩展本身不收钱, 可配合 Kimi Code / Claude Code / Cursor / Codex 等本地 agent。截至 2026-07。"
+    body: "Kimi 帮助中心 · Kimi WebBridge 介绍 —— Chrome / Edge 扩展, 继承当前浏览器登录态, 让本地 agent 点击、填表和跨站提取; 本地优先, 可配合 Kimi Code / Claude Code / Cursor / Codex 等工具。"
     url: "https://www.kimi.com/zh-cn/help/kimi-webbridge/kimi-webbridge-introduction"
     urlLabel: "Kimi 帮助中心 · Kimi WebBridge"
+  - id: 18
+    body: "Kimi Code 官方文档 · 模型配置 —— 当前提供 k3.1-pro / k3.1-pro-highspeed / k3 / k3-256k / kimi-for-coding（K2.8 Preview）/ kimi-for-coding-highspeed。新套餐 Plus 起可用 K3.1 Pro 与 K3, Pro 起解锁高速版与 1M 上下文; 旧套餐对应 Moderato / Allegretto 门槛。K3.1 Pro 仅支持思考, reasoning_effort 为 low / high / max。复核于 2026-10。"
+    url: "https://www.kimi.com/code/docs/kimi-code/models.html"
+    urlLabel: "Kimi Code · 模型配置"
+  - id: 19
+    body: "Kimi 官方 K3 产品说明 —— Kimi Code 除 CLI 外也支持兼容 IDE; 官方 FAQ 明确列出 Kimi Code for VS Code 和 Cursor, 可在输入栏模型菜单选择 Kimi。它与 Cursor 原生 BYOK 是两条不同接入路径。"
+    url: "https://www.kimi.com/ai-models/kimi-k3"
+    urlLabel: "Kimi 官方 · IDE 支持"
 ---
 
 <Cover />
 
 <T zh="如果你完全不碰代码, 这章可以跳过 —— 这正是我把它单拎出来的原因。" />
 
-<T zh={<>这一章我给开发者摆三道门: 一道是 <strong>Kimi Code</strong>, 跑在终端、对标 Claude Code 的第一方编码 agent; 一道是<strong>开放平台 API</strong> —— OpenAI 与 Anthropic 两套兼容协议, 改几行配置就能把你已经在用的 agent 接过来; 还有一道是 <strong>CC-Switch</strong>, 把多套供应商配置收进一个面板、一键切换。便宜不是它的卖点了(第三章那次定价说过), 但「国内可达 + 两套协议 + 开放权重」这三样, 对国内开发者仍是少有的顺。</>} />
+<T zh={<>这一章我给开发者摆三道门: 一道是 <strong>Kimi Code</strong>, 跑在终端、对标 Claude Code 的第一方编码 agent; 一道是<strong>开放平台 API</strong> —— OpenAI Chat Completions / Responses 与 Anthropic Messages 三种兼容格式, 改几行配置就能把已经在用的 agent 接过来; 还有一道是可选的 <strong>CC-Switch</strong>, 把多套供应商配置收进一个面板。「国内可达 + 多协议 + 开放权重」这三样, 对国内开发者仍是少有的顺。</>} />
 
 <SectionTitle number="I"><T zh="Kimi Code 是第一方的终端 agent" /></SectionTitle>
 
 <T zh="它不是在聊天里贴代码, 是直接进你的仓库改 —— 读文件、跑命令、提改动。" />
 
-<T zh={<>Kimi Code 是跑在终端里的命令行工具, 对标 Claude Code: 它在你的项目目录里直接读多个文件、跑命令、改文件, 一个完整的「改、跑、看、再改」循环, 不用你在浏览器和编辑器之间来回搬。<Footnote n={1} />后端模型现在是 K3 与编码专线的 kimi-for-coding(即 K2.7-Code 那条线, 第三章)—— 配上长程编码的底子, 它扛得住「改一个跨十几个文件的功能」, 而不只是补全一个函数。</>} />
+<T zh={<>Kimi Code 是跑在终端里的命令行工具, 对标 Claude Code: 它在你的项目目录里直接读多个文件、跑命令、改文件, 一个完整的「改、跑、看、再改」循环, 不用你在浏览器和编辑器之间来回搬。<Footnote n={1} />模型列表现在是 K3.1 Pro（及高速版）、K3（及 256K 版）、K2.8 Preview 和 K2.7 Code Highspeed; 官方客户端用 <C>/model</C> 切换, 第三方工具要填对应模型 ID, 不要把显示名称当 ID。<Footnote n={18} /></>} />
 
 <CodeBlock caption={<T zh="安装 Kimi Code CLI(macOS / Linux 二选一;Windows 用官方 PowerShell 脚本, 见文档)" />}>
 
@@ -96,19 +104,19 @@ kimi --version   # 验证
 
 </CodeBlock>
 
-<T zh={<>装完用 <C>/login</C> 登录, 两条路任选: <strong>会员 OAuth</strong>(走你的 Kimi 会员订阅额度)或 <strong>开放平台 API Key</strong>(走按量计费)。<Footnote n={1} />这两条路的账完全分开: 会员那条的模型与上下文还按档位解锁 —— k3 要 Moderato 档及以上, 1M 上下文要 Allegretto 档及以上; 会员额度约为每 5 小时 300–1200 次请求, 并发上限 30。<Footnote n={1} /><Footnote n={2} />要记牢的是: 会员的 coding 端点(<C>api.kimi.com/coding</C>)与开放平台(<C>api.moonshot.cn</C>)是<strong>两个完全独立的账号体系, Key 互不通用</strong> —— 加上开放平台内部还分国内 / 国际两套(下一节), Kimi 一侧其实有三套账户, 配错哪一个都是 401。<Footnote n={2} /></>} />
+<T zh={<>装完用 <C>/login</C> 登录, 两条路任选: <strong>会员 OAuth</strong>(走你的 Kimi 会员订阅额度)或 <strong>开放平台 API Key</strong>(走按量计费)。<Footnote n={1} />会员那条的模型与上下文按档位解锁: 新套餐 Plus 起可用 K3.1 Pro / K3, Pro 起解锁高速版与 1M 上下文; 旧套餐对应 Moderato / Allegretto 门槛。新套餐取消 Code 周限额, 新旧套餐都有滚动 5 小时窗口并受月度共享池限制。<Footnote n={18} />要记牢的是: 会员 coding 端点(<C>api.kimi.com/coding</C>)与开放平台(<C>api.moonshot.cn</C>)是<strong>两个完全独立的账号体系, Key 互不通用</strong> —— 加上开放平台内部还分国内 / 国际两套, Kimi 一侧其实有三套账户, 配错哪一个都是 401。<Footnote n={2} /></>} />
 
 <Callout kind="note" zh={<>Kimi Code 还能反向接别家: 它的 provider 配置支持 Anthropic Messages 协议, 你哪天想把同一个终端工具接到 Claude 上, 改配置即可。工具是中立的, 选模型是你的自由。</>} />
 
 <Divider />
 
-<SectionTitle number="II"><T zh="拿 Key 与两套协议(地基)" /></SectionTitle>
+<SectionTitle number="II"><T zh="拿 Key 与三种协议格式(地基)" /></SectionTitle>
 
-<T zh="所有接法都从同一块地基开始: 一个 Key、两套协议。先把地基打对, 后面每个 agent 都只是填空。" />
+<T zh="所有接法都从同一块地基开始: 一个 Key、三种兼容格式。先把地基打对, 后面每个 agent 都只是填空。" />
 
 <T zh={<>先去控制台建 Key: 国内在 <C>platform.kimi.com</C>(人民币, 微信 / 支付宝充值), 国际在 <C>platform.kimi.ai</C>(美元)。<strong>两套账户与 Key 完全独立, 混用直接 401</strong> —— 官方 FAQ 的原话是「不能混用」, 这也是接入失败最常见的原因。<Footnote n={3} /></>} />
 
-<T zh={<>同一个 Key, 对应两套兼容协议。一是 <strong>OpenAI 兼容</strong>(Chat Completions): base_url 国内 <C>https://api.moonshot.cn/v1</C>、国际 <C>https://api.moonshot.ai/v1</C>, 鉴权 <C>Authorization: Bearer</C>, 官方惯用环境变量 <C>MOONSHOT_API_KEY</C>。<Footnote n={4} />二是 <strong>Anthropic 兼容</strong>: 国内 <C>https://api.moonshot.cn/anthropic</C>、国际 <C>https://api.moonshot.ai/anthropic</C> —— 这是让 Claude Code 系工具指向 Kimi 的关键, 下一节第一个就用它。<Footnote n={6} /></>} />
+<T zh={<>同一个 Key, 对应三种兼容格式。<strong>OpenAI Chat Completions</strong> 与 <strong>OpenAI Responses</strong> 共用国内 <C>https://api.moonshot.cn/v1</C>、国际 <C>https://api.moonshot.ai/v1</C>, 分别请求 <C>/chat/completions</C> 和 <C>/responses</C>; 鉴权都是 <C>Authorization: Bearer</C>, 官方惯用环境变量 <C>MOONSHOT_API_KEY</C>。<Footnote n={4} /><strong>Anthropic Messages</strong> 则用国内 <C>https://api.moonshot.cn/anthropic</C>、国际 <C>https://api.moonshot.ai/anthropic</C>。Codex 走原生 Responses, Claude Code 走 Anthropic, 都不需要协议转换。</>} />
 
 <Tabs caption={<T zh="两套账户速查: Key 在哪建, 就用哪套端点(占位符 YOUR_KIMI_API_KEY 换成你的 Key)" />}>
 <Tab label={<T zh="国内站(¥)" />}>
@@ -137,7 +145,7 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
 </Tab>
 </Tabs>
 
-<T zh={<>地基里还埋着一个限速坑: 速率按账户累计充值分档, 不充值的 tier0 只有 3 RPM、并发 1 —— 而 OpenAI SDK 默认会自动重试 2 次, 官方 FAQ 的原话是, tier0 用户「一次错误的请求就会消耗完所有的 RPM 额度」。充到 ¥50 的 tier1 才有 200 RPM 的可用体验; 注意代金券不计入累计充值。<Footnote n={5} /></>} />
+<T zh={<>地基里还埋着一个限速坑: 速率按账户累计充值分档, 并发、RPM、TPM、TPD 与联网搜索 QPS 都可能成为瓶颈, 代金券不计入累计充值。别把旧教程里的某个 tier 数字当永久配置; 接入前看官方当前表格, 上线后在真实请求里处理 429 并做指数退避, SDK 自动重试也会消耗速率额度。<Footnote n={5} /></>} />
 
 <Callout kind="warn" zh={<>接入报错先查这三样, 按命中率排: ① 国内 Key 配了国际端点(或反过来)→ 401; ② 拿会员订阅的 Key 去调开放平台(或反过来)→ 401; ③ tier0 限速 → 429。三样都不是配置写错了, 是账户对错了。</>} />
 
@@ -151,7 +159,7 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
 
 <T zh={<>这是官方文档写得最全的一条: 把 <C>ANTHROPIC_BASE_URL</C> 指到 Kimi 的 Anthropic 兼容端点、用 <C>ANTHROPIC_AUTH_TOKEN</C> 鉴权, Claude Code 就把 Kimi 当后端。<Footnote n={6} />两个变量名别搞混 —— <C>ANTHROPIC_AUTH_TOKEN</C> 走 <C>Authorization: Bearer</C> 头, <C>ANTHROPIC_API_KEY</C> 走 <C>X-Api-Key</C> 头; 两者同时存在会冲突, 之前配过 <C>ANTHROPIC_API_KEY</C> 的先删掉。<Footnote n={7} />写进 <C>~/.claude/settings.json</C> 长期生效:</>} />
 
-<CodeBlock caption={<T zh="~/.claude/settings.json —— 照官方指南的最小全套(国内站;国际站把 BASE_URL 换成 https://api.moonshot.ai/anthropic)" />}>
+<CodeBlock caption={<T zh="~/.claude/settings.json —— 当前官方示例(国内站;国际站替换 BASE_URL 域名)" />}>
 
 ```json
 {
@@ -161,11 +169,10 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
     "ANTHROPIC_MODEL": "kimi-k3[1m]",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "kimi-k3[1m]",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "kimi-k3[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "kimi-k3[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "kimi-k2.7-code",
     "ANTHROPIC_DEFAULT_FABLE_MODEL": "kimi-k3[1m]",
     "CLAUDE_CODE_SUBAGENT_MODEL": "kimi-k3[1m]",
-    "ENABLE_TOOL_SEARCH": "false",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1048576",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000",
     "CLAUDE_CODE_EFFORT_LEVEL": "max"
   }
 }
@@ -173,7 +180,7 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
 
 </CodeBlock>
 
-<T zh={<>四条注意事项, 都来自官方指南: ① 各档模型变量要配全, 缺了对应场景(后台摘要、子 agent)会静默失败; ② <C>/model</C> 菜单是内置别名表、不会显示 Kimi 模型, 配置是否生效以 <C>/status</C> 为准; ③ <C>ENABLE_TOOL_SEARCH</C> 必须为 <C>false</C>, Kimi 端点暂不支持该特性; ④ 换用 <C>kimi-k2.7-code</C> 时它强制思考, 要在 Claude Code 里按 Tab 开 Thinking on, 否则请求被 400 拒绝; 另外 WebFetch 在该端点暂不可用。<Footnote n={6} /></>} />
+<T zh={<>三条注意事项, 都来自当前官方指南: ① 各档模型变量要配全, 缺了对应场景(后台摘要、子 agent)会失败; ② <C>settings.json</C> 的 <C>env</C> 会覆盖 shell 同名变量, 修改后重启, 再用 <C>/status</C> 与 <C>/model</C> 核对; ③ 换用强制思考的 <C>kimi-k2.7-code</C> 时, 要在 Claude Code 里开启 Thinking, 否则请求被 400 拒绝。旧教程里的 <C>ENABLE_TOOL_SEARCH=false</C> 已不在当前最小配置中, 不要继续机械照抄。<Footnote n={6} /></>} />
 
 <H3 id="opencode"><T zh="OpenCode(有内置 Moonshot, 最省事)" /></H3>
 
@@ -193,20 +200,38 @@ export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic"
         "apiKey": "{env:MOONSHOT_API_KEY}"
       },
       "models": {
-        "kimi-k3": { "name": "Kimi K3", "limit": { "context": 1048576, "output": 65536 } },
-        "kimi-k2.7-code": { "name": "Kimi K2.7 Code", "limit": { "context": 262144, "output": 65536 } }
+        "kimi-k3.1-pro": { "name": "Kimi K3.1 Pro", "limit": { "context": 1048576, "output": 131072 } },
+        "kimi-k3": { "name": "Kimi K3", "limit": { "context": 1048576, "output": 65536 } }
       }
     }
   },
-  "model": "kimi/kimi-k3"
+  "model": "kimi/kimi-k3.1-pro"
 }
 ```
 
 </CodeBlock>
 
-<H3 id="codex"><T zh="Codex CLI(直连不行, 要借一层协议转换)" /></H3>
+<H3 id="codex"><T zh="Codex CLI(原生 Responses, 现在可以直连)" /></H3>
 
-<T zh={<>我先把墙说清楚: 当前版本的 Codex, 自定义供应商的 <C>wire_api</C> 只支持 <C>responses</C> 一档(官方文档原文: responses is the only supported value), 而 Kimi 开放平台提供的是 Chat Completions —— 协议对不上, <strong>直连不行</strong>。<Footnote n={8} />官方路径是借 CC-Switch 的本地路由做转换: 路由把 Codex 的 Responses 请求转成 Chat Completions 再发给 Kimi, Moonshot 官方的 Codex 接入指南就是照这条写的(配置在 CC-Switch 界面里完成, 不用手改 config.toml)。<Footnote n={9} />完整步骤见下一节 —— 对 Codex 用户来说, CC-Switch 不是可选项, 是目前唯一官方写明的桥。</>} />
+<T zh={<>旧结论是「Codex 只支持 Responses, Kimi 只有 Chat Completions, 所以要转换」。现在后半句已经变了: Kimi 原生提供 Responses API, 自定义 provider 的 <C>wire_api</C> 填 <C>responses</C> 即可直连 <C>kimi-k3.1-pro</C>, 不再需要 CC-Switch 或本地代理。<Footnote n={8} /><Footnote n={9} />先在终端设置 <C>KIMI_API_KEY</C>, 再写 <C>~/.codex/config.toml</C>:</>} />
+
+<CodeBlock caption={<T zh="~/.codex/config.toml —— 开放平台国内站直连;国际站替换 base_url 域名" />}>
+
+```toml
+model = "kimi-k3.1-pro"
+model_provider = "kimi"
+model_context_window = 1048576
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "KIMI_API_KEY"
+wire_api = "responses"
+```
+
+</CodeBlock>
+
+<T zh={<>重启 Codex 后选一个真实仓库任务验证。若之前用 CC-Switch 接过, 先关闭它的 Codex 路由, 避免它继续改写配置或把 base_url 指回本地地址; 出现 <C>404 /v1/responses</C> 时, 先检查 base_url 是否恰好保留 <C>/v1</C>。<Footnote n={9} /></>} />
 
 <H3 id="pi"><T zh="Pi(终端 agent, 配置文件驱动)" /></H3>
 
@@ -248,9 +273,9 @@ aider --model openai/kimi-k3
 
 </CodeBlock>
 
-<H3 id="cursor"><T zh="Cursor(明说: 官方接不了)" /></H3>
+<H3 id="cursor"><T zh="Cursor(原生 BYOK 与 Kimi Code 扩展是两条路)" /></H3>
 
-<T zh={<>Cursor 的自带 Key(BYOK)只支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家, 文档里没有任意第三方 OpenAI 兼容端点的入口; 自定义 Key 还只覆盖标准聊天模型, Tab 补全照样走 Cursor 内置模型。<Footnote n={15} />设置里那个 OpenAI base URL override 开关, 即便你的版本里还在, 也不受官方支持、随时可能移除, 别把 workflow 押在上面。要在 Cursor 里用 Kimi 模型, 我能给的诚实答案是: 不能, 换上面任何一家 agent。</>} />
+<T zh={<>Cursor 原生自带 Key(BYOK)仍只支持 OpenAI / Anthropic / Google / Azure OpenAI / AWS Bedrock 五家, 自定义 Key 只覆盖标准聊天模型, Tab 补全继续走 Cursor 内置模型。<Footnote n={15} />但这不等于「Cursor 不能用 Kimi」: 官方另提供 Kimi Code for VS Code / Cursor 的 IDE 路径, 在扩展输入栏选择 Kimi 模型即可。想用 Cursor 原生 Agent 直连任意 Kimi 端点, 与在 Cursor 里使用 Kimi Code 扩展, 是两件不同的事, 别再混成一句「能」或「不能」。<Footnote n={19} /></>} />
 
 <H3 id="webbridge"><T zh="顺带: 你的 agent 想动浏览器, 装 Kimi WebBridge" /></H3>
 
@@ -260,9 +285,9 @@ aider --model openai/kimi-k3
 
 <Divider />
 
-<SectionTitle number="IV"><T zh="CC-Switch: 一个面板管所有切换" /></SectionTitle>
+<SectionTitle number="IV"><T zh="CC-Switch: 可选的配置面板, 不再是必经桥" /></SectionTitle>
 
-<T zh={<>当你只有一套配置, 手动改 env 就够了; 当你在 Kimi、Claude 官方、其他国产模型之间来回切, 手动改就变成了体力活加残留地狱。CC-Switch(farion1231/cc-switch, 官网 ccswitch.io)就是为这件事生的: 一个桌面面板, 管理 Claude Code、Codex、Gemini CLI、OpenCode 等 8 个工具的供应商配置, v3.17.0、约 12 万 star。<Footnote n={16} />它不是命令行工具, 是 Tauri 桌面应用:</>} />
+<T zh={<>当你只有一套配置, 手动改 env 就够了; 当你在 Kimi、Claude 官方和其他模型之间频繁切换, CC-Switch 这类第三方面板可以少做一些重复劳动。<Footnote n={16} />但要更新一个旧认知: Codex 已能走 Kimi 原生 Responses API, CC-Switch 的协议转换不再是必需品。它的价值回到「集中管理配置」, 而不是「没有它就接不上」。macOS 仍可这样安装:</>} />
 
 <CodeBlock caption={<T zh="安装 CC-Switch(macOS;Windows / Linux 在 ccswitch.io 下安装包)" />}>
 
@@ -272,13 +297,11 @@ brew install --cask cc-switch
 
 </CodeBlock>
 
-<T zh={<>它的机制值得花三十秒搞懂: 你的每套供应商配置(profile)存在它自己的数据库(<C>~/.cc-switch/cc-switch.db</C>); 点「启用」时, 它把对应配置<strong>原子写入</strong>工具真正的配置文件 —— Claude Code 是 <C>~/.claude/settings.json</C> 的 <C>env</C> 块, Codex 是 <C>~/.codex/auth.json</C> 加 <C>config.toml</C>。Claude Code 支持热切换不用重启, Codex 要重开终端。手动改 live 配置文件也没关系, 会被它回填进数据库; 它还会检测 shell 里残留的 <C>ANTHROPIC_API_KEY</C> 之类的环境变量并警告 —— 因为环境变量优先级高于配置文件, 那正是「改了不生效」的头号来源。<Footnote n={16} /></>} />
+<T zh={<>它会维护供应商 profile, 并把启用中的配置写入对应工具的配置文件。代价是「谁在改配置」多了一层: 如果手动直连与面板路由同时开着, 后写入的一方可能覆盖前一方。Claude Code 改完用 <C>/status</C> 核, Codex 改完检查 <C>config.toml</C> 的 base_url 和实际启动模型; 旧 Codex 路由不用了就关掉。<Footnote n={6} /><Footnote n={9} /><Footnote n={16} /></>} />
 
-<T zh={<>接 Kimi 几乎不用动手: Claude Code 侧内置了「Kimi」预设(端点 <C>api.moonshot.cn/anthropic</C>), 填 Key 即用 —— 预设默认模型目前还是 <C>kimi-k2.7-code</C>, 想用 K3 就把它改成 <C>kimi-k3</C>, 改完对照官方指南核一遍变量(<C>ENABLE_TOOL_SEARCH=false</C>、压缩窗口 1048576); 另有「Kimi For Coding」预设走会员订阅线(<C>api.kimi.com/coding/</C>)。<Footnote n={6} /><Footnote n={16} />Codex 侧就是第三节那堵墙的答案: 开启路由总开关与 Codex 路由(默认监听 <C>127.0.0.1:15721</C>), 添加 Kimi 供应商(Base URL <C>https://api.moonshot.cn/v1</C>、默认模型 <C>kimi-k3</C>、上游格式 Chat Completions), 启用后重启 Codex —— 路由运行时它替你完成 Responses 与 Chat Completions 的转换。<Footnote n={9} /></>} />
+<Callout kind="note" zh={<>两句实话。一, CC-Switch 是社区第三方工具, 不是 Kimi 官方维护, 预设值可能与官方当前推荐不同。二, 只有启用它的本地路由时, Key 和请求才需要经过那层转换; 公司环境应先做安全评估。能原生直连时, 少一层代理通常也意味着少一类排错变量。</>} />
 
-<Callout kind="note" zh={<>两句实话。一, CC-Switch 是社区第三方工具, 不是 Kimi 官方维护 —— Moonshot 官方指南自己提醒你, 它的预设值可能与官方推荐值有差异, 启用后用 /status 核一遍。二, 你的 Key 和请求会经过它的本地路由, 公司环境先过一遍安全评估; 下载只认官网 ccswitch.io, 官方声明过任何收费的「CC Switch」都是假冒。</>} />
-
-<T zh={<>和手动改 env 怎么选? 一套配置走天下 → 手动就够, 第二节都给了。多套之间频繁切、或要给团队演示 → CC-Switch 省的是切换成本和「不残留」。两者不冲突 —— 它写入的正是你手动改的那两个文件。<Footnote n={16} /></>} />
+<T zh={<>和手动改 env 怎么选? 一套配置走天下 → 手动就够, 第二、三节都给了。多套之间频繁切、或要给团队演示 → 再评估 CC-Switch。别为了使用一个配置面板, 反过来把已经能直连的链路重新绕回代理。</>} />
 
 <Divider />
 
@@ -292,9 +315,9 @@ brew install --cask cc-switch
 
 <T zh="一个值得请出它的真实场景: 给一个跨十几个文件的功能加开关。我的用法是, 不一句「加个 feature flag」就放手, 先把范围、测试和安全边界交代清楚, 让它先报方案再动手:" />
 
-<PromptBox model="kimi-k2.7-code" text={<T zh={"任务: 给现有的导出功能加一个 feature flag「EXPORT_V2」。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】flag 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为新分支补至少两条(开 / 关各一)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} example={<T zh={"任务: 给现有的登录接口加一个限流中间件「RATE_LIMIT_LOGIN」, 每 IP 每分钟最多 10 次。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】用配置开关控制, 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为限流逻辑补至少两条(未超限放行 / 超限返回 429)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} />
+<PromptBox model="kimi-k3.1-pro" text={<T zh={"任务: 给现有的导出功能加一个 feature flag「EXPORT_V2」。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】flag 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为新分支补至少两条(开 / 关各一)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} example={<T zh={"任务: 给现有的登录接口加一个限流中间件「RATE_LIMIT_LOGIN」, 每 IP 每分钟最多 10 次。\n\n【先报方案】先列出你打算改哪些文件、为什么, 等我确认再动手, 别直接改。\n【做法】用配置开关控制, 默认关闭; 关闭时行为和现在完全一致。\n【测试】改完跑一遍现有测试; 为限流逻辑补至少两条(未超限放行 / 超限返回 429)。\n【安全】不要改数据库 schema、不要删文件、不要碰 CI 配置; 每步说清要执行什么命令。"} />} />
 
-<Callout kind="warn" zh={<>一条安全线: 放它自动跑命令前, 你得能看懂它每一步要做什么、并且能回滚。它跑得快是优点, 也是风险 —— 一个你没看懂就合进去的改动, 出问题时它跑得有多快, 你回起来就有多狼狈。另外, K3 发布第一周, 所有跑分都只有厂商自评和一个盲测榜(第三章), 别拿它们当选型的理由; 选型的理由该是「够用 + 兼容 + 国内顺手」。</>} />
+<Callout kind="warn" zh={<>一条安全线: 放它自动跑命令前, 你得能看懂它每一步要做什么、并且能回滚。它跑得快是优点, 也是风险 —— 一个你没看懂就合进去的改动, 出问题时它跑得有多快, 你回起来就有多狼狈。选型也别沿用发布第一周旧跑分: K3.1 Pro 的官方成绩与 K3 的独立成绩不是同口径, 先用一件真实改动比较质量、返工和账单。</>} />
 
 <Steps>
   <Step title={<T zh="用刚配好的线跑一件真改动, 全程盯着" />}>

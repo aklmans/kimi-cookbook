@@ -29,8 +29,8 @@
   PriceTable / Timeline / Tabs),不发明新写法;
 - **无「免费」字样**(用「开源」「公开」),内引号用「」,
   半角逗号 + 空格,破折号 ——,中英之间留空;
-- **门禁**:`npm test && npm run lint && npx tsc --noEmit && npm run build`
-  全绿后再提。
+- **门禁**:`npm test && npm run lint && npx tsc --noEmit && npm run build && npm run test:release`
+  全绿后再提。`test:release` 自动启动生产构建并运行浏览器 smoke。
 
 **协议**:你的 PR 一经合并,即视为同意以 **CC BY-NC-SA 4.0** 授权该贡献
 (署名 Zhaphar,同协议共享,非商业)。
